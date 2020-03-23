@@ -29,6 +29,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UsernameHasBeenRegisteredException.class)
     ResponseEntity<?> handlerUsernameHasBeenRegisteredException(UsernameHasBeenRegisteredException ex, WebRequest request) {
+        //request.
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -41,4 +42,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(PasswordNotCorrectException.class)
+    ResponseEntity<?> handlePasswordNotCorrect(PasswordNotCorrectException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    //TODO： 处理Json数据转换异常
 }
