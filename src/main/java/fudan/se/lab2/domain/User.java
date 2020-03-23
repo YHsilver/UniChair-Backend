@@ -1,5 +1,6 @@
 package fudan.se.lab2.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +29,8 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
+    //TODO: 要实现三个会议集合
+    private ArrayList<Long> conferencesId = new ArrayList<>();
 
     public User() {}
     public User(String username, String password, String fullname, Set<Authority> authorities) {
@@ -35,6 +38,14 @@ public class User implements UserDetails {
         this.password= password;
         this.fullname = fullname;
         this.authorities = authorities;
+    }
+
+    public ArrayList<Long> getConferencesId() {
+        return conferencesId;
+    }
+
+    public void setConferencesId(ArrayList<Long> conferencesId) {
+        this.conferencesId = conferencesId;
     }
 
     @Override
