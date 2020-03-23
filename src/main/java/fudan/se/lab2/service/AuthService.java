@@ -39,6 +39,7 @@ public class AuthService {
     }
 
     public User register(RegisterRequest request) {
+        // TODO: Implement the function.
         String username = request.getUsername();
         String password = request.getPassword();
         String fullname = request.getFullname();
@@ -52,6 +53,7 @@ public class AuthService {
     }
 
     public String login(String username, String rawPassword) {
+        // TODO: Implement the function.
         //tokenUtil.generateToken()
         User myUser = this.userRepository.findByUsername(username);
         if (myUser == null)
@@ -76,7 +78,6 @@ public class AuthService {
         conferenceRepository.save(newConference);
         System.out.println(newConference.toString());
         //默认成功
-        //todo
         return "{\"message\":\"conference application submit success\"}";
     }
 

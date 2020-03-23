@@ -22,9 +22,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // TODO: Implement the function.
         User user = userRepository.findByUsername(username);
         if (user == null)
             throw new UsernameNotFoundException("User: '" + username + "' not found.");
         else return user;
+
     }
 }

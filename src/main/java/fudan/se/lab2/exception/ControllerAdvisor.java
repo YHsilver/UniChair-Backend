@@ -48,6 +48,4 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-
-    //TODO： 处理Json数据转换异常
 }

@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-    //TODO: 要实现三个会议集合
+
     private ArrayList<Long> conferencesId = new ArrayList<>();
 
     public User() {}
