@@ -42,7 +42,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // TODO: Implement the filter.
         // ignore the check of token if the request is a login or register request
-        if ((request.getRequestURI().equals("/register")||request.getRequestURI().equals("/login"))) {
+        if (request.getRequestURI().equals("/register")||request.getRequestURI().equals("/login")||request.getRequestURI().equals("/welcome")) {
             System.out.println("[URI]: " + request.getRequestURI() + " passed");
             filterChain.doFilter(request, response);
             return;
