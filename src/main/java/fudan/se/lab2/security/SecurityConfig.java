@@ -35,19 +35,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // TODO: Configure your auth here. Remember to read the JavaDoc carefully.
+        //auth.authenticationProvider()
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // TODO: you need to configure your http security. Remember to read the JavaDoc carefully.
-
         // We dont't need CSRF for this project.
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 // Make sure we use stateless session; session won't be used to store user's state.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/welcome").permitAll()
+                .antMatchers("/welcome","/login","/register","/setUpConference").permitAll()
                 .anyRequest().authenticated();
 
 //      Here we use JWT(Json Web Token) to authenticate the user.
@@ -72,3 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 }
+
+
+
