@@ -2,14 +2,13 @@ package fudan.se.lab2.controller;
 
 import fudan.se.lab2.controller.request.ConferenceRequest;
 import fudan.se.lab2.service.AuthService;
-import fudan.se.lab2.service.JwtUserDetailsService;
+
 import fudan.se.lab2.controller.request.LoginRequest;
 import fudan.se.lab2.controller.request.RegisterRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
