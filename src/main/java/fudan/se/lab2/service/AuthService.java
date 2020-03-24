@@ -2,8 +2,8 @@ package fudan.se.lab2.service;
 
 import fudan.se.lab2.controller.request.ConferenceRequest;
 import fudan.se.lab2.domain.Conference;
-import fudan.se.lab2.exception.PasswordNotCorrectException;
-import fudan.se.lab2.exception.UsernameHasBeenRegisteredException;
+import fudan.se.lab2.exception.LoginAndRegisterException.PasswordNotCorrectException;
+import fudan.se.lab2.exception.LoginAndRegisterException.UsernameHasBeenRegisteredException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.domain.User;
@@ -11,10 +11,12 @@ import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.controller.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.HashSet;
+
+import java.util.*;
 
 /**
  * @author LBW
@@ -52,10 +54,15 @@ public class AuthService {
         return newUser;
     }
 
-    public String login(String username, String rawPassword) {
+    public Map<String, Object> login(String username, String rawPassword) {
         // TODO: Implement the function.
         //tokenUtil.generateToken()
+        if(passwordEncoder == null){
+            System.out.println("PasswordEncoder NULL");
+        }
         User myUser = this.userRepository.findByUsername(username);
+        String myUserPassword = myUser == null ? "nullPass" : myUser.getPassword();
+        System.out.println("username: " + username + " rawPassword: " + rawPassword + "myUser.getPassword(): " + myUserPassword);
         if (myUser == null)
             throw new UsernameNotFoundException(username);
         else if (!passwordEncoder.matches(rawPassword, myUser.getPassword())){
@@ -63,7 +70,13 @@ public class AuthService {
             System.out.println("rawPassword :" + rawPassword);
             throw new PasswordNotCorrectException(username);
         }else{
-            return "{\"token\":\"" + tokenUtil.generateToken(myUser) + "\"}";
+            Map<String, Object> response = new HashMap<>();
+            //JSONObject.
+            System.out.println(myUser.toString());
+            response.put("token", tokenUtil.generateToken(myUser));
+            response.put("userDetails", myUser.toString());
+            return response;
+            //return "{\"token\":\"" + tokenUtil.generateToken(myUser) + "\"}";
         }
     }
 

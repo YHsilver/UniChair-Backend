@@ -1,6 +1,7 @@
 package fudan.se.lab2.controller;
 
 import fudan.se.lab2.controller.request.ConferenceRequest;
+import fudan.se.lab2.domain.User;
 import fudan.se.lab2.service.AuthService;
 
 import fudan.se.lab2.controller.request.LoginRequest;
@@ -39,6 +40,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         logger.debug("LoginForm: " + request.toString());
+        //ResponseEntity.ok().
         return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
 
     }

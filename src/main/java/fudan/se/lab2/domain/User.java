@@ -16,6 +16,15 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -6140085056226164016L;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + id +
+                ", \"username\":\"" + username + '\"' +
+                ", \"fullname\":\"" + fullname + '\"' +
+                '}';
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

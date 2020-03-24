@@ -1,4 +1,4 @@
-package fudan.se.lab2.exception;
+package fudan.se.lab2.exception.LoginAndRegisterException;
 
 /**
  * @author LBW
