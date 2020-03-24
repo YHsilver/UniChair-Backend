@@ -23,12 +23,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UsernameNotFoundException.class)
     ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
         Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
+        response.put("message", "Username '" + ex.getMessage() + "' not found");
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UsernameHasBeenRegisteredException.class)
-    ResponseEntity<?> handlerUsernameHasBeenRegisteredException(UsernameHasBeenRegisteredException ex, WebRequest request) {
+    ResponseEntity<?> handleUsernameHasBeenRegisteredException(UsernameHasBeenRegisteredException ex, WebRequest request) {
         //request.
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
