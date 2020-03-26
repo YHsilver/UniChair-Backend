@@ -43,40 +43,41 @@ public class AuthService {
     public User register(RegisterRequest request) {
         // TODO: Implement the function.
         String username = request.getUsername();
-        String password = request.getPassword();
-        String fullname = request.getFullname();
         User existUser = userRepository.findByUsername(username);
         if (existUser != null) {
             throw new UsernameHasBeenRegisteredException(username);
         }
-        User newUser = new User(username, passwordEncoder.encode(password), fullname, new HashSet<>());
+
+        User newUser = new User(username, passwordEncoder.encode(request.getPassword()),
+                request.getFullname(), new HashSet<>());
+        // 'newUser' is better than 'user'
+
         userRepository.save(newUser);
         return newUser;
     }
 
+    /**
+     * check whether the login request can be successful
+     * @param username the username in the login request
+     * @param rawPassword the raw password in the login request
+     * @throws UsernameNotFoundException if username doesn't exist in the user repository
+     * @throws PasswordNotCorrectException if password is not correct
+     * @return return a map with two entries if success, one is "token" and the other is "userDetails"
+     */
     public Map<String, Object> login(String username, String rawPassword) {
-        // TODO: Implement the function.
-        //tokenUtil.generateToken()
-        if(passwordEncoder == null){
-            System.out.println("PasswordEncoder NULL");
+        if(username == null || rawPassword == null){
+            throw new UsernameNotFoundException(username == null ? "" : username);
         }
-        User myUser = this.userRepository.findByUsername(username);
-        String myUserPassword = myUser == null ? "nullPass" : myUser.getPassword();
-        System.out.println("username: " + username + " rawPassword: " + rawPassword + "myUser.getPassword(): " + myUserPassword);
-        if (myUser == null)
+        User currentUser = userRepository.findByUsername(username);
+        if (currentUser == null)
             throw new UsernameNotFoundException(username);
-        else if (!passwordEncoder.matches(rawPassword, myUser.getPassword())){
-            System.out.println("myUser.password :" + myUser.getPassword());
-            System.out.println("rawPassword :" + rawPassword);
+        else if (!passwordEncoder.matches(rawPassword, currentUser.getPassword())){
             throw new PasswordNotCorrectException(username);
         }else{
             Map<String, Object> response = new HashMap<>();
-            //JSONObject.
-            System.out.println(myUser.toString());
-            response.put("token", tokenUtil.generateToken(myUser));
-            response.put("userDetails", myUser.toString());
+            response.put("token", tokenUtil.generateToken(currentUser));
+            response.put("userDetails", currentUser.toJsonObject());
             return response;
-            //return "{\"token\":\"" + tokenUtil.generateToken(myUser) + "\"}";
         }
     }
 

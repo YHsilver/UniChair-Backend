@@ -16,8 +16,7 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -6140085056226164016L;
 
-    @Override
-    public String toString() {
+    public String toJsonObject() {
         return "{" +
                 "\"id\":" + id +
                 ", \"username\":\"" + username + '\"' +
@@ -30,7 +29,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true)
-    private String username;
+    private String username; // 'username' is better than 'name'
 
     private String password;
     private String fullname;
