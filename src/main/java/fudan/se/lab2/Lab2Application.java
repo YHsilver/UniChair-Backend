@@ -9,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -20,6 +19,7 @@ import java.util.HashSet;
  *
  * @author LBW
  */
+
 @SpringBootApplication
 public class Lab2Application {
 
@@ -32,6 +32,7 @@ public class Lab2Application {
      * Now we are using a In-Memory database, so you need it.
      * You can change it as you like.
      */
+
     @Bean
     public CommandLineRunner dataLoader(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
         return new CommandLineRunner() {
