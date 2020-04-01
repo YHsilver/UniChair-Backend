@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * @author LBW
  */
+
 @Entity
 public class Authority implements GrantedAuthority {
 

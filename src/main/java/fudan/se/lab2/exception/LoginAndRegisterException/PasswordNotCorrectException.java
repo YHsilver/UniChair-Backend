@@ -1,6 +1,6 @@
 package fudan.se.lab2.exception.LoginAndRegisterException;
 
-public class PasswordNotCorrectException extends RuntimeException{
+public class PasswordNotCorrectException extends RuntimeException {
     public PasswordNotCorrectException(String username) {
         // TODO count the times of wrong password, when it increases to a certain value, suspend the account
 

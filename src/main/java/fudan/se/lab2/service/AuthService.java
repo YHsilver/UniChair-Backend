@@ -58,22 +58,23 @@ public class AuthService {
 
     /**
      * check whether the login request can be successful
-     * @param username the username in the login request
+     *
+     * @param username    the username in the login request
      * @param rawPassword the raw password in the login request
-     * @throws UsernameNotFoundException if username doesn't exist in the user repository
-     * @throws PasswordNotCorrectException if password is not correct
      * @return return a map with two entries if success, one is "token" and the other is "userDetails"
+     * @throws UsernameNotFoundException   if username doesn't exist in the user repository
+     * @throws PasswordNotCorrectException if password is not correct
      */
     public Map<String, Object> login(String username, String rawPassword) {
-        if(username == null || rawPassword == null){
+        if (username == null || rawPassword == null) {
             throw new UsernameNotFoundException(username == null ? "" : username);
         }
         User currentUser = userRepository.findByUsername(username);
         if (currentUser == null)
             throw new UsernameNotFoundException(username);
-        else if (!passwordEncoder.matches(rawPassword, currentUser.getPassword())){
+        else if (!passwordEncoder.matches(rawPassword, currentUser.getPassword())) {
             throw new PasswordNotCorrectException(username);
-        }else{
+        } else {
             Map<String, Object> response = new HashMap<>();
             response.put("token", tokenUtil.generateToken(currentUser));
             response.put("userDetails", currentUser.toJsonObject());
@@ -81,20 +82,21 @@ public class AuthService {
         }
     }
 
-    public String setUpConference(ConferenceRequest request){
+    public String setUpConference(ConferenceRequest request) {
 
-        Conference newConference=new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
-                request.getConferenceAbbreviation(),request.getConferenceFullName(),request.getConferenceTime(),
-                request.getConferenceLocation(),request.getContributeEndTime(),request.getResultReleaseTime()
-                );
-        User user=this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference newConference = new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
+                request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceTime(),
+                request.getConferenceLocation(), request.getContributeEndTime(), request.getResultReleaseTime()
+        );
+
+        User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         user.getConferencesId().add(newConference.getConferenceId());
         conferenceRepository.save(newConference);
         System.out.println(newConference.toString());
+
         //默认成功
         return "{\"message\":\"conference application submit success\"}";
     }
-
 
 
 }

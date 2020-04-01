@@ -14,8 +14,9 @@ public class Conference implements Serializable {
     // empty constructor
     public Conference() {
     }
-    public Conference(User chairMan,String conferenceAbbreviation,String conferenceFullName,Date conferenceTime,
-                      String conferenceLocation,Date contributeEndTime,Date resultReleaseTime){
+
+    public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, Date conferenceTime,
+                      String conferenceLocation, Date contributeEndTime, Date resultReleaseTime) {
         this.chairMan = chairMan;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
@@ -59,11 +60,11 @@ public class Conference implements Serializable {
     @ManyToOne
     private User chairMan;
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<User> authorSet=new HashSet<>();
+    private Set<User> authorSet = new HashSet<>();
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<User> reviewerSet=new HashSet<>();
+    private Set<User> reviewerSet = new HashSet<>();
     // all the papers
-    private ArrayList<Paper> paperList=new ArrayList<>();
+    private ArrayList<Paper> paperList = new ArrayList<>();
 
     public String getConferenceAbbreviation() {
         return conferenceAbbreviation;

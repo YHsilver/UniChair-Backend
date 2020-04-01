@@ -1,4 +1,5 @@
 package fudan.se.lab2.security;
+
 import fudan.se.lab2.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -10,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
 import java.util.Collection;
 
 @Component
@@ -19,7 +21,7 @@ class ConfAuthenticationProvider implements AuthenticationProvider {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ConfAuthenticationProvider(JwtUserDetailsService userDetailsService, PasswordEncoder passwordEncoder){
+    public ConfAuthenticationProvider(JwtUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }

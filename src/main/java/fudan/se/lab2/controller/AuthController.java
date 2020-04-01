@@ -17,6 +17,7 @@ import java.util.Map;
 
 /**
  * @author LBW
+ * 这个类大概是用来响应的吧……
  */
 @RestController
 public class AuthController {
@@ -29,7 +30,6 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
-
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
@@ -54,13 +54,13 @@ public class AuthController {
     /**
      * This is a function to test your connectivity. (健康测试时，可能会用到它）.
      */
-    @GetMapping("/welcome")
-    public ResponseEntity<?> welcome() {
-        Map<String, String> response = new HashMap<>();
-        String message = "Welcome to 2020 Software Engineering Lab2. ";
-        response.put("message", message);
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/welcome")
+//    public ResponseEntity<?> welcome() {
+//        Map<String, String> response = new HashMap<>();
+//        String message = "Welcome to 2020 Software Engineering Lab2. ";
+//        response.put("message", message);
+//        return ResponseEntity.ok(response);
+//    }
 
 }
 

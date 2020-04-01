@@ -35,14 +35,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtTokenUtil tokenUtil;
 
     @Autowired
-    public JwtRequestFilter(JwtTokenUtil tokenUtil){
+    public JwtRequestFilter(JwtTokenUtil tokenUtil) {
         this.tokenUtil = tokenUtil;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // ignore the check of token if the request is a login or register or welcome request
-        if (request.getRequestURI().equals("/register")||request.getRequestURI().equals("/login")||request.getRequestURI().equals("/welcome")) {
+        if (request.getRequestURI().equals("/register") || request.getRequestURI().equals("/login") || request.getRequestURI().equals("/welcome")) {
             System.out.println("[URI]: " + request.getRequestURI() + " passed");
             filterChain.doFilter(request, response);
             return;
@@ -56,9 +56,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         // check whether the token is
         String username = null;
-        try{
+        try {
             username = tokenUtil.getUsernameFromToken(token);
-        }catch(ExpiredJwtException ex){
+        } catch (ExpiredJwtException ex) {
             // TODO logger
             System.out.println("[" + ex.getClaims().getSubject() + "] token out of time");
             response.sendRedirect("http://localhost:80/login");
@@ -69,10 +69,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void printRequestHeader(HttpServletRequest request){
+    private void printRequestHeader(HttpServletRequest request) {
         System.out.println("-----------------------------");
         Enumeration<String> requestHeaderNamesEnumeration = request.getHeaderNames();
-        while(requestHeaderNamesEnumeration.hasMoreElements()){
+        while (requestHeaderNamesEnumeration.hasMoreElements()) {
             String elementName = requestHeaderNamesEnumeration.nextElement();
             System.out.println("[name]: " + elementName + " [value]: " + request.getHeader(elementName));
         }

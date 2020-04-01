@@ -1,8 +1,6 @@
 package fudan.se.lab2.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -11,11 +9,14 @@ import java.util.*;
 /**
  * @author LBW
  */
+
 @Entity
 public class User implements UserDetails {
 
+    // 这是干啥的？？？
     private static final long serialVersionUID = -6140085056226164016L;
 
+    // 这个要修改！！！！！！！！！
     public String toJsonObject() {
         return "{" +
                 "\"id\":" + id +
@@ -30,20 +31,22 @@ public class User implements UserDetails {
 
     @Column(unique = true)
     private String username; // 'username' is better than 'name'
-
     private String password;
     private String fullname;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
-
     private ArrayList<Long> conferencesId = new ArrayList<>();
 
-    public User() {}
+    // empty constructor
+    public User() {
+    }
+
+    // constructor
     public User(String username, String password, String fullname, Set<Authority> authorities) {
         this.username = username;
-        this.password= password;
+        this.password = password;
         this.fullname = fullname;
         this.authorities = authorities;
     }
