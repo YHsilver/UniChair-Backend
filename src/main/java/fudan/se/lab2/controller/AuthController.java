@@ -1,19 +1,16 @@
 package fudan.se.lab2.controller;
 
 import fudan.se.lab2.controller.request.ConferenceRequest;
-import fudan.se.lab2.domain.User;
-import fudan.se.lab2.service.AuthService;
-
 import fudan.se.lab2.controller.request.LoginRequest;
 import fudan.se.lab2.controller.request.RegisterRequest;
+import fudan.se.lab2.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author LBW

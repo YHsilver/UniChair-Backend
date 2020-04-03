@@ -8,6 +8,7 @@ import java.util.*;
 
 /**
  * @author LBW
+ * 这个类是用户
  */
 
 @Entity
@@ -15,15 +16,6 @@ public class User implements UserDetails {
 
     // 这是干啥的？？？
     private static final long serialVersionUID = -6140085056226164016L;
-
-    // 这个要修改！！！！！！！！！
-    public String toJsonObject() {
-        return "{" +
-                "\"id\":" + id +
-                ", \"username\":\"" + username + '\"' +
-                ", \"fullname\":\"" + fullname + '\"' +
-                '}';
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -121,4 +113,14 @@ public class User implements UserDetails {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
+
+    // 这个要修改！！！！！！！！！
+    public String toJsonObject() {
+        return "{" +
+                "\"id\":" + id +
+                ", \"username\":\"" + username + '\"' +
+                ", \"fullname\":\"" + fullname + '\"' +
+                '}';
+    }
+
 }
