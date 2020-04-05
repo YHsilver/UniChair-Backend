@@ -4,15 +4,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * Some properties about JWT.
- * You can change the value in `application.properties`.
- *
  * @author LBW
+ * JWT 的属性
  */
+
 @Component
 @ConfigurationProperties(prefix = "jwt.token")
 public class JwtConfigProperties {
+    // 有效时间
     private int validity;
+
+    // 秘密？
     private String secret;
 
     public int getValidity() {

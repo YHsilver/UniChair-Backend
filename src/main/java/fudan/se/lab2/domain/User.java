@@ -14,7 +14,6 @@ import java.util.*;
 @Entity
 public class User implements UserDetails {
 
-    // 这是干啥的？？？
     private static final long serialVersionUID = -6140085056226164016L;
 
     @Id
@@ -24,7 +23,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username; // 'username' is better than 'name'
     private String password;
-    private String fullname;
+    private String fullName;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
@@ -36,10 +35,10 @@ public class User implements UserDetails {
     }
 
     // constructor
-    public User(String username, String password, String fullname, Set<Authority> authorities) {
+    public User(String username, String password, String fullName, Set<Authority> authorities) {
         this.username = username;
         this.password = password;
-        this.fullname = fullname;
+        this.fullName = fullName;
         this.authorities = authorities;
     }
 
@@ -102,24 +101,23 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
 
-    // 这个要修改！！！！！！！！！
     public String toJsonObject() {
         return "{" +
                 "\"id\":" + id +
                 ", \"username\":\"" + username + '\"' +
-                ", \"fullname\":\"" + fullname + '\"' +
+                ", \"fullName\":\"" + fullName + '\"' +
                 '}';
     }
 

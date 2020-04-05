@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author LBW
  * 这个类控制响应的发送，因为有 @RestController
- * 具体响应类是 AuthService
+ * 具体响应内容的类是 AuthService
  */
 
 @RestController

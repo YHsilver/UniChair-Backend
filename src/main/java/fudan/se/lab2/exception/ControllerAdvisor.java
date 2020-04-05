@@ -18,9 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * You can handle all of your exceptions here.
- *
  * @author LBW
+ * 这个类用来处理所有异常
  */
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {

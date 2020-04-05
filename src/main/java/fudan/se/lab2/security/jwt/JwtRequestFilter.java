@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 /**
- * Write your code to make this filter works.
- *
  * @author LBW
+ * token过滤器，验证有无token
  */
+
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -29,12 +29,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         // ignore the check of token if the request is a login or register
         if (request.getRequestURI().equals("/register") || request.getRequestURI().equals("/login")) {
-            System.out.println("[URI]: " + request.getRequestURI() + " passed");
+//            System.out.println("[URI]: " + request.getRequestURI() + " passed");
             filterChain.doFilter(request, response);
             return;
         }
+
         // get token from the request header and check whether it exists
         String token = request.getHeader("token");
         //System.out.println("[URI]: " + request.getRequestURI() + " [token]: " + token);
@@ -48,11 +50,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             username = tokenUtil.getUsernameFromToken(token);
         } catch (ExpiredJwtException ex) {
             // TODO logger
-            System.out.println("[" + ex.getClaims().getSubject() + "] token out of time");
+//            System.out.println("[" + ex.getClaims().getSubject() + "] token out of time");
             response.sendRedirect("http://localhost:80/login");
             return;
         }
-        System.out.println("[" + username + "] token access");
+//        System.out.println("[" + username + "] token access");
         // green light
         filterChain.doFilter(request, response);
     }
@@ -65,6 +67,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             System.out.println("[name]: " + elementName + " [value]: " + request.getHeader(elementName));
         }
         System.out.println("-----------------------------");
-
     }
 }

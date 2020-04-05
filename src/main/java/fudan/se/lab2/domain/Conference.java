@@ -8,6 +8,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author hyf
+ * 会议仓库
+ */
+
 @Entity
 public class Conference implements Serializable {
 
@@ -176,8 +181,7 @@ public class Conference implements Serializable {
 //        this.resultReleaseTime = resultReleaseTime;
 //    }
 
-    @Override
-    public String toString() {
+    public String toJsonObject() {
         return "Conference{" +
                 "conferenceId=" + conferenceId +
                 ", conferenceAbbreviation='" + conferenceAbbreviation + '\'' +

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author LBW
+ * 权限仓库找权限
  */
 @Repository
 public interface AuthorityRepository extends CrudRepository<Authority, Long> {

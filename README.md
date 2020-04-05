@@ -31,3 +31,6 @@
        b. Chair 邀请 PC members
 
        c. Author 投稿
+
+- 一些方法
+  - 由 token 获取用户名： `userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()))` （因为用户名是唯一的，而 token 在每次登录的时候都会有一映射，所以可以获得）

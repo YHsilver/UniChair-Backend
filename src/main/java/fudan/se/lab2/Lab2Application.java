@@ -19,7 +19,7 @@ import java.util.HashSet;
  * Enjoy it :)
  *
  * @author LBW
- * 初始化吧…
+ * 初始化
  */
 
 @SpringBootApplication
