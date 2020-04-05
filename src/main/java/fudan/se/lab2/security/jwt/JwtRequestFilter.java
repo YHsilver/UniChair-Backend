@@ -1,16 +1,7 @@
 package fudan.se.lab2.security.jwt;
 
-import fudan.se.lab2.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,9 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Map;
 
 /**
  * Write your code to make this filter works.
@@ -30,7 +19,6 @@ import java.util.Map;
  */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-
 
     private JwtTokenUtil tokenUtil;
 
@@ -41,8 +29,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // ignore the check of token if the request is a login or register or welcome request
-        if (request.getRequestURI().equals("/register") || request.getRequestURI().equals("/login") || request.getRequestURI().equals("/welcome")) {
+        // ignore the check of token if the request is a login or register
+        if (request.getRequestURI().equals("/register") || request.getRequestURI().equals("/login")) {
             System.out.println("[URI]: " + request.getRequestURI() + " passed");
             filterChain.doFilter(request, response);
             return;

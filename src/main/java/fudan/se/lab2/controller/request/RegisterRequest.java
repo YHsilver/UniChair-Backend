@@ -16,8 +16,8 @@ public class RegisterRequest {
     // password
     private String password;
 
-    // fullname
-    private String fullname;
+    // fullName
+    private String fullName;
 
     // unit
     private String unit;
@@ -36,10 +36,10 @@ public class RegisterRequest {
     }
 
     // constructor
-    public RegisterRequest(String username, String password, String fullname, String unit, String area, String email, Set<String> authorities) {
+    public RegisterRequest(String username, String password, String fullName, String unit, String area, String email, Set<String> authorities) {
         this.username = username;
         this.password = password;
-        this.fullname = fullname;
+        this.fullName = fullName;
         this.unit = unit;
         this.area = area;
         this.email = email;
@@ -63,11 +63,11 @@ public class RegisterRequest {
 //    }
 
     public String getFullname() {
-        return fullname;
+        return fullName;
     }
 
-//    public void setFullname(String fullname) {
-//        this.fullname = fullname;
+//    public void setFullname(String fullName) {
+//        this.fullName = fullName;
 //    }
 
 
@@ -90,5 +90,15 @@ public class RegisterRequest {
 //     public void setAuthorities(Set<String> authorities) {
 //         this.authorities = authorities;
 //     }
+
+    @Override
+    public String toString() {
+        return "\nusername: " + this.getUsername()
+                + "\npassword: " + this.getPassword()
+                + "\nfullName: " + this.getFullname()
+                + "\nunit: " + this.getUnit()
+                + "\narea: " + this.getArea()
+                + "\nemail: " + this.getEmail();
+    }
 }
 

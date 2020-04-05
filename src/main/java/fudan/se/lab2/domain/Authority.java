@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * @author LBW
- * 管理用户权限？
+ * 管理用户权限，分chair、PC members、author
  */
 
 @Entity

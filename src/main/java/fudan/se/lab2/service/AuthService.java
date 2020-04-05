@@ -11,7 +11,6 @@ import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.controller.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,16 +19,29 @@ import java.util.*;
 
 /**
  * @author LBW
+ * 这个类是具体响应类
+ * “响应服务”
  */
 @Service
 
 public class AuthService {
+
+    // 用户仓库
     private UserRepository userRepository;
+
+    // 权限仓库
     private AuthorityRepository authorityRepository;
+
+    // 会议仓库
     private ConferenceRepository conferenceRepository;
+
+    // 加密密码
     private PasswordEncoder passwordEncoder;
+
+    // token
     private JwtTokenUtil tokenUtil;
 
+    // constructor
     @Autowired
     public AuthService(UserRepository userRepository, AuthorityRepository authorityRepository,
                        ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder, JwtTokenUtil tokenUtil) {
@@ -40,6 +52,7 @@ public class AuthService {
         this.tokenUtil = tokenUtil;
     }
 
+    // 回应register的响应
     public User register(RegisterRequest request) {
         // TODO: Implement the function.
         String username = request.getUsername();
@@ -47,7 +60,6 @@ public class AuthService {
         if (existUser != null) {
             throw new UsernameHasBeenRegisteredException(username);
         }
-
         User newUser = new User(username, passwordEncoder.encode(request.getPassword()),
                 request.getFullname(), new HashSet<>());
         // 'newUser' is better than 'user'

@@ -8,7 +8,7 @@ import java.util.*;
 
 /**
  * @author LBW
- * 这个类是用户
+ * 这个类是用户类，生成用户，放入仓库
  */
 
 @Entity

@@ -100,4 +100,14 @@ public class ConferenceRequest {
 //        this.conferenceAbbreviation = conferenceAbbreviation;
 //    }
 
+    @Override
+    public String toString() {
+        return "\nconferenceAbbreviation: " + this.getConferenceAbbreviation()
+                + "\nconferenceFullName: " + this.getConferenceFullName()
+                + "\nconferenceTime: " + this.getConferenceTime()
+                + "\nconferenceLocation: " + this.getConferenceLocation()
+                + "\ncontributeEndTime: " + this.getContributeEndTime()
+                + "\nresultReleaseTime: " + this.getResultReleaseTime();
+    }
+
 }

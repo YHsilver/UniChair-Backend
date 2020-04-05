@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author LBW
+ * 在仓库中找名字，大海捞针
  */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
