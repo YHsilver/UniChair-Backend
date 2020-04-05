@@ -1,21 +1,24 @@
 package fudan.se.lab2.service;
 
+import fudan.se.lab2.controller.request.ConferenceManagementRequest;
 import fudan.se.lab2.controller.request.ConferenceRequest;
+import fudan.se.lab2.controller.request.RegisterRequest;
 import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.domain.User;
 import fudan.se.lab2.exception.LoginAndRegisterException.PasswordNotCorrectException;
 import fudan.se.lab2.exception.LoginAndRegisterException.UsernameHasBeenRegisteredException;
-import fudan.se.lab2.repository.ConferenceRepository;
-import fudan.se.lab2.security.jwt.JwtTokenUtil;
-import fudan.se.lab2.domain.User;
 import fudan.se.lab2.repository.AuthorityRepository;
+import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
-import fudan.se.lab2.controller.request.RegisterRequest;
+import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
  * @author LBW
@@ -94,13 +97,12 @@ public class AuthService {
         }
     }
 
+    // 设置会议
     public String setUpConference(ConferenceRequest request) {
-
         Conference newConference = new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
                 request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceTime(),
                 request.getConferenceLocation(), request.getContributeEndTime(), request.getResultReleaseTime()
         );
-
         User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         user.getConferencesId().add(newConference.getConferenceId());
         conferenceRepository.save(newConference);
@@ -110,5 +112,23 @@ public class AuthService {
         return "{\"message\":\"conference application submit success\"}";
     }
 
+    // 管理员处理会议
+    public String ConferenceManagement(ConferenceManagementRequest request) {
+        String name = request.getName();
+        switch (name) {
+            case "LOOK": {
+                System.out.println(this.conferenceRepository.findAll());
+                return this.conferenceRepository.findAll().toString();
+            }
+            case "CHANGESTATE": {
+                Conference conference = this.conferenceRepository.findByConferenceId(Long.parseLong(request.getContent()[0]));
+                conference.setStage(Conference.Stage.valueOf(request.getContent()[1]));
+                return null;
+            }
+            default: {
+                return null;
+            }
+        }
+    }
 
 }

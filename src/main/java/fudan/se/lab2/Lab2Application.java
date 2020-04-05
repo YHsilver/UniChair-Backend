@@ -40,7 +40,9 @@ public class Lab2Application {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
+
                 // Create authorities if not exist.
+                // 管理员、投稿人、审稿人
                 Authority adminAuthority = getOrCreateAuthority("Admin", authorityRepository);
                 Authority contributorAuthority = getOrCreateAuthority("Contributor", authorityRepository);
                 Authority reviewerAuthority = getOrCreateAuthority("Reviewer", authorityRepository);
@@ -49,7 +51,7 @@ public class Lab2Application {
                 if (userRepository.findByUsername("admin") == null) {
                     User admin = new User(
                             "admin",
-                            passwordEncoder.encode("pass"),
+                            passwordEncoder.encode("ThisisaAdminPASSWORD123$$软工牛逼"),
                             "libowen",
                             new HashSet<>(Collections.singletonList(adminAuthority))
                     );

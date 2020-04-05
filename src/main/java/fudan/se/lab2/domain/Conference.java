@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  * @author hyf
- * 会议仓库
+ * 会议类
  */
 
 @Entity
@@ -42,8 +42,14 @@ public class Conference implements Serializable {
     // 评审结果发布日期
     private Date resultReleaseTime;
 
+    // 会议申请状态:PENDING(待审核), PASS(通过), REJECT(驳回)
+    private enum Status {PENDING, PASS, REJECT}
+
+    // 会议申请状态
+    private Status status;
+
     // 会议阶段：preparation(准备中), contribution(投稿中), reviewing(审稿中), grading(终评中) and ending(审稿结束)
-    private enum Stage {preparation, contribution, reviewing, grading, ending}
+    public enum Stage {preparation, contribution, reviewing, grading, ending}
 
     // 会议阶段
     private Stage stage;
@@ -101,13 +107,21 @@ public class Conference implements Serializable {
 //        this.conferenceFullName = conferenceFullName;
 //    }
 
+    public String getStatus() {
+        return status.toString();
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public String getStage() {
         return stage.toString();
     }
 
-//    public void setStage(String stage) {
-//        this.stage = stage;
-//    }
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
     public Date getContributeStartTime() {
         return contributeStartTime;
