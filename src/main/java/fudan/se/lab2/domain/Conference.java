@@ -3,13 +3,13 @@ package fudan.se.lab2.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author hyf
+ * @author pxy、yh
  * 会议类
  */
 
@@ -28,22 +28,22 @@ public class Conference implements Serializable {
     private String conferenceFullName;
 
     // 举办时间
-    private Date conferenceTime;
+    private LocalDate conferenceTime;
 
     // 举办地点
     private String conferenceLocation;
 
     // 投稿开始日期
-    private Date contributeStartTime;
+    private LocalDate contributeStartTime;
 
     // 投稿截止日期
-    private Date contributeEndTime;
+    private LocalDate contributeEndTime;
 
     // 评审结果发布日期
-    private Date resultReleaseTime;
+    private LocalDate resultReleaseTime;
 
     // 会议申请状态:PENDING(待审核), PASS(通过), REJECT(驳回)
-    private enum Status {PENDING, PASS, REJECT}
+    public static enum Status {PENDING, PASS, REJECT}
 
     // 会议申请状态
     private Status status;
@@ -72,8 +72,8 @@ public class Conference implements Serializable {
     }
 
     // constructor
-    public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, Date conferenceTime,
-                      String conferenceLocation, Date contributeEndTime, Date resultReleaseTime) {
+    public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, LocalDate conferenceTime,
+                      String conferenceLocation, LocalDate contributeEndTime, LocalDate resultReleaseTime) {
         this.chairMan = chairMan;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
@@ -123,19 +123,19 @@ public class Conference implements Serializable {
         this.stage = stage;
     }
 
-    public Date getContributeStartTime() {
+    public LocalDate getContributeStartTime() {
         return contributeStartTime;
     }
 
-//    public void setContributeStartTime(Date contributeStartTime) {
+//    public void setContributeStartTime(LocalDate contributeStartTime) {
 //        this.contributeStartTime = contributeStartTime;
 //    }
 
-    public Date getContributeEndTime() {
+    public LocalDate getContributeEndTime() {
         return contributeEndTime;
     }
 
-//    public void setContributeEndTime(Date contributeEndTime) {
+//    public void setContributeEndTime(LocalDate contributeEndTime) {
 //        this.contributeEndTime = contributeEndTime;
 //    }
 
@@ -171,7 +171,7 @@ public class Conference implements Serializable {
 //        this.paperList = paperList;
 //    }
 
-    public Date getConferenceTime() {
+    public LocalDate getConferenceTime() {
         return conferenceTime;
     }
 
@@ -187,11 +187,11 @@ public class Conference implements Serializable {
 //        this.conferenceLocation = conferenceLocation;
 //    }
 
-    public Date getResultReleaseTime() {
+    public LocalDate getResultReleaseTime() {
         return resultReleaseTime;
     }
 
-//    public void setResultReleaseTime(Date resultReleaseTime) {
+//    public void setResultReleaseTime(LocalDate resultReleaseTime) {
 //        this.resultReleaseTime = resultReleaseTime;
 //    }
 

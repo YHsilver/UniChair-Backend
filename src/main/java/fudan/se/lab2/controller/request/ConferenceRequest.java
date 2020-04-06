@@ -1,9 +1,9 @@
 package fudan.se.lab2.controller.request;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
- * @author xxx
+ * @author pxy、yh
  * 这个类用来处理会议申请
  */
 public class ConferenceRequest {
@@ -19,16 +19,16 @@ public class ConferenceRequest {
     private String conferenceFullName;
 
     // 举办时间
-    private Date conferenceTime;
+    private LocalDate conferenceTime;
 
     // 举办地点
     private String conferenceLocation;
 
     // 投稿截止日期
-    private Date contributeEndTime;
+    private LocalDate contributeEndTime;
 
     // 评审结果发布日期
-    private Date resultReleaseTime;
+    private LocalDate resultReleaseTime;
 
     // empty constructor
     public ConferenceRequest() {
@@ -36,11 +36,12 @@ public class ConferenceRequest {
 
     // constructor
     public ConferenceRequest(String token, String conferenceAbbreviation, String conferenceFullName,
-                             Date conferenceTime, String conferenceLocation, Date contributeEndTime,
-                             Date resultReleaseTime) {
+                             LocalDate conferenceTime, String conferenceLocation, LocalDate contributeEndTime,
+                             LocalDate resultReleaseTime) {
         this.token = token;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
+        // 这里时间不对，应该有个“时差”的关系？？？
         this.conferenceTime = conferenceTime;
         this.conferenceLocation = conferenceLocation;
         this.contributeEndTime = contributeEndTime;
@@ -55,11 +56,11 @@ public class ConferenceRequest {
         return token;
     }
 
-    public Date getResultReleaseTime() {
+    public LocalDate getResultReleaseTime() {
         return resultReleaseTime;
     }
 
-//    public void setResultReleaseTime(Date resultReleaseTime) {
+//    public void setResultReleaseTime(LocalDate resultReleaseTime) {
 //        this.resultReleaseTime = resultReleaseTime;
 //    }
 
@@ -67,11 +68,11 @@ public class ConferenceRequest {
 //        this.conferenceFullName = conferenceFullName;
 //    }
 
-    public Date getConferenceTime() {
+    public LocalDate getConferenceTime() {
         return conferenceTime;
     }
 
-//    public void setConferenceTime(Date conferenceTime) {
+//    public void setConferenceTime(LocalDate conferenceTime) {
 //        this.conferenceTime = conferenceTime;
 //    }
 
@@ -84,11 +85,11 @@ public class ConferenceRequest {
 //    }
 
 
-    public Date getContributeEndTime() {
+    public LocalDate getContributeEndTime() {
         return contributeEndTime;
     }
 
-//    public void setContributeEndTime(Date contributeEndTime) {
+//    public void setContributeEndTime(LocalDate contributeEndTime) {
 //        this.contributeEndTime = contributeEndTime;
 //    }
 

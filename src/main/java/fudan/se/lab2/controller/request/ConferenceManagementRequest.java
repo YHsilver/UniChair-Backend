@@ -7,7 +7,7 @@ package fudan.se.lab2.controller.request;
 
 public class ConferenceManagementRequest {
 
-    private enum Name {LOOK, CHANGESTATE}
+    private enum Name {LOOK, CHANGESTATUS}
 
     private Name name;
 

@@ -21,9 +21,23 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(unique = true)
-    private String username; // 'username' is better than 'name'
+    // 'username' is better than 'name'
+    private String username;
+
+    // password
     private String password;
+
+    // fullName
     private String fullName;
+
+    // unit
+    private String unit;
+
+    // area
+    private String area;
+
+    // email
+    private String email;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
@@ -35,10 +49,14 @@ public class User implements UserDetails {
     }
 
     // constructor
-    public User(String username, String password, String fullName, Set<Authority> authorities) {
+    public User(String username, String password, String fullName, String unit, String area, String email,
+                Set<Authority> authorities) {
         this.username = username;
         this.password = password;
         this.fullName = fullName;
+        this.unit = unit;
+        this.area = area;
+        this.email = email;
         this.authorities = authorities;
     }
 

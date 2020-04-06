@@ -44,6 +44,10 @@ public class AuthService {
     // token
     private JwtTokenUtil tokenUtil;
 
+    public AuthService() {
+
+    }
+
     // constructor
     @Autowired
     public AuthService(UserRepository userRepository, AuthorityRepository authorityRepository,
@@ -55,18 +59,24 @@ public class AuthService {
         this.tokenUtil = tokenUtil;
     }
 
-    // 回应register的响应
+    /**
+     * check whether the register request can be successful
+     *
+     * @param request the register request
+     * @return return new User if success, one is "token" and the other is "userDetails"
+     * @throws UsernameHasBeenRegisteredException if username has been registered
+     */
     public User register(RegisterRequest request) {
-        // TODO: Implement the function.
         String username = request.getUsername();
-        User existUser = userRepository.findByUsername(username);
-        if (existUser != null) {
+        String fullName = request.getFullname();
+        String unit = request.getUnit();
+        String area = request.getArea();
+        String email = request.getEmail();
+        if (userRepository.findByUsername(username) != null) {
             throw new UsernameHasBeenRegisteredException(username);
         }
-        User newUser = new User(username, passwordEncoder.encode(request.getPassword()),
-                request.getFullname(), new HashSet<>());
-        // 'newUser' is better than 'user'
-
+        User newUser = new User(username, passwordEncoder.encode(request.getPassword()), fullName, unit, area, email,
+                new HashSet<>());
         userRepository.save(newUser);
         return newUser;
     }
@@ -97,6 +107,12 @@ public class AuthService {
         }
     }
 
+    /**
+     * check whether the ConferenceRequest request can be successful
+     *
+     * @param request the ConferenceRequest request
+     * @return return a successful message if success
+     */
     // 设置会议
     public String setUpConference(ConferenceRequest request) {
         Conference newConference = new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
@@ -112,18 +128,24 @@ public class AuthService {
         return "{\"message\":\"conference application submit success\"}";
     }
 
+    /**
+     * check whether the ConferenceManagement request can be successful
+     *
+     * @param request the ConferenceManagement request
+     * @return return conference's state if request is "changeStatus"
+     */
     // 管理员处理会议
     public String ConferenceManagement(ConferenceManagementRequest request) {
         String name = request.getName();
         switch (name) {
-            case "LOOK": {
+            case "lookUp": {
                 System.out.println(this.conferenceRepository.findAll());
                 return this.conferenceRepository.findAll().toString();
             }
-            case "CHANGESTATE": {
+            case "changeStatus": {
                 Conference conference = this.conferenceRepository.findByConferenceId(Long.parseLong(request.getContent()[0]));
-                conference.setStage(Conference.Stage.valueOf(request.getContent()[1]));
-                return null;
+                conference.setStatus(Conference.Status.valueOf(request.getContent()[1]));
+                return conference.getConferenceId() + conference.getStatus();
             }
             default: {
                 return null;
