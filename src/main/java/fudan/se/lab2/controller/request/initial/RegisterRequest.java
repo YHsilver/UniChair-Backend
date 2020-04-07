@@ -1,4 +1,4 @@
-package fudan.se.lab2.controller.request;
+package fudan.se.lab2.controller.request.initial;
 
 /**
  * @author LBW
@@ -60,11 +60,11 @@ public class RegisterRequest {
 //        this.password = password;
 //    }
 
-    public String getFullname() {
+    public String getFullName() {
         return fullName;
     }
 
-//    public void setFullname(String fullName) {
+//    public void setFullName(String fullName) {
 //        this.fullName = fullName;
 //    }
 
@@ -93,7 +93,7 @@ public class RegisterRequest {
     public String toString() {
         return "\nusername: " + this.getUsername()
                 + "\npassword: " + this.getPassword()
-                + "\nfullName: " + this.getFullname()
+                + "\nfullName: " + this.getFullName()
                 + "\nunit: " + this.getUnit()
                 + "\narea: " + this.getArea()
                 + "\nemail: " + this.getEmail();

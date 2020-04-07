@@ -17,8 +17,6 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                //TODO: If you encounter some Cross-Domain problems（跨域问题）, Maybe you can do something here.
-
                 //添加映射路径
                 registry.addMapping("/**")
                         //放行哪些原始域

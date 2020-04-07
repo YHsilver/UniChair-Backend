@@ -32,7 +32,7 @@ public class Paper {
 
     // constructor
     public Paper(String Author, Long conferenceId, String title, String summary, Long fileId) {
-        this.conferenceId = conferenceId;
+        this.Author = Author;
         this.conferenceId = conferenceId;
         this.title = title;
         this.summary = summary;

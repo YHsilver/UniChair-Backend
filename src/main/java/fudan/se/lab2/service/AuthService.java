@@ -1,8 +1,9 @@
 package fudan.se.lab2.service;
 
-import fudan.se.lab2.controller.request.ConferenceManagementRequest;
-import fudan.se.lab2.controller.request.ConferenceRequest;
-import fudan.se.lab2.controller.request.RegisterRequest;
+import fudan.se.lab2.controller.request.admin.ChangeConferenceStatusRequest;
+import fudan.se.lab2.controller.request.admin.ShowConferenceRequest;
+import fudan.se.lab2.controller.request.initial.RegisterRequest;
+import fudan.se.lab2.controller.request.user.SetUpConferenceRequest;
 import fudan.se.lab2.domain.Conference;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.exception.LoginAndRegisterException.PasswordNotCorrectException;
@@ -68,7 +69,7 @@ public class AuthService {
      */
     public User register(RegisterRequest request) {
         String username = request.getUsername();
-        String fullName = request.getFullname();
+        String fullName = request.getFullName();
         String unit = request.getUnit();
         String area = request.getArea();
         String email = request.getEmail();
@@ -114,10 +115,14 @@ public class AuthService {
      * @return return a successful message if success
      */
     // 设置会议
-    public String setUpConference(ConferenceRequest request) {
+    public String setUpConference(SetUpConferenceRequest request) {
+        // 这里时间不对，应该有个“时差”的关系？？？
+        // TODO
         Conference newConference = new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
-                request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceTime(),
-                request.getConferenceLocation(), request.getContributeEndTime(), request.getResultReleaseTime()
+                request.getConferenceAbbreviation(), request.getConferenceFullName(),
+                request.getConferenceTime().plusDays(1L),
+                request.getConferenceLocation(), request.getContributeEndTime().plusDays(1L),
+                request.getResultReleaseTime().plusDays(1L)
         );
         User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         user.getConferencesId().add(newConference.getConferenceId());
@@ -129,28 +134,30 @@ public class AuthService {
     }
 
     /**
-     * check whether the ConferenceManagement request can be successful
+     * check whether the AdminShowConference request can be successful
      *
-     * @param request the ConferenceManagement request
-     * @return return conference's state if request is "changeStatus"
+     * @param request the AdminRequest request
+     * @return return conferences' lists
      */
-    // 管理员处理会议
-    public String ConferenceManagement(ConferenceManagementRequest request) {
-        String name = request.getName();
-        switch (name) {
-            case "lookUp": {
-                System.out.println(this.conferenceRepository.findAll());
-                return this.conferenceRepository.findAll().toString();
-            }
-            case "changeStatus": {
-                Conference conference = this.conferenceRepository.findByConferenceId(Long.parseLong(request.getContent()[0]));
-                conference.setStatus(Conference.Status.valueOf(request.getContent()[1]));
-                return conference.getConferenceId() + conference.getStatus();
-            }
-            default: {
-                return null;
-            }
-        }
+    // 管理员查看会议
+    public String ShowConference(ShowConferenceRequest request) {
+        Conference.Status status = request.getRequestContent();
+        // TODO
+        System.out.println(this.conferenceRepository.findAll());
+        return this.conferenceRepository.findAll().toString();
+    }
+
+    /**
+     * check whether the Admin changeConferenceStatus request can be successful
+     *
+     * @param request the changeConferenceStatus request
+     * @return return conference's ID & Status
+     */
+    // 管理员修改会议状态
+    public String changeConferenceStatus(ChangeConferenceStatusRequest request) {
+        Conference thisConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
+        thisConference.setStatus(request.getChangedStatus());
+        return thisConference.getConferenceId() + thisConference.getStatus();
     }
 
 }

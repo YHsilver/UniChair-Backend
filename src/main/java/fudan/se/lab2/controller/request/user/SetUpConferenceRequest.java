@@ -1,4 +1,6 @@
-package fudan.se.lab2.controller.request;
+package fudan.se.lab2.controller.request.user;
+
+import fudan.se.lab2.controller.request.UserRequest;
 
 import java.time.LocalDate;
 
@@ -6,7 +8,7 @@ import java.time.LocalDate;
  * @author pxy、yh
  * 这个类用来处理会议申请
  */
-public class ConferenceRequest {
+public class SetUpConferenceRequest extends UserRequest {
 
     // 7个参数（含token）
     // token
@@ -31,17 +33,16 @@ public class ConferenceRequest {
     private LocalDate resultReleaseTime;
 
     // empty constructor
-    public ConferenceRequest() {
+    public SetUpConferenceRequest() {
     }
 
     // constructor
-    public ConferenceRequest(String token, String conferenceAbbreviation, String conferenceFullName,
-                             LocalDate conferenceTime, String conferenceLocation, LocalDate contributeEndTime,
-                             LocalDate resultReleaseTime) {
+    public SetUpConferenceRequest(String token, String conferenceAbbreviation, String conferenceFullName,
+                                  LocalDate conferenceTime, String conferenceLocation, LocalDate contributeEndTime,
+                                  LocalDate resultReleaseTime) {
         this.token = token;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
-        // 这里时间不对，应该有个“时差”的关系？？？
         this.conferenceTime = conferenceTime;
         this.conferenceLocation = conferenceLocation;
         this.contributeEndTime = contributeEndTime;

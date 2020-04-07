@@ -1,4 +1,4 @@
-package fudan.se.lab2.controller.request;
+package fudan.se.lab2.controller.request.initial;
 
 /**
  * @author LBW

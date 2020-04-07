@@ -1,6 +1,11 @@
 package fudan.se.lab2.controller;
 
-import fudan.se.lab2.controller.request.*;
+import fudan.se.lab2.controller.request.AdminRequest;
+import fudan.se.lab2.controller.request.admin.ChangeConferenceStatusRequest;
+import fudan.se.lab2.controller.request.admin.ShowConferenceRequest;
+import fudan.se.lab2.controller.request.initial.LoginRequest;
+import fudan.se.lab2.controller.request.initial.RegisterRequest;
+import fudan.se.lab2.controller.request.user.SetUpConferenceRequest;
 import fudan.se.lab2.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,21 +54,31 @@ public class AuthController {
 
     // 来自 localhost:80/setUpConference 的请求
     @PostMapping("/setUpConference")
-    public ResponseEntity<?> setUpConference(@RequestBody ConferenceRequest request) {
+    public ResponseEntity<?> setUpConference(@RequestBody SetUpConferenceRequest request) {
         logger.debug("setUpConferenceForm: " + request.toString());
         System.out.println("setUpConferenceForm: " + request.toString());
         return ResponseEntity.ok(authService.setUpConference(request));
     }
 
     // 来自 localhost:80/admin 的请求
-    @PostMapping("/admin")
     // 查看申请的会议 or 修改会议状态
-    public ResponseEntity<?> getConferences(@RequestBody ConferenceManagementRequest request) {
+    @PostMapping("/admin")
+    public ResponseEntity<?> getConferences(@RequestBody AdminRequest request) {
         logger.debug("getConferences: " + request.toString());
         System.out.println("getConferences: " + request.toString());
-        return ResponseEntity.ok(authService.ConferenceManagement(request));
+        AdminRequest.Name requestName = request.getRequestName();
+        switch (requestName) {
+            // 查看会议申请
+            case LOOK: {
+                return ResponseEntity.ok(authService.ShowConference((ShowConferenceRequest) request));
+            }
+            case CHANGESTATUS: {
+                return ResponseEntity.ok(authService.changeConferenceStatus((ChangeConferenceStatusRequest) request));
+            }
+            default:
+                return null;
+        }
     }
-
 }
 
 
