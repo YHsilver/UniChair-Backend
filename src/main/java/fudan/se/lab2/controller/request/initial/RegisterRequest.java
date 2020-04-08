@@ -89,14 +89,17 @@ public class RegisterRequest {
 //         this.authorities = authorities;
 //     }
 
+
     @Override
     public String toString() {
-        return "\nusername: " + this.getUsername()
-                + "\npassword: " + this.getPassword()
-                + "\nfullName: " + this.getFullName()
-                + "\nunit: " + this.getUnit()
-                + "\narea: " + this.getArea()
-                + "\nemail: " + this.getEmail();
+        return "RegisterRequest{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", unit='" + unit + '\'' +
+                ", area='" + area + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
 

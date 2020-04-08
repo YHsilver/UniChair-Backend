@@ -39,7 +39,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         logger.debug("RegistrationForm: " + request.toString());
-        System.out.println("RegistrationForm: " + request.toString());
+//        System.out.println("RegistrationForm: " + request.toString());
         return ResponseEntity.ok(authService.register(request));
     }
 
@@ -47,7 +47,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         logger.debug("LoginForm: " + request.toString());
-        System.out.println("LoginForm: " + request.toString());
+//        System.out.println("LoginForm: " + request.toString());
         //ResponseEntity.ok().
         return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
     }
@@ -56,7 +56,7 @@ public class AuthController {
     @PostMapping("/setUpConference")
     public ResponseEntity<?> setUpConference(@RequestBody SetUpConferenceRequest request) {
         logger.debug("setUpConferenceForm: " + request.toString());
-        System.out.println("setUpConferenceForm: " + request.toString());
+//        System.out.println("setUpConferenceForm: " + request.toString());
         return ResponseEntity.ok(authService.setUpConference(request));
     }
 

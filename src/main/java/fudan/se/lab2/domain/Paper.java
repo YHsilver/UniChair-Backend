@@ -68,5 +68,15 @@ public class Paper {
         this.status = status;
     }
 
-
+    @Override
+    public String toString() {
+        return "Paper{" +
+                "Author='" + Author + '\'' +
+                ", conferenceId=" + conferenceId +
+                ", title='" + title + '\'' +
+                ", summary='" + summary + '\'' +
+                ", fileId=" + fileId +
+                ", status=" + status +
+                '}';
+    }
 }

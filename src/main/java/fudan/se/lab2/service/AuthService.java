@@ -114,10 +114,10 @@ public class AuthService {
      * @param request the ConferenceRequest request
      * @return return a successful message if success
      */
-    // 设置会议
+    // 申请会议
     public String setUpConference(SetUpConferenceRequest request) {
+        System.out.println(request.toString());
         // 这里时间不对，应该有个“时差”的关系？？？
-        // TODO
         Conference newConference = new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
                 request.getConferenceAbbreviation(), request.getConferenceFullName(),
                 request.getConferenceTime().plusDays(1L),
@@ -127,7 +127,7 @@ public class AuthService {
         User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         user.getConferencesId().add(newConference.getConferenceId());
         conferenceRepository.save(newConference);
-        System.out.println(newConference.toString());
+//        System.out.println(newConference.toString());
 
         //默认成功
         return "{\"message\":\"conference application submit success\"}";

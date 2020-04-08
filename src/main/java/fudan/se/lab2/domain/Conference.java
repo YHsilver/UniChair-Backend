@@ -49,7 +49,7 @@ public class Conference implements Serializable {
     private Status status;
 
     // 会议阶段：preparation(准备中), contribution(投稿中), reviewing(审稿中), grading(终评中) and ending(审稿结束)
-    public enum Stage {preparation, contribution, reviewing, grading, ending}
+    public enum Stage {PREPARATION, CONTRIBUTION, REVIEWING, GRADING, ENDING}
 
     // 会议阶段
     private Stage stage;
@@ -81,6 +81,11 @@ public class Conference implements Serializable {
         this.conferenceLocation = conferenceLocation;
         this.contributeEndTime = contributeEndTime;
         this.resultReleaseTime = resultReleaseTime;
+        this.status = Status.PENDING;// 初始化都是待审核状态
+        this.stage = Stage.PREPARATION;// 初始化都是准备状态
+        this.authorSet = null;// 还没有人投稿
+        this.reviewerSet = null;// 还没有人成为PC members
+        this.paperList = null;// 还没有人投稿
     }
 
     public Long getConferenceId() {
@@ -195,17 +200,19 @@ public class Conference implements Serializable {
 //        this.resultReleaseTime = resultReleaseTime;
 //    }
 
-    public String toJsonObject() {
+    @Override
+    public String toString() {
         return "Conference{" +
                 "conferenceId=" + conferenceId +
                 ", conferenceAbbreviation='" + conferenceAbbreviation + '\'' +
                 ", conferenceFullName='" + conferenceFullName + '\'' +
                 ", conferenceTime=" + conferenceTime +
                 ", conferenceLocation='" + conferenceLocation + '\'' +
-                ", stage='" + stage + '\'' +
                 ", contributeStartTime=" + contributeStartTime +
                 ", contributeEndTime=" + contributeEndTime +
                 ", resultReleaseTime=" + resultReleaseTime +
+                ", status=" + status +
+                ", stage=" + stage +
                 ", chairMan=" + chairMan +
                 ", authorSet=" + authorSet +
                 ", reviewerSet=" + reviewerSet +

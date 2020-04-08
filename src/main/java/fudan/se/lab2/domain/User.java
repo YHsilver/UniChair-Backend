@@ -42,6 +42,7 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Authority> authorities = new HashSet<>();
 
+    // 会议列表
     private ArrayList<Long> conferencesId = new ArrayList<>();
 
     // empty constructor
@@ -139,4 +140,18 @@ public class User implements UserDetails {
                 '}';
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", unit='" + unit + '\'' +
+                ", area='" + area + '\'' +
+                ", email='" + email + '\'' +
+                ", authorities=" + authorities +
+                ", conferencesId=" + conferencesId +
+                '}';
+    }
 }

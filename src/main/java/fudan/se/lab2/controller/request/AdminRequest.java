@@ -6,6 +6,7 @@ package fudan.se.lab2.controller.request;
  */
 public class AdminRequest {
 
+    // 查看会议、审核会议……
     public static enum Name {LOOK, CHANGESTATUS}
 
     private Name requestName;

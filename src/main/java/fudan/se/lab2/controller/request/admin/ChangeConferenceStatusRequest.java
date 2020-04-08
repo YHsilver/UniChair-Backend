@@ -34,4 +34,13 @@ public class ChangeConferenceStatusRequest extends AdminRequest {
     public Conference.Status getChangedStatus() {
         return changedStatus;
     }
+
+    @Override
+    public String toString() {
+        return "ChangeConferenceStatusRequest{" +
+                "requestName=" + requestName +
+                ", conferenceId=" + conferenceId +
+                ", changedStatus=" + changedStatus +
+                '}';
+    }
 }

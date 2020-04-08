@@ -102,14 +102,17 @@ public class SetUpConferenceRequest extends UserRequest {
 //        this.conferenceAbbreviation = conferenceAbbreviation;
 //    }
 
+
     @Override
     public String toString() {
-        return "\nconferenceAbbreviation: " + this.getConferenceAbbreviation()
-                + "\nconferenceFullName: " + this.getConferenceFullName()
-                + "\nconferenceTime: " + this.getConferenceTime()
-                + "\nconferenceLocation: " + this.getConferenceLocation()
-                + "\ncontributeEndTime: " + this.getContributeEndTime()
-                + "\nresultReleaseTime: " + this.getResultReleaseTime();
+        return "SetUpConferenceRequest{" +
+                "token='" + token + '\'' +
+                ", conferenceAbbreviation='" + conferenceAbbreviation + '\'' +
+                ", conferenceFullName='" + conferenceFullName + '\'' +
+                ", conferenceTime=" + conferenceTime +
+                ", conferenceLocation='" + conferenceLocation + '\'' +
+                ", contributeEndTime=" + contributeEndTime +
+                ", resultReleaseTime=" + resultReleaseTime +
+                '}';
     }
-
 }

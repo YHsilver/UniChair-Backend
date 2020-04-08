@@ -41,6 +41,10 @@ public class LoginRequest {
 
     @Override
     public String toString() {
-        return "\nusername: " + this.getUsername() + "\npassword: " + this.getPassword();
+        return "LoginRequest{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
+
 }
