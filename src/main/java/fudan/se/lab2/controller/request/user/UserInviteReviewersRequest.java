@@ -1,30 +1,28 @@
 package fudan.se.lab2.controller.request.user;
 
-import fudan.se.lab2.controller.request.UserRequest;
-
 /**
  * @author hyf
  * 这个类用于邀请PC members
  */
 
-public class InviteReviewersRequest extends UserRequest {
+public class UserInviteReviewersRequest {
 
-    private Name name = Name.INVITE;
+    private String name = "INVITE";
 
     private String username;
 
     // empty constructor
-    public InviteReviewersRequest() {
+    public UserInviteReviewersRequest() {
         super();
 
     }
 
     // constructor
-    public InviteReviewersRequest(String username) {
+    public UserInviteReviewersRequest(String username) {
         this.username = username;
     }
 
-    public Name getName() {
+    public String getName() {
         return name;
     }
 
@@ -34,7 +32,7 @@ public class InviteReviewersRequest extends UserRequest {
 
     @Override
     public String toString() {
-        return "InvitePCMembersRequest{" +
+        return "UserInviteReviewersRequest{" +
                 "name=" + name +
                 ", username='" + username + '\'' +
                 '}';

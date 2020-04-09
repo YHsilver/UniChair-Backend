@@ -1,6 +1,5 @@
 package fudan.se.lab2.controller.request.user;
 
-import fudan.se.lab2.controller.request.UserRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -8,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 这个类用于提交投稿
  */
 
-public class SubmitPaperRequest extends UserRequest {
+public class UserSubmitPaperRequest {
 
     // 投稿人
     private String author;
@@ -26,11 +25,11 @@ public class SubmitPaperRequest extends UserRequest {
     private MultipartFile file;
 
     // empty constructor
-    public SubmitPaperRequest() {
+    public UserSubmitPaperRequest() {
     }
 
     // constructor
-    public SubmitPaperRequest(String author, Long conferenceId, String title, String summary, MultipartFile file) {
+    public UserSubmitPaperRequest(String author, Long conferenceId, String title, String summary, MultipartFile file) {
         this.author = author;
         this.conferenceId = conferenceId;
         this.title = title;
@@ -60,7 +59,7 @@ public class SubmitPaperRequest extends UserRequest {
 
     @Override
     public String toString() {
-        return "SubmitPaperRequest{" +
+        return "UserSubmitPaperRequest{" +
                 "author='" + author + '\'' +
                 ", conferenceId=" + conferenceId +
                 ", title='" + title + '\'' +

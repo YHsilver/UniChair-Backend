@@ -1,14 +1,13 @@
 package fudan.se.lab2.controller.request.user;
 
-import fudan.se.lab2.controller.request.UserRequest;
-
 import java.time.LocalDate;
 
 /**
  * @author pxy、yh
  * 这个类用来处理会议申请
  */
-public class SetUpConferenceRequest extends UserRequest {
+
+public class UserSetUpConferenceRequest {
 
     // 7个参数（含token）
     // token
@@ -33,13 +32,13 @@ public class SetUpConferenceRequest extends UserRequest {
     private LocalDate resultReleaseTime;
 
     // empty constructor
-    public SetUpConferenceRequest() {
+    public UserSetUpConferenceRequest() {
     }
 
     // constructor
-    public SetUpConferenceRequest(String token, String conferenceAbbreviation, String conferenceFullName,
-                                  LocalDate conferenceTime, String conferenceLocation, LocalDate contributeEndTime,
-                                  LocalDate resultReleaseTime) {
+    public UserSetUpConferenceRequest(String token, String conferenceAbbreviation, String conferenceFullName,
+                                      LocalDate conferenceTime, String conferenceLocation, LocalDate contributeEndTime,
+                                      LocalDate resultReleaseTime) {
         this.token = token;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
@@ -105,7 +104,7 @@ public class SetUpConferenceRequest extends UserRequest {
 
     @Override
     public String toString() {
-        return "SetUpConferenceRequest{" +
+        return "UserSetUpConferenceRequest{" +
                 "token='" + token + '\'' +
                 ", conferenceAbbreviation='" + conferenceAbbreviation + '\'' +
                 ", conferenceFullName='" + conferenceFullName + '\'' +

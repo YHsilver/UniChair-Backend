@@ -62,5 +62,9 @@
 
   - 会议审核（管理员）：管理员查看会议仓库 ConferenceRepertories 中的会议列表，决定每个会议的状态 `public static enum Status {PENDING, PASS, REJECT}`
 
-* 一些方法
+- 一些方法
   - 由 token 获取用户名： `userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()))` （因为用户名是唯一的，而 token 在每次登录的时候都会有一映射，所以可以获得）
+
+## 待做
+
+- 引入 MySQL

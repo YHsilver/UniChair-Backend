@@ -1,6 +1,6 @@
 package fudan.se.lab2.service;
 
-import fudan.se.lab2.controller.request.initial.RegisterRequest;
+import fudan.se.lab2.controller.request.auth.RegisterRequest;
 import fudan.se.lab2.domain.Authority;
 import fudan.se.lab2.domain.User;
 import org.junit.jupiter.api.Test;

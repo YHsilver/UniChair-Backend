@@ -1,6 +1,6 @@
 package fudan.se.lab2.controller.request;
 
-import fudan.se.lab2.controller.request.user.SetUpConferenceRequest;
+import fudan.se.lab2.controller.request.user.UserSetUpConferenceRequest;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ConferenceRequestTest {
 
     // suppose that 'gaokao' is a big meeting
-    private SetUpConferenceRequest conferenceRequest = new SetUpConferenceRequest("token", "conferenceAbbreviation",
+    private UserSetUpConferenceRequest conferenceRequest = new UserSetUpConferenceRequest("token", "conferenceAbbreviation",
             "conferenceFullName",
             LocalDate.of(2020, 7, 7), "conferenceLocation", LocalDate.of(2020, 7, 8),
             LocalDate.of(2020, 7, 9));

@@ -1,6 +1,5 @@
-package fudan.se.lab2.controller.request.admin;
+package fudan.se.lab2.controller.request.user;
 
-import fudan.se.lab2.controller.request.AdminRequest;
 import fudan.se.lab2.domain.Conference;
 
 /**
@@ -8,18 +7,18 @@ import fudan.se.lab2.domain.Conference;
  * 这个类用于获取会议列表
  */
 
-public class ShowConferenceRequest extends AdminRequest {
+public class UserGetConferenceRequest   {
 
-    private AdminRequest.Name name = AdminRequest.Name.LOOK;
+    private String name = "LOOK";
 
     private Conference.Status requestContent;
 
     // empty constructor
-    public ShowConferenceRequest() {
+    public UserGetConferenceRequest() {
     }
 
     // constructor
-    public ShowConferenceRequest(Conference.Status requestContent) {
+    public UserGetConferenceRequest(Conference.Status requestContent) {
         this.requestContent = requestContent;
     }
 
@@ -29,7 +28,7 @@ public class ShowConferenceRequest extends AdminRequest {
 
     @Override
     public String toString() {
-        return "ShowConferenceRequest{" +
+        return "UserGetConferenceRequest{" +
                 "name=" + name +
                 ", requestContent=" + requestContent +
                 '}';

@@ -41,13 +41,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // TODO: you need to configure your http security. Remember to read the JavaDoc carefully.
+        // 这里！解决跨域问题！！！
         // We dont't need CSRF for this project.
         http.cors().and().csrf().disable()
                 // Make sure we use stateless session; session won't be used to store user's state.
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/welcome", "/login", "/register", "/setUpConference").permitAll()
+                .antMatchers("/admin/*", "/login", "/register", "/setUpConference").permitAll()
                 .anyRequest().authenticated();
 
 //      Here we use JWT(Json Web Token) to authenticate the user.

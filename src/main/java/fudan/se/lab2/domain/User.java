@@ -137,6 +137,7 @@ public class User implements UserDetails {
                 "\"id\":" + id +
                 ", \"username\":\"" + username + '\"' +
                 ", \"fullName\":\"" + fullName + '\"' +
+                ", \"email\":\"" + email + '\"' +
                 '}';
     }
 

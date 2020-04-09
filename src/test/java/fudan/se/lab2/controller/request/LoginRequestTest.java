@@ -1,6 +1,6 @@
 package fudan.se.lab2.controller.request;
 
-import fudan.se.lab2.controller.request.initial.LoginRequest;
+import fudan.se.lab2.controller.request.auth.LoginRequest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
