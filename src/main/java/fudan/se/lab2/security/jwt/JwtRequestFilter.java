@@ -41,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String token = request.getHeader("token");
         //System.out.println("[URI]: " + request.getRequestURI() + " [token]: " + token);
         if (token == null) {
-            response.sendRedirect("http://localhost:80/login");
+            response.sendRedirect("http://localhost:80/index");
             return;
         }
         // check whether the token is
@@ -51,7 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException ex) {
             // TODO logger
 //            System.out.println("[" + ex.getClaims().getSubject() + "] token out of time");
-            response.sendRedirect("http://localhost:80/login");
+            response.sendRedirect("http://localhost:80/index");
             return;
         }
 //        System.out.println("[" + username + "] token access");

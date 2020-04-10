@@ -7,20 +7,17 @@ import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
-import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author LBW
  * 这个类是具体响应类
  * “响应服务”
  */
-@Service
 
+@Service
 public class AdminService {
 
     // 用户仓库
@@ -61,16 +58,17 @@ public class AdminService {
      * @return return conferences' lists
      */
     public String ShowConference(AdminGetConferenceRequest request) {
-        Conference.Status status = request.getRequestContent();
+//        Conference.Status status = Conference.Status.valueOf(request.getRequestContent());
+//        System.out.println(status);
         // TODO
 //        System.out.println(this.conferenceRepository.findAll());
-
-        Iterable<Conference> conferences = this.conferenceRepository.findAll();
-        List<Conference> list = Lists.newArrayList();
-        conferences.forEach(single -> {
-            list.add(single);
-        });
-        return conferences.toString();
+        return request.toString();
+//        Iterable<Conference> conferences = this.conferenceRepository.findAll();
+//        List<Conference> list = Lists.newArrayList();
+//        conferences.forEach(single -> {
+//            list.add(single);
+//        });
+//        return conferences.toString();
     }
 
     /**

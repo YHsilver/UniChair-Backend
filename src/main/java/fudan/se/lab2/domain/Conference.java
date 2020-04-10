@@ -42,8 +42,8 @@ public class Conference implements Serializable {
     // 评审结果发布日期
     private LocalDate resultReleaseTime;
 
-    // 会议申请状态类别:PENDING(待审核), PASS(通过), REJECT(驳回),ALL(所有)
-    public static enum Status {PENDING, PASS, REJECT, ALL}
+    // 会议申请状态类别:PENDING(待审核), PASS(通过), REJECT(驳回)
+    public enum Status {PENDING, PASS, REJECT}
 
     // 会议申请状态
     private Status status;

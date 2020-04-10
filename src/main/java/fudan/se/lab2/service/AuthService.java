@@ -22,8 +22,8 @@ import java.util.Map;
  * 这个类是具体响应类
  * “响应服务”
  */
-@Service
 
+@Service
 public class AuthService {
 
     // 用户仓库

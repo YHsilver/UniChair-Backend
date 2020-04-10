@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/setUpConference")
     public ResponseEntity<?> setUpConference(@RequestBody UserSetUpConferenceRequest request) {
         logger.debug("setUpConferenceForm: " + request.toString());
-//        System.out.println("setUpConferenceForm: " + request.toString());
+        System.out.println(request);
         return ResponseEntity.ok(userService.setUpConference(request));
     }
 

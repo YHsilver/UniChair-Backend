@@ -56,7 +56,6 @@ public class UserService {
      * @return return a successful message if success
      */
     public String setUpConference(UserSetUpConferenceRequest request) {
-        System.out.println(request.toString());
         // 这里时间不对，应该有个“时差”的关系？？？
         Conference newConference = new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
                 request.getConferenceAbbreviation(), request.getConferenceFullName(),
@@ -67,8 +66,6 @@ public class UserService {
         User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         user.getConferencesId().add(newConference.getConferenceId());
         conferenceRepository.save(newConference);
-//        System.out.println(newConference.toString());
-
         //默认成功
         return "{\"message\":\"conference application submit success!\"}";
     }
