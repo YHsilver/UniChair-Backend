@@ -16,6 +16,7 @@ public class Authority implements GrantedAuthority {
 
     private static final long serialVersionUID = -8974777274465208640L;
 
+    // 3个属性
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,11 +28,17 @@ public class Authority implements GrantedAuthority {
     @JsonIgnore
     private Set<User> users;
 
+    // empty constructor
     public Authority() {
     }
 
+    // constructor
     public Authority(String authority) {
         this.authority = authority;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
@@ -39,8 +46,8 @@ public class Authority implements GrantedAuthority {
         return authority;
     }
 
-    public Long getId() {
-        return id;
+    public Set<User> getUsers() {
+        return users;
     }
 
     public void setId(Long id) {
@@ -49,10 +56,6 @@ public class Authority implements GrantedAuthority {
 
     public void setAuthority(String authority) {
         this.authority = authority;
-    }
-
-    public Set<User> getUsers() {
-        return users;
     }
 
     public void setUsers(Set<User> users) {

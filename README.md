@@ -64,10 +64,12 @@
 
 - 一些方法
   - 由 token 获取用户名： `userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()))` （因为用户名是唯一的，而 token 在每次登录的时候都会有一映射，所以可以获得）
+  - getter 和 setter 注入灵魂！
 
 ## 待做
 
 - 引入 MySQL
+- 多次错误冻结账号——管理员解冻
 
 ## 接口说明
 

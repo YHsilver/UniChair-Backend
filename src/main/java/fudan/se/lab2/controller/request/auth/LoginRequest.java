@@ -6,7 +6,7 @@ package fudan.se.lab2.controller.request.auth;
  */
 public class LoginRequest {
 
-    // 2个参数
+    // 2个属性
     // user name
     private String username;
 
@@ -27,17 +27,17 @@ public class LoginRequest {
         return username;
     }
 
-//    public void setUsername(String username) {
-//        this.username = username;
-//    }
-
     public String getPassword() {
         return password;
     }
 
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public String toString() {

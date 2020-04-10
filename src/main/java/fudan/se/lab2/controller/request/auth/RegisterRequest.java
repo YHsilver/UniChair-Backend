@@ -1,5 +1,9 @@
 package fudan.se.lab2.controller.request.auth;
 
+import fudan.se.lab2.domain.Authority;
+
+import java.util.Set;
+
 /**
  * @author LBW
  * 这个类用来处理注册申请
@@ -7,7 +11,7 @@ package fudan.se.lab2.controller.request.auth;
 
 public class RegisterRequest {
 
-    // 6个属性
+    // 7个属性
     // user name
     private String username;
 
@@ -27,7 +31,7 @@ public class RegisterRequest {
     private String email;
 
     // authorities
-//    private Set<Authority> authorities;
+    private Set<Authority> authorities;
 
     // empty constructor
     public RegisterRequest() {
@@ -48,26 +52,13 @@ public class RegisterRequest {
         return username;
     }
 
-//    public void setUsername(String username) {
-//        this.username = username;
-//    }
-
     public String getPassword() {
         return password;
     }
 
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-
     public String getFullName() {
         return fullName;
     }
-
-//    public void setFullName(String fullName) {
-//        this.fullName = fullName;
-//    }
-
 
     public String getUnit() {
         return unit;
@@ -81,14 +72,37 @@ public class RegisterRequest {
         return email;
     }
 
-//    public Set<Authority> getAuthorities() {
-//        return authorities;
-//    }
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
 
-//     public void setAuthorities(Set<String> authorities) {
-//         this.authorities = authorities;
-//     }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
 
     @Override
     public String toString() {

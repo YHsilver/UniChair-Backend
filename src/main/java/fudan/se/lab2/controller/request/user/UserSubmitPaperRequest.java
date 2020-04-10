@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserSubmitPaperRequest {
 
+    // 5个属性
     // 投稿人
     private String author;
 
@@ -55,6 +56,26 @@ public class UserSubmitPaperRequest {
 
     public MultipartFile getFile() {
         return file;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 
     @Override

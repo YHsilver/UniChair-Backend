@@ -7,8 +7,9 @@ import fudan.se.lab2.domain.Conference;
  * 这个类用于管理员修改会议状态
  */
 
-public class AdminChangeConferenceStatusRequest   {
+public class AdminChangeConferenceStatusRequest {
 
+    // 3个属性
     private String name = "CHANGESTATUS";
 
     private Long id;
@@ -26,12 +27,28 @@ public class AdminChangeConferenceStatusRequest   {
         this.status = status;
     }
 
-    public Long getConferenceId() {
+    public String getName() {
+        return name;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public Conference.Status getChangedStatus() {
+    public Conference.Status getStatus() {
         return status;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setStatus(Conference.Status status) {
+        this.status = status;
     }
 
     @Override

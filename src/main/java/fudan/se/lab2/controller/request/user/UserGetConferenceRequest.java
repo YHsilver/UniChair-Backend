@@ -7,8 +7,9 @@ import fudan.se.lab2.domain.Conference;
  * 这个类用于获取会议列表
  */
 
-public class UserGetConferenceRequest   {
+public class UserGetConferenceRequest {
 
+    // 2个属性
     private String name = "LOOK";
 
     private Conference.Status requestContent;
@@ -22,8 +23,20 @@ public class UserGetConferenceRequest   {
         this.requestContent = requestContent;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Conference.Status getRequestContent() {
         return requestContent;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRequestContent(Conference.Status requestContent) {
+        this.requestContent = requestContent;
     }
 
     @Override

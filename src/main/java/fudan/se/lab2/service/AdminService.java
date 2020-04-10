@@ -78,9 +78,9 @@ public class AdminService {
      * @return return conference's ID & Status
      */
     public String changeConferenceStatus(AdminChangeConferenceStatusRequest request) {
-        Conference thisConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
-        thisConference.setStatus(request.getChangedStatus());
-        return thisConference.getConferenceId() + thisConference.getStatus();
+        Conference thisConference = this.conferenceRepository.findByConferenceId(request.getId());
+        thisConference.setStatus(request.getStatus());
+        return thisConference.getConferenceId().toString() + thisConference.getStage();
     }
 
 }

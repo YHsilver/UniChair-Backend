@@ -16,6 +16,7 @@ import java.util.Set;
 @Entity
 public class Conference implements Serializable {
 
+    // 14个属性？？？这个类要拆
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     // 会议ID
@@ -92,113 +93,113 @@ public class Conference implements Serializable {
         return conferenceId;
     }
 
-//    public void setConferenceId(Long conferenceId) {
-//        this.conferenceId = conferenceId;
-//    }
+    public Status getStatus() {
+        return status;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public LocalDate getConferenceTime() {
+        return conferenceTime;
+    }
+
+    public LocalDate getContributeEndTime() {
+        return contributeEndTime;
+    }
 
     public String getConferenceAbbreviation() {
         return conferenceAbbreviation;
     }
 
-//    public void setConferenceAbbreviation(String conferenceAbbreviation) {
-//        this.conferenceAbbreviation = conferenceAbbreviation;
-//    }
-
     public String getConferenceFullName() {
         return conferenceFullName;
-    }
-
-//    public void setConferenceFullName(String conferenceFullName) {
-//        this.conferenceFullName = conferenceFullName;
-//    }
-
-    public String getStatus() {
-        return status.toString();
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getStage() {
-        return stage.toString();
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     public LocalDate getContributeStartTime() {
         return contributeStartTime;
     }
 
-//    public void setContributeStartTime(LocalDate contributeStartTime) {
-//        this.contributeStartTime = contributeStartTime;
-//    }
-
-    public LocalDate getContributeEndTime() {
-        return contributeEndTime;
+    public String getConferenceLocation() {
+        return conferenceLocation;
     }
-
-//    public void setContributeEndTime(LocalDate contributeEndTime) {
-//        this.contributeEndTime = contributeEndTime;
-//    }
 
     public User getChairMan() {
         return chairMan;
     }
 
-//    public void setChairMan(User chairMan) {
-//        this.chairMan = chairMan;
-//    }
+    public LocalDate getResultReleaseTime() {
+        return resultReleaseTime;
+    }
 
     public Set<User> getAuthorSet() {
         return authorSet;
     }
 
-//    public void setAuthorSet(Set<User> authorSet) {
-//        this.authorSet = authorSet;
-//    }
-
     public Set<User> getReviewerSet() {
         return reviewerSet;
     }
-
-//    public void setReviewerSet(Set<User> reviewerSet) {
-//        this.reviewerSet = reviewerSet;
-//    }
 
     public ArrayList<Paper> getPaperList() {
         return paperList;
     }
 
-//    public void setPaperList(ArrayList<Paper> paperList) {
-//        this.paperList = paperList;
-//    }
-
-    public LocalDate getConferenceTime() {
-        return conferenceTime;
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
     }
 
-//    public void setConferenceTime(Date conferenceTime) {
-//        this.conferenceTime = conferenceTime;
-//    }
-
-    public String getConferenceLocation() {
-        return conferenceLocation;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-//    public void setConferenceLocation(String conferenceLocation) {
-//        this.conferenceLocation = conferenceLocation;
-//    }
-
-    public LocalDate getResultReleaseTime() {
-        return resultReleaseTime;
+    public void setConferenceAbbreviation(String conferenceAbbreviation) {
+        this.conferenceAbbreviation = conferenceAbbreviation;
     }
 
-//    public void setResultReleaseTime(LocalDate resultReleaseTime) {
-//        this.resultReleaseTime = resultReleaseTime;
-//    }
+    public void setConferenceFullName(String conferenceFullName) {
+        this.conferenceFullName = conferenceFullName;
+    }
+
+    public void setAuthorSet(Set<User> authorSet) {
+        this.authorSet = authorSet;
+    }
+
+    public void setChairMan(User chairMan) {
+        this.chairMan = chairMan;
+    }
+
+    public void setConferenceLocation(String conferenceLocation) {
+        this.conferenceLocation = conferenceLocation;
+    }
+
+    public void setConferenceTime(LocalDate conferenceTime) {
+        this.conferenceTime = conferenceTime;
+    }
+
+    public void setContributeEndTime(LocalDate contributeEndTime) {
+        this.contributeEndTime = contributeEndTime;
+    }
+
+    public void setContributeStartTime(LocalDate contributeStartTime) {
+        this.contributeStartTime = contributeStartTime;
+    }
+
+    public void setPaperList(ArrayList<Paper> paperList) {
+        this.paperList = paperList;
+    }
+
+    public void setResultReleaseTime(LocalDate resultReleaseTime) {
+        this.resultReleaseTime = resultReleaseTime;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public void setReviewerSet(Set<User> reviewerSet) {
+        this.reviewerSet = reviewerSet;
+    }
 
     @Override
     public String toString() {

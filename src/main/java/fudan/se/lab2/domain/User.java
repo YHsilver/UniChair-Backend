@@ -1,10 +1,11 @@
 package fudan.se.lab2.domain;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author LBW
@@ -16,6 +17,7 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -6140085056226164016L;
 
+    // 9个属性
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -61,17 +63,33 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
-    public ArrayList<Long> getConferencesId() {
-        return conferencesId;
-    }
-
-    public void setConferencesId(ArrayList<Long> conferencesId) {
-        this.conferencesId = conferencesId;
+    public Long getId() {
+        return id;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public String getUsername() {
+        return username;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     @Override
@@ -80,56 +98,68 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public Set<Authority> getAuthorities() {
+        return authorities;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public ArrayList<Long> getConferencesId() {
+        return conferencesId;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getFullName() {
-        return fullName;
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setConferencesId(ArrayList<Long> conferencesId) {
+        this.conferencesId = conferencesId;
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 
     public String toJsonObject() {

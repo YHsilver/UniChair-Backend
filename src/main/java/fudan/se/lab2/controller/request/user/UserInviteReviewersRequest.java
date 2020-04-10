@@ -7,14 +7,13 @@ package fudan.se.lab2.controller.request.user;
 
 public class UserInviteReviewersRequest {
 
+    // 2个属性
     private String name = "INVITE";
 
     private String username;
 
     // empty constructor
     public UserInviteReviewersRequest() {
-        super();
-
     }
 
     // constructor
@@ -28,6 +27,14 @@ public class UserInviteReviewersRequest {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

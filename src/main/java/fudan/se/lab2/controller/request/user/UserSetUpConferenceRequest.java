@@ -48,59 +48,61 @@ public class UserSetUpConferenceRequest {
         this.resultReleaseTime = resultReleaseTime;
     }
 
-    public String getConferenceFullName() {
-        return conferenceFullName;
-    }
-
     public String getToken() {
         return token;
+    }
+
+    public String getConferenceFullName() {
+        return conferenceFullName;
     }
 
     public LocalDate getResultReleaseTime() {
         return resultReleaseTime;
     }
 
-//    public void setResultReleaseTime(LocalDate resultReleaseTime) {
-//        this.resultReleaseTime = resultReleaseTime;
-//    }
-
-//    public void setConferenceFullName(String conferenceFullName) {
-//        this.conferenceFullName = conferenceFullName;
-//    }
-
     public LocalDate getConferenceTime() {
         return conferenceTime;
     }
-
-//    public void setConferenceTime(LocalDate conferenceTime) {
-//        this.conferenceTime = conferenceTime;
-//    }
 
     public String getConferenceLocation() {
         return conferenceLocation;
     }
 
-//    public void setConferenceLocation(String conferenceLocation) {
-//        this.conferenceLocation = conferenceLocation;
-//    }
-
-
     public LocalDate getContributeEndTime() {
         return contributeEndTime;
     }
-
-//    public void setContributeEndTime(LocalDate contributeEndTime) {
-//        this.contributeEndTime = contributeEndTime;
-//    }
 
     public String getConferenceAbbreviation() {
         return conferenceAbbreviation;
     }
 
-//    public void setConferenceAbbreviation(String conferenceAbbreviation) {
-//        this.conferenceAbbreviation = conferenceAbbreviation;
-//    }
+    public void setToken(String token) {
+        this.token = token;
+    }
 
+    public void setConferenceFullName(String conferenceFullName) {
+        this.conferenceFullName = conferenceFullName;
+    }
+
+    public void setConferenceTime(LocalDate conferenceTime) {
+        this.conferenceTime = conferenceTime;
+    }
+
+    public void setConferenceLocation(String conferenceLocation) {
+        this.conferenceLocation = conferenceLocation;
+    }
+
+    public void setResultReleaseTime(LocalDate resultReleaseTime) {
+        this.resultReleaseTime = resultReleaseTime;
+    }
+
+    public void setContributeEndTime(LocalDate contributeEndTime) {
+        this.contributeEndTime = contributeEndTime;
+    }
+
+    public void setConferenceAbbreviation(String conferenceAbbreviation) {
+        this.conferenceAbbreviation = conferenceAbbreviation;
+    }
 
     @Override
     public String toString() {

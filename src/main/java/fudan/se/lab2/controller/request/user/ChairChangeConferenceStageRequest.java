@@ -8,8 +8,9 @@ import fudan.se.lab2.domain.Conference;
  * 这个类用于 chair 改变会议状态
  */
 
-public class ChairChangeConferenceStageRequest   {
+public class ChairChangeConferenceStageRequest {
 
+    // 3个属性
     private String name = "CHANGESTAGE";
 
     private Long conferenceId;
@@ -27,12 +28,28 @@ public class ChairChangeConferenceStageRequest   {
         this.conferenceId = conferenceId;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public Conference.Stage getChangedStage() {
         return changedStage;
     }
 
     public Long getConferenceId() {
         return conferenceId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
+    }
+
+    public void setChangedStage(Conference.Stage changedStage) {
+        this.changedStage = changedStage;
     }
 
     @Override

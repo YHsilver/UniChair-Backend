@@ -5,6 +5,8 @@ package fudan.se.lab2.domain;
  * 这个类用来处理投稿的论文
  */
 public class Paper {
+
+    // 6个参数
     // 投稿人
     private String Author;
 
@@ -20,11 +22,11 @@ public class Paper {
     // 论文文件 ID
     private Long fileId;
 
-    // 审核状态
-    private Status status;
-
     //审核状态, 审核通过和投稿中
     private enum Status {PASS, REVIEWING}
+
+    // 审核状态
+    private Status status;
 
     // empty constructor
     public Paper() {
@@ -62,6 +64,30 @@ public class Paper {
 
     public Status getStatus() {
         return status;
+    }
+
+    public String getAuthor() {
+        return Author;
+    }
+
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void setAuthor(String author) {
+        Author = author;
+    }
+
+    public void setFileId(Long fileId) {
+        this.fileId = fileId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setStatus(Status status) {
