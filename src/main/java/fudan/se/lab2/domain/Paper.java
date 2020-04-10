@@ -8,7 +8,7 @@ public class Paper {
 
     // 6个参数
     // 投稿人
-    private String Author;
+    private String author;
 
     // 所属会议
     private Long conferenceId;
@@ -33,8 +33,8 @@ public class Paper {
     }
 
     // constructor
-    public Paper(String Author, Long conferenceId, String title, String summary, Long fileId) {
-        this.Author = Author;
+    public Paper(String author, Long conferenceId, String title, String summary, Long fileId) {
+        this.author = author;
         this.conferenceId = conferenceId;
         this.title = title;
         this.summary = summary;
@@ -44,10 +44,6 @@ public class Paper {
 
     public Long getConferenceId() {
         return conferenceId;
-    }
-
-    public String getContributorName() {
-        return Author;
     }
 
     public String getTitle() {
@@ -67,7 +63,7 @@ public class Paper {
     }
 
     public String getAuthor() {
-        return Author;
+        return author;
     }
 
     public void setConferenceId(Long conferenceId) {
@@ -79,7 +75,7 @@ public class Paper {
     }
 
     public void setAuthor(String author) {
-        Author = author;
+        this.author = author;
     }
 
     public void setFileId(Long fileId) {
@@ -97,7 +93,7 @@ public class Paper {
     @Override
     public String toString() {
         return "Paper{" +
-                "Author='" + Author + '\'' +
+                "author='" + author + '\'' +
                 ", conferenceId=" + conferenceId +
                 ", title='" + title + '\'' +
                 ", summary='" + summary + '\'' +
