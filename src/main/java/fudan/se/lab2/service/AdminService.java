@@ -7,13 +7,14 @@ import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
-import org.assertj.core.util.Lists;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static fudan.se.lab2.service.UserService.getConferenceJsonObjects;
 
 /**
  * @author LBW
@@ -63,17 +64,7 @@ public class AdminService {
      */
     public List<JSONObject> ShowConference(AdminGetConferenceRequest request) {
         Conference.Status status = request.getContent();
-        System.out.println(this.conferenceRepository.findAll());
-        Iterable<Conference> conferences = this.conferenceRepository.findAll();
-//        System.out.println(conferences);
-        // conferences list
-        List<JSONObject> list = Lists.newArrayList();
-        conferences.forEach(single -> {
-            if (single.getStatus() == status)
-                list.add(single.toAdminJSON());
-        });
-        System.out.println(list.toString());
-        return list;
+        return getConferenceJsonObjects(status, this.conferenceRepository);
     }
 
     /**
@@ -87,5 +78,5 @@ public class AdminService {
         thisConference.setStatus(request.getStatus());
         return thisConference.getConferenceId().toString() + thisConference.getStage();
     }
-    
+
 }

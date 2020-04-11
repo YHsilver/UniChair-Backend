@@ -3,7 +3,6 @@ package fudan.se.lab2.domain;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ public class User implements UserDetails {
 
     // 9个属性
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
@@ -45,7 +44,8 @@ public class User implements UserDetails {
     private Set<Authority> authorities = new HashSet<>();
 
     // 会议列表
-    private ArrayList<Long> conferenceIds = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<Conference> conferences = new HashSet<>();
 
     // empty constructor
     public User() {
@@ -102,8 +102,8 @@ public class User implements UserDetails {
         return authorities;
     }
 
-    public ArrayList<Long> getConferenceIds() {
-        return conferenceIds;
+    public Set<Conference> getConferences() {
+        return conferences;
     }
 
     public void setUsername(String username) {
@@ -130,8 +130,8 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
-    public void setConferencesId(ArrayList<Long> conferenceIds) {
-        this.conferenceIds = conferenceIds;
+    public void setConferences(Set<Conference> conferences) {
+        this.conferences = conferences;
     }
 
     public void setFullName(String fullName) {
@@ -183,7 +183,7 @@ public class User implements UserDetails {
                 ", area='" + area + '\'' +
                 ", email='" + email + '\'' +
                 ", authorities=" + authorities +
-                ", conferenceIds=" + conferenceIds +
+                ", conferences=" + conferences.toString() +
                 '}';
     }
 
@@ -198,7 +198,7 @@ public class User implements UserDetails {
                 ", area='" + area + '\'' +
                 ", email='" + email + '\'' +
 //                ", authorities=" + authorities +
-//                ", conferenceIds=" + conferenceIds +
+                ", conferences=" + conferences.toString() +
                 '}';
     }
 }

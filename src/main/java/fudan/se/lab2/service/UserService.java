@@ -7,9 +7,13 @@ import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import org.assertj.core.util.Lists;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author LBW
@@ -56,15 +60,17 @@ public class UserService {
      * @return return a successful message if success
      */
     public String setUpConference(UserSetUpConferenceRequest request) {
+        User chairMan = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+//        System.out.println(chairMan);
         // 这里时间不对，应该有个“时差”的关系？？？
-        Conference newConference = new Conference(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
+        Conference newConference = new Conference(chairMan,
                 request.getConferenceAbbreviation(), request.getConferenceFullName(),
                 request.getConferenceTime().plusDays(1L),
                 request.getConferenceLocation(), request.getContributeEndTime().plusDays(1L),
                 request.getResultReleaseTime().plusDays(1L)
         );
-        User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        user.getConferenceIds().add(newConference.getConferenceId());
+//        System.out.println(newConference);
+        chairMan.getConferences().add(newConference);
         conferenceRepository.save(newConference);
         //默认成功
         return "{\"message\":\"conference application submit success!\"}";
@@ -76,11 +82,19 @@ public class UserService {
      * @param request the UserRequest request
      * @return return conferences' lists
      */
-    public String getConference(UserGetConferenceRequest request) {
-        Conference.Status status = request.getRequestContent();
-        // TODO
-        System.out.println(this.conferenceRepository.findAll());
-        return this.conferenceRepository.findAll().toString();
+    public List<JSONObject> getConference(UserGetConferenceRequest request) {
+        Conference.Status status = Conference.Status.PASS;
+        return getConferenceJsonObjects(status, this.conferenceRepository);
+    }
+
+    public static List<JSONObject> getConferenceJsonObjects(Conference.Status status, ConferenceRepository conferenceRepository) {
+        Iterable<Conference> conferences = conferenceRepository.findAll();
+        List<JSONObject> list = Lists.newArrayList();
+        conferences.forEach(single -> {
+            if (single.getStatus() == status)
+                list.add(single.toAdminJSON());
+        });
+        return list;
     }
 
     /**

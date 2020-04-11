@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
  * @author hyf
  * this is a test class for AuthService
  */
+
 class AuthServiceTest {
 
     private AuthService authService = new AuthService();

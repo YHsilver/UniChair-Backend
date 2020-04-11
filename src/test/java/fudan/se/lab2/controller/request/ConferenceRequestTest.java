@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author hyf
  * this is a test class for ConferenceRequest
  */
+
 class ConferenceRequestTest {
 
     // suppose that 'gaokao' is a big meeting

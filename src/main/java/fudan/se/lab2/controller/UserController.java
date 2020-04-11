@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/setUpConference")
     public ResponseEntity<?> setUpConference(@RequestBody UserSetUpConferenceRequest request) {
         logger.debug("setUpConferenceForm: " + request.toString());
-        System.out.println(request);
+//        System.out.println(request);
         return ResponseEntity.ok(userService.setUpConference(request));
     }
 
@@ -43,28 +43,28 @@ public class UserController {
     @PostMapping("/system/getConference")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserGetConferenceRequest request) {
         logger.debug("UserRequest: " + request.toString());
-        System.out.println("UserRequest: " + request.toString());
+//        System.out.println("UserRequest: " + request.toString());
         return ResponseEntity.ok(userService.getConference(request));
     }
 
     @PostMapping("/system/submitPaper")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserSubmitPaperRequest request) {
         logger.debug("UserRequest: " + request.toString());
-        System.out.println("UserRequest: " + request.toString());
+//        System.out.println("UserRequest: " + request.toString());
         return ResponseEntity.ok(userService.submitPaper(request));
     }
 
     @PostMapping("/system/inviteReviewers")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserInviteReviewersRequest request) {
         logger.debug("UserRequest: " + request.toString());
-        System.out.println("UserRequest: " + request.toString());
+//        System.out.println("UserRequest: " + request.toString());
         return ResponseEntity.ok(userService.inviteReviewers(request));
     }
 
     @PostMapping("/system/changeConferenceStatus")
     public ResponseEntity<?> handleUserRequest(@RequestBody ChairChangeConferenceStageRequest request) {
         logger.debug("UserRequest: " + request.toString());
-        System.out.println("UserRequest: " + request.toString());
+//        System.out.println("UserRequest: " + request.toString());
         return ResponseEntity.ok(userService.changeConferenceStatus(request));
     }
 

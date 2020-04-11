@@ -4,6 +4,7 @@ package fudan.se.lab2.controller.request.auth;
  * @author LBW
  * 这个类用来处理登陆申请
  */
+
 public class LoginRequest {
 
     // 2个属性

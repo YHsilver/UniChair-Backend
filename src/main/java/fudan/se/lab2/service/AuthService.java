@@ -81,18 +81,14 @@ public class AuthService {
      */
     public Map<String, Object> login(String username, String rawPassword) {
         if (username == null || rawPassword == null) {
-//            System.out.println("hi");
             throw new UsernameNotFoundException(username == null ? "" : username);
         }
         User currentUser = userRepository.findByUsername(username);
         if (currentUser == null) {
-//            System.out.println("hello");
             throw new UsernameNotFoundException(username);
         } else if (!passwordEncoder.matches(rawPassword, currentUser.getPassword())) {
-//            System.out.println("bye");
             throw new PasswordNotCorrectException(username);
         } else {
-//            System.out.println("haha");
             Map<String, Object> response = new HashMap<>();
             response.put("token", tokenUtil.generateToken(currentUser));
             response.put("userDetails", currentUser.toJsonObject());

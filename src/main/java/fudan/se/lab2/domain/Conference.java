@@ -7,7 +7,6 @@ import org.json.simple.parser.ParseException;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,7 @@ public class Conference implements Serializable {
 
     // 14个属性？？？这个类要拆
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 会议ID
     private Long conferenceId;
 
@@ -69,7 +68,8 @@ public class Conference implements Serializable {
     private Set<User> reviewerSet = new HashSet<>();
 
     // all the papers
-    private ArrayList<Paper> paperList = new ArrayList<Paper>();
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<Paper> paperSet = new HashSet<>();
 
     // empty constructor
     public Conference() {
@@ -89,7 +89,7 @@ public class Conference implements Serializable {
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
         this.authorSet = null;// 还没有人投稿
         this.reviewerSet = null;// 还没有人成为PC members
-        this.paperList = null;// 还没有人投稿
+        this.paperSet = null;// 还没有人投稿
     }
 
     public Long getConferenceId() {
@@ -144,8 +144,8 @@ public class Conference implements Serializable {
         return reviewerSet;
     }
 
-    public ArrayList<Paper> getPaperList() {
-        return paperList;
+    public Set<Paper> getPaperSet() {
+        return paperSet;
     }
 
     public void setConferenceId(Long conferenceId) {
@@ -188,8 +188,8 @@ public class Conference implements Serializable {
         this.contributeStartTime = contributeStartTime;
     }
 
-    public void setPaperList(ArrayList<Paper> paperList) {
-        this.paperList = paperList;
+    public void setPaperSet(Set<Paper> paperSet) {
+        this.paperSet = paperSet;
     }
 
     public void setResultReleaseTime(LocalDate resultReleaseTime) {
@@ -221,7 +221,7 @@ public class Conference implements Serializable {
                 ", chairMan=" + chairMan +
                 ", authorSet=" + authorSet +
                 ", reviewerSet=" + reviewerSet +
-                ", paperList=" + paperList +
+                ", paperSet=" + paperSet.toString() +
                 '}';
     }
 

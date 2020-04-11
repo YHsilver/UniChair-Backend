@@ -1,14 +1,15 @@
-package fudan.se.lab2.controller.request;
+package fudan.se.lab2.controller.request.auth;
 
-import fudan.se.lab2.controller.request.auth.LoginRequest;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * @author hyf
  * this is a test class for LoginRequest
  */
+
 class LoginRequestTest {
 
     private String username1 = "admin";

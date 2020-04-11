@@ -1,14 +1,32 @@
 package fudan.se.lab2.domain;
 
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author hyf
  * 这个类用来处理投稿的论文
  */
-public class Paper {
+
+@Entity
+public class Paper implements Serializable {
 
     // 6个参数
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // 论文文件 ID
+    private Long fileId;
+
     // 投稿人
-    private String author;
+    @ManyToOne
+    private User author;
+
+    // 审稿人
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<User> reviewerSet = new HashSet<>();
 
     // 所属会议
     private Long conferenceId;
@@ -18,9 +36,6 @@ public class Paper {
 
     //摘要
     private String summary;
-
-    // 论文文件 ID
-    private Long fileId;
 
     //审核状态, 审核通过和投稿中
     private enum Status {PASS, REVIEWING}
@@ -33,12 +48,14 @@ public class Paper {
     }
 
     // constructor
-    public Paper(String author, Long conferenceId, String title, String summary, Long fileId) {
+    public Paper(User author, Long conferenceId, String title, String summary, Long fileId) {
+        this.fileId = fileId;
         this.author = author;
+        // 最开始没有审稿人
+        this.reviewerSet = null;
         this.conferenceId = conferenceId;
         this.title = title;
         this.summary = summary;
-        this.fileId = fileId;
         this.status = Status.REVIEWING;
     }
 
@@ -62,8 +79,12 @@ public class Paper {
         return status;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
+    }
+
+    public Set<User> getReviewerSet() {
+        return reviewerSet;
     }
 
     public void setConferenceId(Long conferenceId) {
@@ -74,7 +95,7 @@ public class Paper {
         this.summary = summary;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 
@@ -90,12 +111,17 @@ public class Paper {
         this.status = status;
     }
 
+    public void setReviewerSet(Set<User> reviewerSet) {
+        this.reviewerSet = reviewerSet;
+    }
+
     @Override
     public String toString() {
         return "Paper{" +
-                "author='" + author + '\'' +
+                "author='" + author.getUsername() + '\'' +
                 ", conferenceId=" + conferenceId +
                 ", title='" + title + '\'' +
+                ", reviewer='" + reviewerSet.toString() + '\'' +
                 ", summary='" + summary + '\'' +
                 ", fileId=" + fileId +
                 ", status=" + status +
