@@ -45,6 +45,17 @@ public class AuthController {
 //        System.out.println(request);
         return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
     }
+
+    /**
+    * This is a function to test your connectivity. (健康测试时，可能会用到它）.
+    */
+    @GetMapping("/welcome")
+    public ResponseEntity<?> welcome() {
+        Map<String, String> response = new HashMap<>();
+        String message = "Welcome to 2020 Software Engineering Lab2. ";
+        response.put("message", message);
+        return ResponseEntity.ok(response);
+    }
 }
 
 
