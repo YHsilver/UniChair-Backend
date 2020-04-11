@@ -60,6 +60,22 @@ public class Lab2Application {
                     );
                     userRepository.save(admin);
                 }
+
+                Authority testRobertAuthority = getOrCreateAuthority("testRobert", authorityRepository);
+
+                // Create testRobert if not exists.
+                if (userRepository.findByUsername("testRobert") == null) {
+                    User admin = new User(
+                            "testRobert",
+                            passwordEncoder.encode("superModelRuleTheWorld##~"),
+                            "testRobert",
+                            "fudan",
+                            "software",
+                            "testRobert@fudan.edu.cn",
+                            new HashSet<>(Collections.singletonList(testRobertAuthority))
+                    );
+                    userRepository.save(admin);
+                }
             }
 
             private Authority getOrCreateAuthority(String authorityText, AuthorityRepository authorityRepository) {

@@ -12,6 +12,7 @@ import java.util.Set;
  * @author PXY
  * 会议仓库找会议
  */
+
 @Repository
 public interface ConferenceRepository extends CrudRepository<Conference, Long> {
     Conference findByConferenceId(Long id);

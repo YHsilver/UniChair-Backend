@@ -45,7 +45,7 @@ public class User implements UserDetails {
     private Set<Authority> authorities = new HashSet<>();
 
     // 会议列表
-    private ArrayList<Long> conferencesId = new ArrayList<>();
+    private ArrayList<Long> conferenceIds = new ArrayList<>();
 
     // empty constructor
     public User() {
@@ -102,8 +102,8 @@ public class User implements UserDetails {
         return authorities;
     }
 
-    public ArrayList<Long> getConferencesId() {
-        return conferencesId;
+    public ArrayList<Long> getConferenceIds() {
+        return conferenceIds;
     }
 
     public void setUsername(String username) {
@@ -130,8 +130,8 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
-    public void setConferencesId(ArrayList<Long> conferencesId) {
-        this.conferencesId = conferencesId;
+    public void setConferencesId(ArrayList<Long> conferenceIds) {
+        this.conferenceIds = conferenceIds;
     }
 
     public void setFullName(String fullName) {
@@ -171,6 +171,7 @@ public class User implements UserDetails {
                 '}';
     }
 
+    // print all info, not safe!
     @Override
     public String toString() {
         return "User{" +
@@ -182,7 +183,22 @@ public class User implements UserDetails {
                 ", area='" + area + '\'' +
                 ", email='" + email + '\'' +
                 ", authorities=" + authorities +
-                ", conferencesId=" + conferencesId +
+                ", conferenceIds=" + conferenceIds +
+                '}';
+    }
+
+    // print necessary info, safe!
+    public String toUserString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+//                ", password='" + password + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", unit='" + unit + '\'' +
+                ", area='" + area + '\'' +
+                ", email='" + email + '\'' +
+//                ", authorities=" + authorities +
+//                ", conferenceIds=" + conferenceIds +
                 '}';
     }
 }

@@ -32,15 +32,14 @@ public class AdminController {
 
     @PostMapping("/admin/getConference")
     public ResponseEntity<?> handleAdminGetConferenceRequest(@RequestBody AdminGetConferenceRequest request) {
-        logger.debug("AdminRequest: " + request.toString());
+        logger.debug(request.toString());
         System.out.println(request);
-        // todo
         return ResponseEntity.ok(adminService.ShowConference(request));
     }
 
     @PostMapping("/admin/changeStatus")
     public ResponseEntity<?> handleAdminChangeConferenceStatusRequest(@RequestBody AdminChangeConferenceStatusRequest request) {
-        logger.debug("AdminRequest: " + request.toString());
+        logger.debug(request.toString());
         System.out.println(request);
         return ResponseEntity.ok(adminService.changeConferenceStatus(request));
     }

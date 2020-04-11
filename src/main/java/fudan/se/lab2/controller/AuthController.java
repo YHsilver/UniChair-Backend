@@ -33,7 +33,7 @@ public class AuthController {
     // 来自 localhost:80/register 的请求
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        logger.debug("RegistrationForm: " + request.toString());
+        logger.debug(request.toString());
 //        System.out.println(request.toString());
         return ResponseEntity.ok(authService.register(request));
     }
@@ -41,8 +41,8 @@ public class AuthController {
     // 来自 localhost:80/login 的请求
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        logger.debug("LoginForm: " + request.toString());
-        System.out.println(request);
+        logger.debug(request.toString());
+//        System.out.println(request);
         return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
     }
 }

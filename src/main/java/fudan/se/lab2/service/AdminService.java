@@ -7,9 +7,13 @@ import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import org.assertj.core.util.Lists;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author LBW
@@ -57,18 +61,19 @@ public class AdminService {
      * @param request the AdminRequest request
      * @return return conferences' lists
      */
-    public String ShowConference(AdminGetConferenceRequest request) {
-//        Conference.Status status = Conference.Status.valueOf(request.getRequestContent());
-//        System.out.println(status);
-        // TODO
-//        System.out.println(this.conferenceRepository.findAll());
-        return request.toString();
-//        Iterable<Conference> conferences = this.conferenceRepository.findAll();
-//        List<Conference> list = Lists.newArrayList();
-//        conferences.forEach(single -> {
-//            list.add(single);
-//        });
-//        return conferences.toString();
+    public List<JSONObject> ShowConference(AdminGetConferenceRequest request) {
+        Conference.Status status = request.getContent();
+        System.out.println(this.conferenceRepository.findAll());
+        Iterable<Conference> conferences = this.conferenceRepository.findAll();
+//        System.out.println(conferences);
+        // conferences list
+        List<JSONObject> list = Lists.newArrayList();
+        conferences.forEach(single -> {
+            if (single.getStatus() == status)
+                list.add(single.toAdminJSON());
+        });
+        System.out.println(list.toString());
+        return list;
     }
 
     /**
@@ -82,5 +87,5 @@ public class AdminService {
         thisConference.setStatus(request.getStatus());
         return thisConference.getConferenceId().toString() + thisConference.getStage();
     }
-
+    
 }

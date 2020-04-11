@@ -1,5 +1,8 @@
 package fudan.se.lab2.domain;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -201,6 +204,7 @@ public class Conference implements Serializable {
         this.reviewerSet = reviewerSet;
     }
 
+    // print all info, not safe!
     @Override
     public String toString() {
         return "Conference{" +
@@ -219,6 +223,30 @@ public class Conference implements Serializable {
                 ", reviewerSet=" + reviewerSet +
                 ", paperList=" + paperList +
                 '}';
+    }
+
+    public JSONObject String2Json(String str) throws ParseException {
+        return (JSONObject) (new JSONParser().parse(str));
+    }
+
+    public JSONObject toAdminJSON() {
+        try {
+            String str = "{" +
+                    "\"id\":\"" + conferenceId.toString() + '\"' +
+                    ", \"abbr\":\"" + conferenceAbbreviation.toString() + '\"' +
+                    ", \"name\":\"" + conferenceFullName.toString() + '\"' +
+                    ", \"time\":\"" + conferenceTime.toString() + '\"' +
+                    ", \"place\":\"" + conferenceLocation.toString() + '\"' +
+                    ", \"contributeEndTime\":\"" + contributeEndTime.toString() + '\"' +
+                    ", \"resultReleaseTime\":\"" + resultReleaseTime.toString() + '\"' +
+                    ", \"status\":\"" + status.toString() + '\"' +
+                    ", \"chairMan\":\"" + chairMan.getUsername().toString() + '\"' +
+                    '}';
+            return String2Json(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
 

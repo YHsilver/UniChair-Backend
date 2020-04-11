@@ -64,7 +64,7 @@ public class UserService {
                 request.getResultReleaseTime().plusDays(1L)
         );
         User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        user.getConferencesId().add(newConference.getConferenceId());
+        user.getConferenceIds().add(newConference.getConferenceId());
         conferenceRepository.save(newConference);
         //默认成功
         return "{\"message\":\"conference application submit success!\"}";

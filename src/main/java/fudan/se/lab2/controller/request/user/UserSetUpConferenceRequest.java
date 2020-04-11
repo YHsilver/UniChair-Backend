@@ -107,8 +107,7 @@ public class UserSetUpConferenceRequest {
     @Override
     public String toString() {
         return "UserSetUpConferenceRequest{" +
-//                "token='" + token + '\'' +
-                ", conferenceAbbreviation='" + conferenceAbbreviation + '\'' +
+                "conferenceAbbreviation='" + conferenceAbbreviation + '\'' +
                 ", conferenceFullName='" + conferenceFullName + '\'' +
                 ", conferenceTime=" + conferenceTime +
                 ", conferenceLocation='" + conferenceLocation + '\'' +
