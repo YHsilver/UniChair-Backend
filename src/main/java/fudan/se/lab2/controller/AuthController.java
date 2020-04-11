@@ -7,9 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author LBW
@@ -47,12 +51,12 @@ public class AuthController {
     }
 
     /**
-    * This is a function to test your connectivity. (健康测试时，可能会用到它）.
-    */
+     * This is a function to test your connectivity. (健康测试时，可能会用到它）.
+     */
     @GetMapping("/welcome")
     public ResponseEntity<?> welcome() {
         Map<String, String> response = new HashMap<>();
-        String message = "Welcome to 2020 Software Engineering Lab2. ";
+        String message = "Welcome to Uni Conference!";
         response.put("message", message);
         return ResponseEntity.ok(response);
     }
