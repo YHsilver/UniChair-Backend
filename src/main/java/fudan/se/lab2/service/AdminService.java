@@ -64,6 +64,8 @@ public class AdminService {
      */
     public List<JSONObject> ShowConference(AdminGetConferenceRequest request) {
         Conference.Status status = request.getContent();
+//        System.out.println(request);
+//        System.out.println(getConferenceJsonObjects(status, this.conferenceRepository));
         return getConferenceJsonObjects(status, this.conferenceRepository);
     }
 
@@ -76,7 +78,7 @@ public class AdminService {
     public String changeConferenceStatus(AdminChangeConferenceStatusRequest request) {
         Conference thisConference = this.conferenceRepository.findByConferenceId(request.getId());
         thisConference.setStatus(request.getStatus());
-        return thisConference.getConferenceId().toString() + thisConference.getStage();
+        conferenceRepository.save(thisConference);
+        return thisConference.getConferenceFullName() + "'s Status is " + thisConference.getStatus().toString() + " now!";
     }
-
 }
