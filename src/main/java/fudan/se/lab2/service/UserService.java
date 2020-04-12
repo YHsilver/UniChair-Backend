@@ -141,7 +141,7 @@ public class UserService {
      * @param request the UserRequest request
      * @return return conference's id and changed stage
      */
-    public String changeConferenceStatus(ChairChangeConferenceStageRequest request) {
+    public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
         Conference.Stage changedStage = request.getChangedStage();
         Conference thisConference = conferenceRepository.findByConferenceId(request.getConferenceId());
         thisConference.setStage(changedStage);
@@ -175,4 +175,23 @@ public class UserService {
         return "{\"message\":\"your invitation has been send!\"}";
     }
 
+    /**
+     * check my invitations(用户查看自己的邀请函)
+     *
+     * @param request the UserRequest request
+     * @return return conferences' lists
+     */
+    public String checkMyInvitations(UserCheckMyInvitationsRequest request) {
+        return "OK";
+    }
+
+    /**
+     * check my invitations(用户查看自己发出的邀请函)
+     *
+     * @param request the UserRequest request
+     * @return return conferences' lists
+     */
+    public String checkSendInvitations(UserCheckSendInvitationsRequest request) {
+        return "OK";
+    }
 }

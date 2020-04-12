@@ -4,7 +4,7 @@ import fudan.se.lab2.domain.Conference;
 
 /**
  * @author hyf
- * 这个类用于获取自己的会议列表（通过、被拒绝、待审核）
+ * 这个类用于获取自己申请的会议列表（通过、被拒绝、待审核）
  */
 
 public class UserGetMyConferenceRequest {

@@ -21,11 +21,11 @@ public class Paper implements Serializable {
     private Long fileId;
 
     // 投稿人
-    @ManyToOne
+    @OneToOne
     private User author;
 
     // 审稿人
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<User> reviewerSet = new HashSet<>();
 
     // 所属会议

@@ -55,6 +55,7 @@ public class UserController {
     }
 
 
+    // 投稿
     @PostMapping("/system/submitPaper")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserSubmitPaperRequest request) {
         logger.debug(request.toString());
@@ -62,6 +63,7 @@ public class UserController {
         return ResponseEntity.ok(userService.submitPaper(request));
     }
 
+    // 邀请别人成为 PC members
     @PostMapping("/system/inviteReviewers")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserInviteReviewersRequest request) {
         logger.debug(request.toString());
@@ -69,11 +71,27 @@ public class UserController {
         return ResponseEntity.ok(userService.inviteReviewers(request));
     }
 
-    @PostMapping("/system/changeConferenceStatus")
+    // 查看自己的邀请函
+    @PostMapping("/system/checkMyInvitations")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserCheckMyInvitationsRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
+        return ResponseEntity.ok(userService.checkMyInvitations(request));
+    }
+
+    // 查看自己发出的邀请函
+    @PostMapping("/system/checkSendInvitations")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserCheckSendInvitationsRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
+        return ResponseEntity.ok(userService.checkSendInvitations(request));
+    }
+
+    @PostMapping("/system/changeConferenceStage")
     public ResponseEntity<?> handleUserRequest(@RequestBody ChairChangeConferenceStageRequest request) {
         logger.debug(request.toString());
 //        System.out.println(request.toString());
-        return ResponseEntity.ok(userService.changeConferenceStatus(request));
+        return ResponseEntity.ok(userService.changeConferenceStage(request));
     }
 
 }
