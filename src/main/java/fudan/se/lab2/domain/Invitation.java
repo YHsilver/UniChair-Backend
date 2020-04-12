@@ -1,7 +1,12 @@
 package fudan.se.lab2.domain;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
 import javax.persistence.*;
 import java.io.Serializable;
+
+import static fudan.se.lab2.domain.Conference.String2Json;
 
 /**
  * @author hyf
@@ -11,13 +16,16 @@ import java.io.Serializable;
 @Entity
 public class Invitation implements Serializable {
 
-    // 6个参数
+    // 7个参数
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long invitationId;
 
     // 会议id
     private Long conferenceId;
+
+    // 会议全名
+    private String conferenceFullName;
 
     // 邀请人
     @OneToOne
@@ -39,14 +47,20 @@ public class Invitation implements Serializable {
 
     }
 
-    public Invitation(Long invitationId, Long conferenceId, User chair, User reviewer, String message, Status status) {
+    public Invitation(Long invitationId, Long conferenceId, String conferenceFullName, User chair, User reviewer,
+                      String message, Status status) {
         this.chair = chair;
         this.reviewer = reviewer;
+        this.conferenceFullName = conferenceFullName;
         this.invitationId = invitationId;
         this.conferenceId = conferenceId;
         this.message = message;
         this.status = status;
 
+    }
+
+    public String getConferenceFullName() {
+        return conferenceFullName;
     }
 
     public Status getStatus() {
@@ -71,6 +85,10 @@ public class Invitation implements Serializable {
 
     public User getReviewer() {
         return reviewer;
+    }
+
+    public void setConferenceFullName(String conferenceFullName) {
+        this.conferenceFullName = conferenceFullName;
     }
 
     public void setConferenceId(Long conferenceId) {
@@ -107,5 +125,24 @@ public class Invitation implements Serializable {
                 ", message='" + message + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public JSONObject toStandardJson() {
+        try {
+            String str = "{" +
+                    "\"invitationId\":\"" + invitationId.toString() + '\"' +
+                    ", \"conferenceId\":\"" + conferenceId.toString() + '\"' +
+                    ", \"sender\":\"" + chair.getUsername().toString() + '\"' +
+                    ", \"fullName\":\"" + chair.getFullName().toString() + '\"' +
+                    ", \"conferenceFullName\":\"" + conferenceFullName.toString() + '\"' +
+                    ", \"reviewer\":\"" + reviewer.toString() + '\"' +
+                    ", \"message\":\"" + message.toString() + '\"' +
+                    ", \"status\":\"" + status.toString() + '\"' +
+                    '}';
+            return String2Json(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

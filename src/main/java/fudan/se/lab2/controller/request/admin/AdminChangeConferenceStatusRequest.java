@@ -9,12 +9,14 @@ import fudan.se.lab2.domain.Conference;
 
 public class AdminChangeConferenceStatusRequest {
 
-    // 3个属性
+    // 4个属性
     private String name = "CHANGESTATUS";
 
     private Long id;
 
     private Conference.Status status;
+
+    private String chair;
 
     // empty constructor
     public AdminChangeConferenceStatusRequest() {
@@ -25,6 +27,10 @@ public class AdminChangeConferenceStatusRequest {
     public AdminChangeConferenceStatusRequest(Long id, Conference.Status status) {
         this.id = id;
         this.status = status;
+    }
+
+    public String getChair() {
+        return chair;
     }
 
     public String getName() {
@@ -49,6 +55,10 @@ public class AdminChangeConferenceStatusRequest {
 
     public void setStatus(Conference.Status status) {
         this.status = status;
+    }
+
+    public void setChair(String chair) {
+        this.chair = chair;
     }
 
     @Override

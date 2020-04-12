@@ -10,12 +10,14 @@ import fudan.se.lab2.domain.Conference;
 
 public class ChairChangeConferenceStageRequest {
 
-    // 3个属性
+    // 4个属性
     private String name = "CHANGESTAGE";
 
     private Long conferenceId;
 
     private Conference.Stage changedStage;
+
+    private String token;
 
     // empty constructor
     public ChairChangeConferenceStageRequest() {
@@ -30,6 +32,10 @@ public class ChairChangeConferenceStageRequest {
 
     public String getName() {
         return name;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public Conference.Stage getChangedStage() {
@@ -50,6 +56,10 @@ public class ChairChangeConferenceStageRequest {
 
     public void setChangedStage(Conference.Stage changedStage) {
         this.changedStage = changedStage;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

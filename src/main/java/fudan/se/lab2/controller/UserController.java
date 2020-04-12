@@ -30,9 +30,9 @@ public class UserController {
     }
 
     // 来自 localhost:80/setUpConference 的请求
-    // case SETUP:
+    // 申请会议
     @PostMapping("/setUpConference")
-    public ResponseEntity<?> setUpConference(@RequestBody UserSetUpConferenceRequest request) {
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserSetUpConferenceRequest request) {
         logger.debug("setUpConferenceForm: " + request.toString());
 //        System.out.println(request);
         return ResponseEntity.ok(userService.setUpConference(request));
@@ -68,6 +68,14 @@ public class UserController {
         logger.debug(request.toString());
         System.out.println(request.toString());
         return ResponseEntity.ok(userService.checkMyInvitations(request));
+    }
+
+    // 是够接受邀请
+    @PostMapping("/system/decideMyInvitations")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserDecideInvitationsRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request);
+        return ResponseEntity.ok(userService.decideInvitations(request));
     }
 }
 

@@ -1,10 +1,14 @@
 package fudan.se.lab2.domain;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
+import static fudan.se.lab2.domain.Conference.String2Json;
 
 /**
  * @author LBW
@@ -16,7 +20,7 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -6140085056226164016L;
 
-    // 10个属性
+    // 12个属性
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,6 +55,14 @@ public class User implements UserDetails {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Paper> papers = new HashSet<>();
 
+    // my invitation lists
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<Invitation> myInvitations = new HashSet<>();
+
+    // send invitation lists
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<Invitation> sendInvitations = new HashSet<>();
+
     // empty constructor
     public User() {
     }
@@ -74,6 +86,14 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public Set<Invitation> getMyInvitations() {
+        return myInvitations;
+    }
+
+    public Set<Invitation> getSendInvitations() {
+        return sendInvitations;
     }
 
     public String getUnit() {
@@ -154,6 +174,14 @@ public class User implements UserDetails {
         this.papers = papers;
     }
 
+    public void setMyInvitations(Set<Invitation> myInvitations) {
+        this.myInvitations = myInvitations;
+    }
+
+    public void setSendInvitations(Set<Invitation> sendInvitations) {
+        this.sendInvitations = sendInvitations;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return false;
@@ -174,13 +202,21 @@ public class User implements UserDetails {
         return false;
     }
 
-    public String toJsonObject() {
-        return "{" +
-                "\"id\":" + id +
-                ", \"username\":\"" + username + '\"' +
-                ", \"fullName\":\"" + fullName + '\"' +
-                ", \"email\":\"" + email + '\"' +
-                '}';
+    public JSONObject toStandardJson() {
+        try {
+            String str = "{" +
+                    "\"id\":\"" + id.toString() + '\"' +
+                    ", \"username\":\"" + username.toString() + '\"' +
+                    ", \"fullName\":\"" + fullName.toString() + '\"' +
+                    ", \"email\":\"" + email.toString() + '\"' +
+                    ", \"area\":\"" + area.toString() + '\"' +
+                    ", \"unit\":\"" + unit.toString() + '\"' +
+                    '}';
+            return String2Json(str);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // print all info, not safe!

@@ -2,12 +2,10 @@ package fudan.se.lab2.service;
 
 import fudan.se.lab2.controller.request.user.*;
 import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.domain.Invitation;
 import fudan.se.lab2.domain.Paper;
 import fudan.se.lab2.domain.User;
-import fudan.se.lab2.repository.AuthorityRepository;
-import fudan.se.lab2.repository.ConferenceRepository;
-import fudan.se.lab2.repository.PaperRepository;
-import fudan.se.lab2.repository.UserRepository;
+import fudan.se.lab2.repository.*;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import org.assertj.core.util.Lists;
 import org.json.simple.JSONObject;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author LBW
+ * @author LBW、hyf
  * 这个类是响应 user controller
  */
 
@@ -40,6 +38,9 @@ public class UserService {
 
     // 稿件仓库
     private PaperRepository paperRepository;
+
+    // 邀请函仓库
+    private InvitationRepository invitationRepository;
 
     // 加密密码
     private PasswordEncoder passwordEncoder;
@@ -185,13 +186,45 @@ public class UserService {
     }
 
     /**
+     * 得到会议的JSON格式，辅助 checkMyInvitations 方法
+     *
+     * @param status        查找的会议状态
+     * @param myInvitations user的会议库（个人）
+     * @return Invitations JSONObject list
+     */
+    private List<JSONObject> getInvitationJsonObjects(Invitation.Status status, Set<Invitation> myInvitations) {
+        List<JSONObject> list = Lists.newArrayList();
+        for (Invitation eachInvitation : myInvitations) {
+            if (eachInvitation.getStatus() == status)
+                list.add(eachInvitation.toStandardJson());
+        }
+        return list;
+    }
+
+    /**
      * check my invitations(用户查看自己的邀请函)
      *
-     * @param request the UserRequest request
+     * @param request the UserCheckMyInvitationsRequest request
      * @return return conferences' lists
      */
-    public String checkMyInvitations(UserCheckMyInvitationsRequest request) {
-        return "OK";
+    public List<JSONObject> checkMyInvitations(UserCheckMyInvitationsRequest request) {
+        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        return getInvitationJsonObjects(request.getStatus(), thisUser.getMyInvitations());
+    }
+
+    /**
+     * decide my invitation（用户决定是否接受邀请）
+     *
+     * @param request the UserDecideInvitationsRequest request
+     * @return successful message
+     */
+    public String decideInvitations(UserDecideInvitationsRequest request) {
+        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Invitation thisInvitation = this.invitationRepository.findByInvitationId(request.getInvitaionId());
+        thisInvitation.setStatus(request.getStatus());
+        thisUser.getMyInvitations().add(thisInvitation);
+        this.invitationRepository.save(thisInvitation);
+        return "Invitation " + thisInvitation.getInvitationId() + "'s Status is " + thisInvitation.getStatus().toString() + " now!";
     }
 
 }

@@ -5,13 +5,18 @@ import fudan.se.lab2.controller.request.chair.ChairCheckSendInvitationsRequest;
 import fudan.se.lab2.controller.request.chair.ChairInviteReviewersRequest;
 import fudan.se.lab2.controller.request.chair.ChairSearchReviewersRequest;
 import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.domain.User;
 import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import org.assertj.core.util.Lists;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author hyf
@@ -58,10 +63,12 @@ public class ChairService {
      * @return return conference's id and changed stage
      */
     public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
+        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference.Stage changedStage = request.getChangedStage();
         Conference thisConference = conferenceRepository.findByConferenceId(request.getConferenceId());
         thisConference.setStage(changedStage);
         conferenceRepository.save(thisConference);
+        thisUser.getConferences().add(thisConference);
         return thisConference.getConferenceFullName() + "'s Stage is " + thisConference.getStage().toString() + " " +
                 "now!";
     }
@@ -72,10 +79,15 @@ public class ChairService {
      * @param request the ChairRequest request
      * @return return successful message
      */
-    public String getReviewers(ChairSearchReviewersRequest request) {
-        // TODO
-        //默认成功
-        return "{\"message\":\"your invitation has been send!\"}";
+    public List<JSONObject> getReviewers(ChairSearchReviewersRequest request) {
+        String fullName = request.getFullName();
+        Iterable<User> users = this.userRepository.findAll();
+        List<JSONObject> list = Lists.newArrayList();
+        users.forEach(eachUser -> {
+            if (eachUser.getFullName() == fullName)
+                list.add(eachUser.toStandardJson());
+        });
+        return list;
     }
 
     /**
@@ -97,6 +109,7 @@ public class ChairService {
      * @return return conferences' lists
      */
     public String checkSendInvitations(ChairCheckSendInvitationsRequest request) {
+        // TODO
         return "OK";
     }
 }

@@ -91,7 +91,7 @@ public class AuthService {
         } else {
             Map<String, Object> response = new HashMap<>();
             response.put("token", tokenUtil.generateToken(currentUser));
-            response.put("userDetails", currentUser.toJsonObject());
+            response.put("userDetails", currentUser.toStandardJson());
             return response;
         }
     }

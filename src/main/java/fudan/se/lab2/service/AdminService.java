@@ -3,6 +3,7 @@ package fudan.se.lab2.service;
 import fudan.se.lab2.controller.request.admin.AdminChangeConferenceStatusRequest;
 import fudan.se.lab2.controller.request.admin.AdminGetConferenceRequest;
 import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.domain.User;
 import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -76,9 +77,11 @@ public class AdminService {
      * @return return conference's ID & Status
      */
     public String changeConferenceStatus(AdminChangeConferenceStatusRequest request) {
+        User thisChair = this.userRepository.findByUsername(request.getChair());
         Conference thisConference = this.conferenceRepository.findByConferenceId(request.getId());
         thisConference.setStatus(request.getStatus());
-        conferenceRepository.save(thisConference);
+        this.conferenceRepository.save(thisConference);
+        thisChair.getConferences().add(thisConference);
         return thisConference.getConferenceFullName() + "'s Status is " + thisConference.getStatus().toString() + " now!";
     }
 }
