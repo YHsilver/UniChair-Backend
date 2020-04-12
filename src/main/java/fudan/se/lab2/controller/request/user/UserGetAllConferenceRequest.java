@@ -8,7 +8,7 @@ import fudan.se.lab2.exception.ConferencException.IllegalConferenceOperateExcept
  * 这个类用于获取通过的全部会议列表，以投稿
  */
 
-public class UserGetConferenceRequest {
+public class UserGetAllConferenceRequest {
 
     // 2个属性
     private String name = "LOOK";
@@ -16,11 +16,11 @@ public class UserGetConferenceRequest {
     private Conference.Status requestContent = Conference.Status.PASS;
 
     // empty constructor
-    public UserGetConferenceRequest() {
+    public UserGetAllConferenceRequest() {
     }
 
     // constructor
-    public UserGetConferenceRequest(Conference.Status requestContent) {
+    public UserGetAllConferenceRequest(Conference.Status requestContent) {
         this.requestContent = requestContent;
     }
 
@@ -44,7 +44,7 @@ public class UserGetConferenceRequest {
 
     @Override
     public String toString() {
-        return "UserGetConferenceRequest{" +
+        return "UserGetAllConferenceRequest{" +
                 "name=" + name +
                 ", requestContent=" + requestContent +
                 '}';

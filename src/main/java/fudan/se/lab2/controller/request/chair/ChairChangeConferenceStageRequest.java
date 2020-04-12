@@ -1,4 +1,4 @@
-package fudan.se.lab2.controller.request.user;
+package fudan.se.lab2.controller.request.chair;
 
 
 import fudan.se.lab2.domain.Conference;

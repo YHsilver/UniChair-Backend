@@ -1,5 +1,6 @@
 package fudan.se.lab2.controller.request.user;
 
+import fudan.se.lab2.controller.request.chair.ChairChangeConferenceStageRequest;
 import fudan.se.lab2.domain.Conference;
 import org.junit.jupiter.api.Test;
 

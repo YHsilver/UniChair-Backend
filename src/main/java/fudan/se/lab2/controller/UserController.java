@@ -38,14 +38,6 @@ public class UserController {
         return ResponseEntity.ok(userService.setUpConference(request));
     }
 
-    // 获取所有现在通过的会议，以投稿
-    @PostMapping("/system/getConference")
-    public ResponseEntity<?> handleUserRequest(@RequestBody UserGetConferenceRequest request) {
-        logger.debug(request.toString());
-//        System.out.println(request.toString());
-        return ResponseEntity.ok(userService.getConference(request));
-    }
-
     // 获取自己申请的会议
     @PostMapping("/system/getMyConference")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserGetMyConferenceRequest request) {
@@ -54,6 +46,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getMyConference(request));
     }
 
+    // 获取所有现在通过的会议，以投稿
+    @PostMapping("/system/getConference")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserGetAllConferenceRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
+        return ResponseEntity.ok(userService.getAllConference(request));
+    }
 
     // 投稿
     @PostMapping("/system/submitPaper")
@@ -63,37 +62,13 @@ public class UserController {
         return ResponseEntity.ok(userService.submitPaper(request));
     }
 
-    // 邀请别人成为 PC members
-    @PostMapping("/system/inviteReviewers")
-    public ResponseEntity<?> handleUserRequest(@RequestBody UserInviteReviewersRequest request) {
-        logger.debug(request.toString());
-//        System.out.println(request.toString());
-        return ResponseEntity.ok(userService.inviteReviewers(request));
-    }
-
-    // 查看自己的邀请函
+    // 查看自己收到的邀请函
     @PostMapping("/system/checkMyInvitations")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserCheckMyInvitationsRequest request) {
         logger.debug(request.toString());
-//        System.out.println(request.toString());
+        System.out.println(request.toString());
         return ResponseEntity.ok(userService.checkMyInvitations(request));
     }
-
-    // 查看自己发出的邀请函
-    @PostMapping("/system/checkSendInvitations")
-    public ResponseEntity<?> handleUserRequest(@RequestBody UserCheckSendInvitationsRequest request) {
-        logger.debug(request.toString());
-//        System.out.println(request.toString());
-        return ResponseEntity.ok(userService.checkSendInvitations(request));
-    }
-
-    @PostMapping("/system/changeConferenceStage")
-    public ResponseEntity<?> handleUserRequest(@RequestBody ChairChangeConferenceStageRequest request) {
-        logger.debug(request.toString());
-//        System.out.println(request.toString());
-        return ResponseEntity.ok(userService.changeConferenceStage(request));
-    }
-
 }
 
 

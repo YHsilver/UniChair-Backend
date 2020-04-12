@@ -18,9 +18,9 @@ import java.util.Set;
 
 /**
  * @author LBW
- * 这个类是具体响应类
- * “响应服务”
+ * 这个类是响应 user controller
  */
+
 @Service
 public class UserService {
 
@@ -55,7 +55,7 @@ public class UserService {
     }
 
     /**
-     * check whether the ConferenceRequest request can be successful(申请会议)
+     * check whether the ConferenceRequest request can be successful(用户申请会议)
      *
      * @param request the ConferenceRequest request
      * @return return a successful message if success
@@ -78,37 +78,7 @@ public class UserService {
     }
 
     /**
-     * 得到会议的JSON格式
-     *
-     * @param status               查找的会议状态
-     * @param conferenceRepository 查找的会议仓库（全局查找）
-     * @return Conferences JSONObject list
-     */
-
-    public static List<JSONObject> getConferenceJsonObjects(Conference.Status status, ConferenceRepository conferenceRepository) {
-        Iterable<Conference> conferences = conferenceRepository.findAll();
-        List<JSONObject> list = Lists.newArrayList();
-        conferences.forEach(eachConference -> {
-            if (eachConference.getStatus() == status)
-                list.add(eachConference.toStandardJson());
-        });
-        return list;
-    }
-
-    /**
-     * check whether the UserShowConference request can be successful(用户查看全部通过的会议)
-     *
-     * @param request the UserGetConferenceRequest request
-     * @return return conferences' lists
-     */
-    public List<JSONObject> getConference(UserGetConferenceRequest request) {
-        Conference.Status status = request.getRequestContent();
-        return getConferenceJsonObjects(status, this.conferenceRepository);
-    }
-
-
-    /**
-     * 得到会议的JSON格式
+     * 得到会议的JSON格式，辅助 getMyConference 方法
      *
      * @param status      查找的会议状态
      * @param conferences user的会议库（个人）
@@ -136,22 +106,35 @@ public class UserService {
     }
 
     /**
-     * changeConferenceStatus(chair 改变会议阶段)
+     * 得到会议的JSON格式，辅助 getConference 方法
      *
-     * @param request the UserRequest request
-     * @return return conference's id and changed stage
+     * @param status               查找的会议状态
+     * @param conferenceRepository 查找的会议仓库（全局查找）
+     * @return Conferences JSONObject list
      */
-    public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
-        Conference.Stage changedStage = request.getChangedStage();
-        Conference thisConference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        thisConference.setStage(changedStage);
-        conferenceRepository.save(thisConference);
-        return thisConference.getConferenceFullName() + "'s Stage is " + thisConference.getStage().toString() + " " +
-                "now!";
+    public static List<JSONObject> getConferenceJsonObjects(Conference.Status status, ConferenceRepository conferenceRepository) {
+        Iterable<Conference> conferences = conferenceRepository.findAll();
+        List<JSONObject> list = Lists.newArrayList();
+        conferences.forEach(eachConference -> {
+            if (eachConference.getStatus() == status)
+                list.add(eachConference.toStandardJson());
+        });
+        return list;
     }
 
     /**
-     * User submit paper
+     * check whether the UserShowConference request can be successful(用户查看全部通过的会议，以投稿)
+     *
+     * @param request the UserGetAllConferenceRequest request
+     * @return return conferences' lists
+     */
+    public List<JSONObject> getAllConference(UserGetAllConferenceRequest request) {
+        Conference.Status status = request.getRequestContent();
+        return getConferenceJsonObjects(status, this.conferenceRepository);
+    }
+
+    /**
+     * User submit paper（用户投稿）
      *
      * @param request the UserRequest request
      * @return return message
@@ -164,18 +147,6 @@ public class UserService {
     }
 
     /**
-     * check whether the UserShowConference request can be successful(用户查看会议)
-     *
-     * @param request the UserRequest request
-     * @return return conferences' lists
-     */
-    public String inviteReviewers(UserInviteReviewersRequest request) {
-        // TODO
-        //默认成功
-        return "{\"message\":\"your invitation has been send!\"}";
-    }
-
-    /**
      * check my invitations(用户查看自己的邀请函)
      *
      * @param request the UserRequest request
@@ -185,13 +156,4 @@ public class UserService {
         return "OK";
     }
 
-    /**
-     * check my invitations(用户查看自己发出的邀请函)
-     *
-     * @param request the UserRequest request
-     * @return return conferences' lists
-     */
-    public String checkSendInvitations(UserCheckSendInvitationsRequest request) {
-        return "OK";
-    }
 }

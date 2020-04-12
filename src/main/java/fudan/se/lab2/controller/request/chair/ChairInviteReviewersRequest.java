@@ -1,11 +1,11 @@
-package fudan.se.lab2.controller.request.user;
+package fudan.se.lab2.controller.request.chair;
 
 /**
  * @author hyf
- * 这个类用于邀请PC members
+ * 这个类用于邀请 PC members
  */
 
-public class UserInviteReviewersRequest {
+public class ChairInviteReviewersRequest {
 
     // 2个属性
     private String name = "INVITE";
@@ -13,11 +13,11 @@ public class UserInviteReviewersRequest {
     private String username;
 
     // empty constructor
-    public UserInviteReviewersRequest() {
+    public ChairInviteReviewersRequest() {
     }
 
     // constructor
-    public UserInviteReviewersRequest(String username) {
+    public ChairInviteReviewersRequest(String username) {
         this.username = username;
     }
 
@@ -39,7 +39,7 @@ public class UserInviteReviewersRequest {
 
     @Override
     public String toString() {
-        return "UserInviteReviewersRequest{" +
+        return "ChairInviteReviewersRequest{" +
                 "name=" + name +
                 ", username='" + username + '\'' +
                 '}';

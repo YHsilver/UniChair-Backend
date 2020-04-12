@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin/*", "/system/*","/login", "/register", "/setUpConference").permitAll()
+                .antMatchers("/admin/*", "/system/*","/invitation","/login", "/register", "/setUpConference").permitAll()
                 .anyRequest().authenticated();
 
 //      Here we use JWT(Json Web Token) to authenticate the user.
