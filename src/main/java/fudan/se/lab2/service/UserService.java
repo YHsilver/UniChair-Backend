@@ -16,6 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
@@ -147,12 +151,11 @@ public class UserService {
      *
      * @param files
      */
-    private void deleteFile(File... files) {
-        for (File file : files) {
+    private void deleteFile(File... files) throws NoSuchFileException, DirectoryNotEmptyException, IOException {
+        for (File file : files)
             if (file.exists()) {
-                file.delete();
+                Files.delete(Paths.get(file.getPath()));
             }
-        }
     }
 
     /**
@@ -161,28 +164,23 @@ public class UserService {
      * @param request the UserRequest request
      * @return return message
      */
-    public String submitPaper(UserSubmitPaperRequest request) {
+    public String submitPaper(UserSubmitPaperRequest request) throws IOException {
         User Author = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         MultipartFile multipartFile = request.getFile();
         // 获取文件名
         String fileName = multipartFile.getOriginalFilename();
         // 获取文件后缀
-        String prefix = fileName.substring(fileName.lastIndexOf("."));
-        try {
-            File excelFile = File.createTempFile(String.valueOf(Math.random()), prefix);
-            // MultipartFile to File
-            multipartFile.transferTo(excelFile);
-            Paper newPaper = new Paper(Author, request.getConferenceId(), request.getTitle(),
-                    request.getSummary(), excelFile);
-            Author.getPapers().add(newPaper);
-            paperRepository.save(newPaper);
-            deleteFile(excelFile);
-            //默认成功
-            return "{\"message\":\"your paper submit success!\"}";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "something wrong with your paper qwq";
-        }
+        String prefix = fileName.substring(fileName.lastIndexOf('.'));
+        File excelFile = File.createTempFile(String.valueOf(Math.random()), prefix);
+        // MultipartFile to File
+        multipartFile.transferTo(excelFile);
+        Paper newPaper = new Paper(Author, request.getConferenceId(), request.getTitle(),
+                request.getSummary(), excelFile);
+        Author.getPapers().add(newPaper);
+        paperRepository.save(newPaper);
+        deleteFile(excelFile);
+        // 成功
+        return "{\"message\":\"your paper submit success!\"}";
     }
 
     /**

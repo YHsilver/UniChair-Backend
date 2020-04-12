@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 /**
  * @author hyf
  * 这个类控制“用户请求”
@@ -59,7 +61,12 @@ public class UserController {
     public ResponseEntity<?> handleUserRequest(@RequestBody UserSubmitPaperRequest request) {
         logger.debug(request.toString());
 //        System.out.println(request.toString());
-        return ResponseEntity.ok(userService.submitPaper(request));
+        try {
+            return ResponseEntity.ok(userService.submitPaper(request));
+        } catch (IOException e) {
+            logger.trace("context", e);   // Compliant
+            return ResponseEntity.ok("something wrong with your paper qwq");
+        }
     }
 
     // 查看自己收到的邀请函
