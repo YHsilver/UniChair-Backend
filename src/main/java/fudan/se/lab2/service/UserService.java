@@ -102,7 +102,7 @@ public class UserService {
      * @return return conferences' lists
      */
     public List<JSONObject> getConference(UserGetConferenceRequest request) {
-        Conference.Status status = Conference.Status.PASS;
+        Conference.Status status = request.getRequestContent();
         return getConferenceJsonObjects(status, this.conferenceRepository);
     }
 

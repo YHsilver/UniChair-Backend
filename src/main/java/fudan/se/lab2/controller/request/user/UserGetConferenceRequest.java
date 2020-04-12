@@ -1,6 +1,7 @@
 package fudan.se.lab2.controller.request.user;
 
 import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.exception.ConferencException.IllegalConferenceOperateException;
 
 /**
  * @author hyf
@@ -12,7 +13,7 @@ public class UserGetConferenceRequest {
     // 2个属性
     private String name = "LOOK";
 
-    private Conference.Status requestContent;
+    private Conference.Status requestContent = Conference.Status.PASS;
 
     // empty constructor
     public UserGetConferenceRequest() {
@@ -32,11 +33,13 @@ public class UserGetConferenceRequest {
     }
 
     public void setName(String name) {
-        this.name = name;
+        System.out.println(name);
+        throw new IllegalConferenceOperateException();
     }
 
     public void setRequestContent(Conference.Status requestContent) {
-        this.requestContent = requestContent;
+        System.out.println(requestContent);
+        throw new IllegalConferenceOperateException();
     }
 
     @Override
