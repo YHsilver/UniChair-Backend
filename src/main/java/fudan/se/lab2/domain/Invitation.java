@@ -47,16 +47,15 @@ public class Invitation implements Serializable {
 
     }
 
-    public Invitation(Long invitationId, Long conferenceId, String conferenceFullName, User chair, User reviewer,
-                      String message, Status status) {
+    public Invitation(Long conferenceId, String conferenceFullName, User chair, User reviewer,
+                      String message) {
         this.chair = chair;
         this.reviewer = reviewer;
         this.conferenceFullName = conferenceFullName;
-        this.invitationId = invitationId;
         this.conferenceId = conferenceId;
         this.message = message;
-        this.status = status;
-
+        // 最初都是待接收
+        this.status = Status.PENDING;
     }
 
     public String getConferenceFullName() {

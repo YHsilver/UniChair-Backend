@@ -225,7 +225,14 @@ public class Conference implements Serializable {
                 '}';
     }
 
-    // IMPORTANT!!!
+    /**
+     * change a JSON String 2 JSONObject
+     * public static!!!
+     *
+     * @param str
+     * @return
+     * @throws ParseException
+     */
     public static JSONObject String2Json(String str) throws ParseException {
         return (JSONObject) (new JSONParser().parse(str));
     }

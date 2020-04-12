@@ -120,6 +120,7 @@ public class UserService {
 
     /**
      * 得到会议的JSON格式，辅助 getAllConference 方法
+     * public static!!!
      *
      * @param status               查找的会议状态
      * @param conferenceRepository 查找的会议仓库（全局查找）
@@ -185,14 +186,15 @@ public class UserService {
 
     /**
      * 得到会议的JSON格式，辅助 checkMyInvitations 方法
+     * public static!!!
      *
-     * @param status        查找的会议状态
-     * @param myInvitations user的会议库（个人）
+     * @param status      查找的会议状态
+     * @param Invitations user的会议库（个人）
      * @return Invitations JSONObject list
      */
-    private List<JSONObject> getInvitationJsonObjects(Invitation.Status status, Set<Invitation> myInvitations) {
+    public static List<JSONObject> getInvitationJsonObjects(Invitation.Status status, Set<Invitation> Invitations) {
         List<JSONObject> list = Lists.newArrayList();
-        for (Invitation eachInvitation : myInvitations) {
+        for (Invitation eachInvitation : Invitations) {
             if (eachInvitation.getStatus() == status)
                 list.add(eachInvitation.toStandardJson());
         }

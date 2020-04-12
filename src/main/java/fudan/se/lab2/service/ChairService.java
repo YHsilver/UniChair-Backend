@@ -5,9 +5,11 @@ import fudan.se.lab2.controller.request.chair.ChairCheckSendInvitationsRequest;
 import fudan.se.lab2.controller.request.chair.ChairInviteReviewersRequest;
 import fudan.se.lab2.controller.request.chair.ChairSearchReviewersRequest;
 import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.domain.Invitation;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
+import fudan.se.lab2.repository.InvitationRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import org.assertj.core.util.Lists;
@@ -17,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static fudan.se.lab2.service.UserService.getInvitationJsonObjects;
 
 /**
  * @author hyf
@@ -34,6 +38,9 @@ public class ChairService {
 
     // 会议仓库
     private ConferenceRepository conferenceRepository;
+
+    // 邀请函仓库
+    private InvitationRepository invitationRepository;
 
     // 加密密码
     private PasswordEncoder passwordEncoder;
@@ -97,7 +104,13 @@ public class ChairService {
      * @return return successful message
      */
     public String inviteReviewers(ChairInviteReviewersRequest request) {
-        // TODO
+        User chair = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        User reviewer = request.getReviewer();
+        Invitation newInvitation = new Invitation(request.getConferenceId(), request.getConferenceFullName(), chair,
+                reviewer, request.getMessage());
+        this.invitationRepository.save(newInvitation);
+        chair.getSendInvitations().add(newInvitation);
+        reviewer.getMyInvitations().add(newInvitation);
         //默认成功
         return "{\"message\":\"your invitation has been send!\"}";
     }
@@ -105,12 +118,12 @@ public class ChairService {
     /**
      * check send invitations(用户查看自己发出的邀请函)
      *
-     * @param request the ChairRequest request
+     * @param request the ChairCheckSendInvitationsRequest request
      * @return return conferences' lists
      */
-    public String checkSendInvitations(ChairCheckSendInvitationsRequest request) {
-        // TODO
-        return "OK";
+    public List<JSONObject> checkSendInvitations(ChairCheckSendInvitationsRequest request) {
+        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        return getInvitationJsonObjects(request.getStatus(), thisUser.getMyInvitations());
     }
 }
 
