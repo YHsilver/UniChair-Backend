@@ -25,6 +25,8 @@ public class UserSubmitPaperRequest {
     // 论文文件
     private MultipartFile file;
 
+    private String token;
+
     // empty constructor
     public UserSubmitPaperRequest() {
     }
@@ -58,6 +60,10 @@ public class UserSubmitPaperRequest {
         return file;
     }
 
+    public String getToken() {
+        return token;
+    }
+
     public void setAuthor(String author) {
         this.author = author;
     }
@@ -76,6 +82,10 @@ public class UserSubmitPaperRequest {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

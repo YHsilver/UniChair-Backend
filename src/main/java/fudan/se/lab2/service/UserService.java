@@ -2,9 +2,11 @@ package fudan.se.lab2.service;
 
 import fudan.se.lab2.controller.request.user.*;
 import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.domain.Paper;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
+import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import org.assertj.core.util.Lists;
@@ -12,7 +14,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -32,6 +37,9 @@ public class UserService {
 
     // 会议仓库
     private ConferenceRepository conferenceRepository;
+
+    // 稿件仓库
+    private PaperRepository paperRepository;
 
     // 加密密码
     private PasswordEncoder passwordEncoder;
@@ -62,7 +70,7 @@ public class UserService {
      */
     public String setUpConference(UserSetUpConferenceRequest request) {
         User chairMan = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-//        System.out.println(chairMan);
+        // System.out.println(chairMan);
         // 这里时间不对，应该有个“时差”的关系？？？
         Conference newConference = new Conference(chairMan,
                 request.getConferenceAbbreviation(), request.getConferenceFullName(),
@@ -106,7 +114,7 @@ public class UserService {
     }
 
     /**
-     * 得到会议的JSON格式，辅助 getConference 方法
+     * 得到会议的JSON格式，辅助 getAllConference 方法
      *
      * @param status               查找的会议状态
      * @param conferenceRepository 查找的会议仓库（全局查找）
@@ -134,16 +142,46 @@ public class UserService {
     }
 
     /**
+     * 删除 File，配合 submitPaper
+     *
+     * @param files
+     */
+    private void deleteFile(File... files) {
+        for (File file : files) {
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+    }
+
+    /**
      * User submit paper（用户投稿）
      *
      * @param request the UserRequest request
      * @return return message
      */
     public String submitPaper(UserSubmitPaperRequest request) {
-        // TODO
-
-        //默认成功
-        return "{\"message\":\"your paper submit success!\"}";
+        User Author = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        MultipartFile multipartFile = request.getFile();
+        // 获取文件名
+        String fileName = multipartFile.getOriginalFilename();
+        // 获取文件后缀
+        String prefix = fileName.substring(fileName.lastIndexOf("."));
+        try {
+            File excelFile = File.createTempFile(String.valueOf(Math.random()), prefix);
+            // MultipartFile to File
+            multipartFile.transferTo(excelFile);
+            Paper newPaper = new Paper(Author, request.getConferenceId(), request.getTitle(),
+                    request.getSummary(), excelFile);
+            Author.getPapers().add(newPaper);
+            paperRepository.save(newPaper);
+            deleteFile(excelFile);
+            //默认成功
+            return "{\"message\":\"your paper submit success!\"}";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "something wrong with your paper qwq";
+        }
     }
 
     /**

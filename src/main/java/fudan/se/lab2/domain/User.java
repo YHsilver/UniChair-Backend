@@ -16,7 +16,7 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = -6140085056226164016L;
 
-    // 9个属性
+    // 10个属性
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,6 +46,10 @@ public class User implements UserDetails {
     // 会议列表
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Conference> conferences = new HashSet<>();
+
+    // paper lists
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<Paper> papers = new HashSet<>();
 
     // empty constructor
     public User() {
@@ -106,6 +110,10 @@ public class User implements UserDetails {
         return conferences;
     }
 
+    public Set<Paper> getPapers() {
+        return papers;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -140,6 +148,10 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setPapers(Set<Paper> papers) {
+        this.papers = papers;
     }
 
     @Override

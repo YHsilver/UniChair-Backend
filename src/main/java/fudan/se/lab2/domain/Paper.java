@@ -1,6 +1,7 @@
 package fudan.se.lab2.domain;
 
 import javax.persistence.*;
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,13 +44,15 @@ public class Paper implements Serializable {
     // 审核状态
     private Status status;
 
+    private File file;
+
     // empty constructor
     public Paper() {
     }
 
     // constructor
-    public Paper(User author, Long conferenceId, String title, String summary, Long fileId) {
-        this.fileId = fileId;
+    public Paper(User author, Long conferenceId, String title, String summary, File file) {
+        this.file = file;
         this.author = author;
         // 最开始没有审稿人
         this.reviewerSet = null;
