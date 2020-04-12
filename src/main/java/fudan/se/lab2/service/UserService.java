@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author LBW
@@ -60,7 +61,7 @@ public class UserService {
      * @return return a successful message if success
      */
     public String setUpConference(UserSetUpConferenceRequest request) {
-        User chairMan = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        User chairMan = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
 //        System.out.println(chairMan);
         // 这里时间不对，应该有个“时差”的关系？？？
         Conference newConference = new Conference(chairMan,
@@ -77,9 +78,27 @@ public class UserService {
     }
 
     /**
-     * check whether the UserShowConference request can be successful(用户查看会议)
+     * 得到会议的JSON格式
      *
-     * @param request the UserRequest request
+     * @param status               查找的会议状态
+     * @param conferenceRepository 查找的会议仓库（全局查找）
+     * @return Conferences JSONObject list
+     */
+
+    public static List<JSONObject> getConferenceJsonObjects(Conference.Status status, ConferenceRepository conferenceRepository) {
+        Iterable<Conference> conferences = conferenceRepository.findAll();
+        List<JSONObject> list = Lists.newArrayList();
+        conferences.forEach(eachConference -> {
+            if (eachConference.getStatus() == status)
+                list.add(eachConference.toStandardJson());
+        });
+        return list;
+    }
+
+    /**
+     * check whether the UserShowConference request can be successful(用户查看全部通过的会议)
+     *
+     * @param request the UserGetConferenceRequest request
      * @return return conferences' lists
      */
     public List<JSONObject> getConference(UserGetConferenceRequest request) {
@@ -87,14 +106,33 @@ public class UserService {
         return getConferenceJsonObjects(status, this.conferenceRepository);
     }
 
-    public static List<JSONObject> getConferenceJsonObjects(Conference.Status status, ConferenceRepository conferenceRepository) {
-        Iterable<Conference> conferences = conferenceRepository.findAll();
+
+    /**
+     * 得到会议的JSON格式
+     *
+     * @param status      查找的会议状态
+     * @param conferences user的会议库（个人）
+     * @return Conferences JSONObject list
+     */
+    private List<JSONObject> getConferenceJsonObjects(Conference.Status status, Set<Conference> conferences) {
         List<JSONObject> list = Lists.newArrayList();
-        conferences.forEach(single -> {
-            if (single.getStatus() == status)
-                list.add(single.toAdminJSON());
-        });
+        for (Conference eachConference : conferences) {
+            if (eachConference.getStatus() == status)
+                list.add(eachConference.toStandardJson());
+        }
         return list;
+    }
+
+    /**
+     * check whether the UserShowConference request can be successful(用户查看自己申请的会议)
+     *
+     * @param request the UserGetMyConferenceRequest request
+     * @return return conferences' lists
+     */
+    public List<JSONObject> getMyConference(UserGetMyConferenceRequest request) {
+        Conference.Status status = request.getRequestContent();
+        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        return getConferenceJsonObjects(status, thisUser.getConferences());
     }
 
     /**
@@ -105,9 +143,11 @@ public class UserService {
      */
     public String changeConferenceStatus(ChairChangeConferenceStageRequest request) {
         Conference.Stage changedStage = request.getChangedStage();
-        Long conferenceId = request.getConferenceId();
-        conferenceRepository.findByConferenceId(conferenceId).setStage(changedStage);
-        return changedStage.toString() + conferenceId.toString();
+        Conference thisConference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        thisConference.setStage(changedStage);
+        conferenceRepository.save(thisConference);
+        return thisConference.getConferenceFullName() + "'s Stage is " + thisConference.getStage().toString() + " " +
+                "now!";
     }
 
     /**
@@ -134,4 +174,5 @@ public class UserService {
         //默认成功
         return "{\"message\":\"your invitation has been send!\"}";
     }
+
 }

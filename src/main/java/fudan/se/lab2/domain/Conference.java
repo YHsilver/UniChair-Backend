@@ -229,7 +229,7 @@ public class Conference implements Serializable {
         return (JSONObject) (new JSONParser().parse(str));
     }
 
-    public JSONObject toAdminJSON() {
+    public JSONObject toStandardJson() {
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +
@@ -240,6 +240,7 @@ public class Conference implements Serializable {
                     ", \"contributeEndTime\":\"" + contributeEndTime.toString() + '\"' +
                     ", \"resultReleaseTime\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"status\":\"" + status.toString() + '\"' +
+                    ", \"stage\":\"" + stage.toString() + '\"' +
                     ", \"chairMan\":\"" + chairMan.getUsername().toString() + '\"' +
                     '}';
             return String2Json(str);

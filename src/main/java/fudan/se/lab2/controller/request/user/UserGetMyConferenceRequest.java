@@ -4,10 +4,13 @@ import fudan.se.lab2.domain.Conference;
 
 /**
  * @author hyf
- * 这个类用于获取通过的全部会议列表，以投稿
+ * 这个类用于获取自己的会议列表（通过、被拒绝、待审核）
  */
 
-public class UserGetConferenceRequest {
+public class UserGetMyConferenceRequest {
+
+    // token
+    private String token;
 
     // 2个属性
     private String name = "LOOK";
@@ -15,11 +18,11 @@ public class UserGetConferenceRequest {
     private Conference.Status requestContent;
 
     // empty constructor
-    public UserGetConferenceRequest() {
+    public UserGetMyConferenceRequest() {
     }
 
     // constructor
-    public UserGetConferenceRequest(Conference.Status requestContent) {
+    public UserGetMyConferenceRequest(Conference.Status requestContent) {
         this.requestContent = requestContent;
     }
 
@@ -31,6 +34,10 @@ public class UserGetConferenceRequest {
         return requestContent;
     }
 
+    public String getToken() {
+        return token;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -39,9 +46,13 @@ public class UserGetConferenceRequest {
         this.requestContent = requestContent;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
-        return "UserGetConferenceRequest{" +
+        return "UserGetMyConferenceRequest{" +
                 "name=" + name +
                 ", requestContent=" + requestContent +
                 '}';

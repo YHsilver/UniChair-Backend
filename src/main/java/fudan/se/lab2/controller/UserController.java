@@ -38,33 +38,41 @@ public class UserController {
         return ResponseEntity.ok(userService.setUpConference(request));
     }
 
-    // 来自 localhost:80/system 的请求（用户）
-
+    // 获取所有现在通过的会议，以投稿
     @PostMapping("/system/getConference")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserGetConferenceRequest request) {
-        logger.debug("UserRequest: " + request.toString());
-//        System.out.println("UserRequest: " + request.toString());
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
         return ResponseEntity.ok(userService.getConference(request));
     }
 
+    // 获取自己申请的会议
+    @PostMapping("/system/getMyConference")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserGetMyConferenceRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
+        return ResponseEntity.ok(userService.getMyConference(request));
+    }
+
+
     @PostMapping("/system/submitPaper")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserSubmitPaperRequest request) {
-        logger.debug("UserRequest: " + request.toString());
-//        System.out.println("UserRequest: " + request.toString());
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
         return ResponseEntity.ok(userService.submitPaper(request));
     }
 
     @PostMapping("/system/inviteReviewers")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserInviteReviewersRequest request) {
-        logger.debug("UserRequest: " + request.toString());
-//        System.out.println("UserRequest: " + request.toString());
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
         return ResponseEntity.ok(userService.inviteReviewers(request));
     }
 
     @PostMapping("/system/changeConferenceStatus")
     public ResponseEntity<?> handleUserRequest(@RequestBody ChairChangeConferenceStageRequest request) {
-        logger.debug("UserRequest: " + request.toString());
-//        System.out.println("UserRequest: " + request.toString());
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
         return ResponseEntity.ok(userService.changeConferenceStatus(request));
     }
 
