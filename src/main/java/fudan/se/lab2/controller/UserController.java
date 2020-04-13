@@ -64,6 +64,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getConferenceDetails(request));
     }
 
+    // 获取会议详细信息
+    @PostMapping("/system/getConferenceDetails")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserGetIdentityRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
+        return ResponseEntity.ok(userService.getIdentity(request));
+    }
+
     // 投稿
     @PostMapping("/system/submitPaper")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserSubmitPaperRequest request) {

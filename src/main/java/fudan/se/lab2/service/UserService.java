@@ -104,6 +104,32 @@ public class UserService {
         return list;
     }
 
+    public String getIdentity(UserGetIdentityRequest request){
+        String resp = "[";
+        User currUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference currConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
+
+        if(currUser.getId().equals(currConference.getChairMan().getId())){
+            resp += "0,";
+        }else{
+            resp += "1,";
+        }
+
+        if(currConference.getReviewerSet().contains(currUser)){
+            resp += "0,";
+        }else{
+            resp += "1,";
+        }
+
+        if(currConference.getAuthorSet().contains(currUser)){
+            resp += "0";
+        }else{
+            resp += "1";
+        }
+
+        return resp + "]";
+    }
+
     /**
      * check whether the UserShowConference request can be successful(用户查看自己申请的会议)
      *
