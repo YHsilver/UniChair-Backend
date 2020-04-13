@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+/**
+ * @author hyf
+ * this is a test class for UserGetAllConferenceRequest
+ */
+
 class UserGetAllConferenceRequestTest {
 
     private UserGetAllConferenceRequest userGetAllConferenceRequest = new UserGetAllConferenceRequest();

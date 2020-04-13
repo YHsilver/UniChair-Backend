@@ -119,6 +119,6 @@ class UserSetUpConferenceRequestTest {
                 "conferenceFullName='conferenceFullName', conferenceTime=2020-07-07, " +
                 "conferenceLocation='conferenceLocation', contributeEndTime=2020-07-08, " +
                 "resultReleaseTime=2020-07-09}", userSetUpConferenceRequest.toString());
-        assertEquals("UserSetUpConferenceRequest{conferenceAbbreviation='conferenceAbbreviation', conferenceFullName='conferenceFullName', conferenceTime=2020-07-07, conferenceLocation='conferenceLocation', contributeEndTime=2020-07-08, resultReleaseTime=2020-07-09}", userSetUpConferenceRequest.toString());
+        assertEquals("UserSetUpConferenceRequest{tokenconferenceAbbreviation='conferenceAbbreviation', conferenceFullName='conferenceFullName', conferenceTime=2020-07-07, conferenceLocation='conferenceLocation', contributeEndTime=2020-07-08, resultReleaseTime=2020-07-09}", userSetUpConferenceRequest.toString());
     }
 }

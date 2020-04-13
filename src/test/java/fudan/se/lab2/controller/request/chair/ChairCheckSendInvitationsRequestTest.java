@@ -1,10 +1,15 @@
 package fudan.se.lab2.controller.request.chair;
 
 import fudan.se.lab2.domain.Invitation;
-import fudan.se.lab2.exception.IllegalOperateException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+/**
+ * @author hyf
+ * this is a test class for ChairCheckSendInvitationsRequest
+ */
 
 class ChairCheckSendInvitationsRequestTest {
 
@@ -31,26 +36,23 @@ class ChairCheckSendInvitationsRequestTest {
 
     @Test
     void setToken() {
-        Throwable exception = assertThrows(IllegalOperateException.class, () -> {
-            chairCheckSendInvitationsRequest.setToken("AToken");
-        });
-        assertEquals("Invalid operation!", exception.getMessage());
+        chairCheckSendInvitationsRequest.setToken("AToken");
+        assertEquals("AToken", chairCheckSendInvitationsRequest.getToken());
+        assertNotEquals("Token", chairCheckSendInvitationsRequest.getToken());
     }
 
     @Test
     void setName() {
-        Throwable exception = assertThrows(IllegalOperateException.class, () -> {
-            chairCheckSendInvitationsRequest.setName("LOOK");
-        });
-        assertEquals("Invalid operation!", exception.getMessage());
+        chairCheckSendInvitationsRequest.setName("LOOK");
+        assertEquals("LOOK", chairCheckSendInvitationsRequest.getName());
+        assertNotEquals("BIUBIU", chairCheckSendInvitationsRequest.getName());
     }
 
     @Test
     void setStatus() {
-        Throwable exception = assertThrows(IllegalOperateException.class, () -> {
-            chairCheckSendInvitationsRequest.setStatus(Invitation.Status.PASS);
-        });
-        assertEquals("Invalid operation!", exception.getMessage());
+        chairCheckSendInvitationsRequest.setStatus(Invitation.Status.PASS);
+        assertEquals(Invitation.Status.PASS, chairCheckSendInvitationsRequest.getStatus());
+        assertNotEquals(Invitation.Status.PENDING, chairCheckSendInvitationsRequest.getStatus());
     }
 
     @Test
