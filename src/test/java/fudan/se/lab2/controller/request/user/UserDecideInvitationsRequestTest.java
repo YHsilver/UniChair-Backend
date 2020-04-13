@@ -37,10 +37,10 @@ class UserDecideInvitationsRequestTest {
     }
 
     @Test
-    void setInvitaionId() {
-        request.setInvitaionId(3L);
-        assertEquals(3L, request.getInvitaionId());
-        assertNotEquals(2L, request.getInvitaionId());
+    void setInvitationId() {
+        request.setInvitationId(3L);
+        assertEquals(3L, request.getInvitationId());
+        assertNotEquals(2L, request.getInvitationId());
     }
 
     @Test

@@ -97,7 +97,7 @@ public class UserController {
     @PostMapping("/system/decideMyInvitations")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserDecideInvitationsRequest request) {
         logger.debug(request.toString());
-//        System.out.println(request);
+        System.out.println(request);
         return ResponseEntity.ok(userService.decideInvitations(request));
     }
 }

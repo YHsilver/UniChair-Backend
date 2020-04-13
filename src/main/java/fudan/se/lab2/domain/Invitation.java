@@ -35,6 +35,12 @@ public class Invitation implements Serializable {
     @OneToOne
     private User reviewer;
 
+    private String reviewerFullName;
+
+    private String reviewerUsername;
+
+    private String reviewerEmail;
+
     // 邀请信息
     private String message;
 
@@ -56,6 +62,10 @@ public class Invitation implements Serializable {
         this.message = message;
         // 最初都是待接收
         this.status = Status.PENDING;
+        this.reviewerUsername = reviewer.getUsername();
+        this.reviewerFullName = reviewer.getFullName();
+        this.reviewerEmail = reviewer.getEmail();
+
     }
 
     public String getConferenceFullName() {
@@ -134,7 +144,9 @@ public class Invitation implements Serializable {
                     ", \"sender\":\"" + chair.getUsername().toString() + '\"' +
                     ", \"fullName\":\"" + chair.getFullName().toString() + '\"' +
                     ", \"conferenceFullName\":\"" + conferenceFullName.toString() + '\"' +
-                    ", \"reviewer\":\"" + reviewer.toString() + '\"' +
+                    ", \"reviewerUsername\":\"" + reviewerUsername + '\"' +
+                    ", \"reviewerFullName\":\"" + reviewerFullName + '\"' +
+                    ", \"reviewerEmail\":\"" + reviewerEmail + '\"' +
                     ", \"message\":\"" + message.toString() + '\"' +
                     ", \"status\":\"" + status.toString() + '\"' +
                     '}';

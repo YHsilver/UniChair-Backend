@@ -14,7 +14,7 @@ public class UserDecideInvitationsRequest {
 
     private String name = "DECIDE";
 
-    private Long invitaionId;
+    private Long invitationId;
 
     private Invitation.Status status;
 
@@ -22,14 +22,14 @@ public class UserDecideInvitationsRequest {
 
     }
 
-    public UserDecideInvitationsRequest(String token, Long invitaionId, Invitation.Status status) {
-        this.invitaionId = invitaionId;
+    public UserDecideInvitationsRequest(String token, Long invitationId, Invitation.Status status) {
+        this.invitationId = invitationId;
         this.status = status;
         this.token = token;
     }
 
-    public Long getInvitaionId() {
-        return invitaionId;
+    public Long getInvitationId() {
+        return invitationId;
     }
 
     public Invitation.Status getStatus() {
@@ -56,8 +56,8 @@ public class UserDecideInvitationsRequest {
         this.name = name;
     }
 
-    public void setInvitaionId(Long invitaionId) {
-        this.invitaionId = invitaionId;
+    public void setInvitationId(Long invitationId) {
+        this.invitationId = invitationId;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UserDecideInvitationsRequest {
         return "UserDecideInvitationsRequest{" +
                 "token='" + token + '\'' +
                 ", name='" + name + '\'' +
-                ", invitaionId=" + invitaionId +
+                ", invitationId=" + invitationId +
                 ", status=" + status +
                 '}';
     }
