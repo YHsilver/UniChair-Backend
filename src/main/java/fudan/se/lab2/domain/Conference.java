@@ -243,9 +243,9 @@ public class Conference implements Serializable {
      * change a JSON String 2 JSONObject
      * public static!!!
      *
-     * @param str
-     * @return
-     * @throws ParseException
+     * @param str JSON 格式字符串
+     * @return JSON 对象
+     * @throws ParseException 出错啦
      */
     public static JSONObject String2Json(String str) throws ParseException {
         return (JSONObject) (new JSONParser().parse(str));
@@ -274,11 +274,16 @@ public class Conference implements Serializable {
 
     public JSONObject toFullJson() {
 //         ["Dr. Chen", "Dr. Zhang", "Hu YuFeng", "Pan XingYu", "Yan Hua"]
-        String reviewers = "[";
+        StringBuilder reviewers = new StringBuilder("[");
         for (User reviewer : reviewerSet) {
-            reviewers += "\"" + reviewer.getFullName() + "\", ";
+            reviewers.append("\"").append(reviewer.getFullName()).append("\", ");
         }
-        reviewers += "]";
+        reviewers.append("]");
+        StringBuilder authors = new StringBuilder("[");
+        for (User author : authorSet) {
+            authors.append("\"").append(author.getFullName()).append("\", ");
+        }
+        authors.append("]");
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +
@@ -286,7 +291,8 @@ public class Conference implements Serializable {
                     ", \"fullName\":\"" + conferenceFullName.toString() + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
                     ", \"chair\":\"" + chairMan.getUsername().toString() + '\"' +
-                    ", \"PCMember\":\"" + reviewers.toString() + '\"' +
+                    ", \"PCMember\":\"" + reviewers.toString().toString() + '\"' +
+                    ", \"Author\":\"" + authors.toString().toString() + '\"' +
                     ", \"heldDate\":\"" + conferenceTime.toString() + '\"' +
                     ", \"heldPlace\":\"" + conferenceLocation.toString() + '\"' +
                     ", \"submissionDeadline\":\"" + contributeEndTime.toString() + '\"' +

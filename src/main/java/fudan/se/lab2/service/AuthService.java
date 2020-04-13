@@ -85,15 +85,15 @@ public class AuthService {
         if (username == null || rawPassword == null) {
             throw new UsernameNotFoundException(username == null ? "" : username);
         }
-        User currentUser = this.userRepository.findByUsername(username);
-        if (currentUser == null) {
+        User thisUser = this.userRepository.findByUsername(username);
+        if (thisUser == null) {
             throw new UsernameNotFoundException(username);
-        } else if (!this.passwordEncoder.matches(rawPassword, currentUser.getPassword())) {
-            throw new PasswordNotCorrectException(username);
+        } else if (!this.passwordEncoder.matches(rawPassword, thisUser.getPassword())) {
+            throw new PasswordNotCorrectException(username, thisUser);
         } else {
             Map<String, Object> response = new HashMap<>();
-            response.put("token", this.tokenUtil.generateToken(currentUser));
-            response.put("userDetails", currentUser.toStandardJson());
+            response.put("token", this.tokenUtil.generateToken(thisUser));
+            response.put("userDetails", thisUser.toStandardJson());
             return response;
         }
     }
