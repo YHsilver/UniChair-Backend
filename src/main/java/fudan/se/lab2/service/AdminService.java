@@ -79,6 +79,7 @@ public class AdminService {
     public String changeConferenceStatus(AdminChangeConferenceStatusRequest request) {
         User thisChair = this.userRepository.findByUsername(request.getChair());
         Conference thisConference = this.conferenceRepository.findByConferenceId(request.getId());
+        // System.out.println(request);
         thisConference.setStatus(request.getStatus());
         this.conferenceRepository.save(thisConference);
         thisChair.getConferences().add(thisConference);

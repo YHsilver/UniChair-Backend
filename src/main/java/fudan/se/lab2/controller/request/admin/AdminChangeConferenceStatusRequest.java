@@ -67,6 +67,7 @@ public class AdminChangeConferenceStatusRequest {
                 "name=" + name +
                 ", id=" + id +
                 ", status=" + status +
+                ", chair=" + chair +
                 '}';
     }
 }
