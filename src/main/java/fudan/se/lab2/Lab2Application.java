@@ -1,8 +1,10 @@
 package fudan.se.lab2;
 
 import fudan.se.lab2.domain.Authority;
+import fudan.se.lab2.domain.Conference;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.repository.AuthorityRepository;
+import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -36,7 +39,7 @@ public class Lab2Application {
      */
 
     @Bean
-    public CommandLineRunner dataLoader(UserRepository userRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner dataLoader(UserRepository userRepository, AuthorityRepository authorityRepository, ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder) {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
@@ -92,6 +95,29 @@ public class Lab2Application {
                     );
                     userRepository.save(AI);
                 }
+
+                /*
+                *     public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, LocalDate conferenceTime,
+                      String conferenceLocation, LocalDate contributeStartTime, LocalDate contributeEndTime,
+                      LocalDate resultReleaseTime, String introduction)
+                * */
+                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", LocalDate.of(2020,4,12),
+                        "AI location", LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), "AI introduction");
+                AIConference.setStatus(Conference.Status.PASS);
+
+                Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", LocalDate.of(2020,4,12),
+                        "testRobert location", LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), "testRobert introduction");
+                testRobertConference.setStatus(Conference.Status.PASS);
+                testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
+
+                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", LocalDate.of(2020,4,12),
+                        "testRobert2 location", LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), "testRobert2 introduction");
+                testRobertConference2.setStatus(Conference.Status.PASS);
+                testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
+
+                conferenceRepository.save(AIConference);
+                conferenceRepository.save(testRobertConference);
+                conferenceRepository.save(testRobertConference2);
             }
 
             private Authority getOrCreateAuthority(String authorityText, AuthorityRepository authorityRepository) {
