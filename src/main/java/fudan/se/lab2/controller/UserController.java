@@ -67,7 +67,7 @@ public class UserController {
     }
 
     // 获取会议详细信息
-    @PostMapping("/system/getConferenceDetails")
+    @PostMapping("/system/getIdentity")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserGetIdentityRequest request) {
         logger.debug(request.toString());
 //        System.out.println(request.toString());
