@@ -1,9 +1,5 @@
 package fudan.se.lab2.controller.request.auth;
 
-import fudan.se.lab2.domain.Authority;
-
-import java.util.Set;
-
 /**
  * @author LBW
  * 这个类用来处理注册申请
@@ -31,7 +27,7 @@ public class RegisterRequest {
     private String email;
 
     // authorities
-    private Set<Authority> authorities;
+//    private Set<Authority> authorities;
 
     // empty constructor
     public RegisterRequest() {
@@ -72,9 +68,9 @@ public class RegisterRequest {
         return email;
     }
 
-    public Set<Authority> getAuthorities() {
-        return authorities;
-    }
+//    public Set<Authority> getAuthorities() {
+//        return authorities;
+//    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -100,9 +96,9 @@ public class RegisterRequest {
         this.email = email;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
+//    public void setAuthorities(Set<Authority> authorities) {
+//        this.authorities = authorities;
+//    }
 
     @Override
     public String toString() {

@@ -105,7 +105,7 @@ public class ChairService {
      */
     public String inviteReviewers(ChairInviteReviewersRequest request) {
         User chair = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        User reviewer = request.getReviewer();
+        User reviewer = this.userRepository.findByUsername(request.getReviewer());
         Invitation newInvitation = new Invitation(request.getConferenceId(), request.getConferenceFullName(), chair,
                 reviewer, request.getMessage());
         this.invitationRepository.save(newInvitation);

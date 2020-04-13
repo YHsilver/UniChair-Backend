@@ -1,6 +1,6 @@
 package fudan.se.lab2.controller.request.chair;
 
-import fudan.se.lab2.domain.User;
+import fudan.se.lab2.exception.IllegalOperateException;
 
 /**
  * @author hyf
@@ -18,7 +18,7 @@ public class ChairInviteReviewersRequest {
 
     private String message;
 
-    private User reviewer;
+    private String reviewer;
 
     private String token;
 
@@ -29,7 +29,7 @@ public class ChairInviteReviewersRequest {
     }
 
     // constructor
-    public ChairInviteReviewersRequest(String username, Long conferenceId, String message, User reviewer, String token,
+    public ChairInviteReviewersRequest(String username, Long conferenceId, String message, String reviewer, String token,
                                        String conferenceFullName) {
         this.username = username;
         this.conferenceFullName = conferenceFullName;
@@ -47,7 +47,7 @@ public class ChairInviteReviewersRequest {
         return token;
     }
 
-    public User getReviewer() {
+    public String getReviewer() {
         return reviewer;
     }
 
@@ -68,7 +68,7 @@ public class ChairInviteReviewersRequest {
     }
 
     public void setName(String name) {
-        this.name = name;
+        throw new IllegalOperateException();
     }
 
     public void setUsername(String username) {
@@ -91,15 +91,19 @@ public class ChairInviteReviewersRequest {
         this.conferenceId = conferenceId;
     }
 
-    public void setReviewer(User reviewer) {
+    public void setReviewer(String reviewer) {
         this.reviewer = reviewer;
     }
 
     @Override
     public String toString() {
         return "ChairInviteReviewersRequest{" +
-                "name=" + name +
+                "name='" + name + '\'' +
                 ", username='" + username + '\'' +
+                ", conferenceId=" + conferenceId +
+                ", message='" + message + '\'' +
+                ", reviewer='" + reviewer + '\'' +
+                ", conferenceFullName='" + conferenceFullName + '\'' +
                 '}';
     }
 }
