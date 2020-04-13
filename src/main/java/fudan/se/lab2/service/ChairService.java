@@ -90,10 +90,13 @@ public class ChairService {
         String fullName = request.getFullName();
         Iterable<User> users = this.userRepository.findAll();
         List<JSONObject> list = Lists.newArrayList();
+
         users.forEach(eachUser -> {
-            if (eachUser.getFullName() == fullName)
+            if (eachUser.getFullName().equals(fullName)){
                 list.add(eachUser.toStandardJson());
+            }
         });
+
         return list;
     }
 
