@@ -56,6 +56,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllConference(request));
     }
 
+    // 获取所有现在通过的会议，以投稿
+    @PostMapping("/system/getConferenceDetails")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserGetConferenceDetailsRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request.toString());
+        return ResponseEntity.ok(userService.getConferenceDetails(request));
+    }
+
     // 投稿
     @PostMapping("/system/submitPaper")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserSubmitPaperRequest request) {

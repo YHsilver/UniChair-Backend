@@ -148,6 +148,18 @@ public class UserService {
     }
 
     /**
+     * check whether the UserShowConference request can be successful(用户查看全部通过的会议，以投稿)
+     *
+     * @param request the UserGetAllConferenceRequest request
+     * @return return conferences' lists
+     */
+    public JSONObject getConferenceDetails(UserGetConferenceDetailsRequest request) {
+        Conference thisConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
+        return thisConference.toFullJson();
+    }
+
+
+    /**
      * 删除 File，配合 submitPaper
      *
      * @param files

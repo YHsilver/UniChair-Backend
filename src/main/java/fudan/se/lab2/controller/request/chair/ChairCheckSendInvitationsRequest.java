@@ -1,7 +1,6 @@
 package fudan.se.lab2.controller.request.chair;
 
 import fudan.se.lab2.domain.Invitation;
-import fudan.se.lab2.exception.IllegalOperateException;
 
 /**
  * @author hyf
@@ -38,15 +37,18 @@ public class ChairCheckSendInvitationsRequest {
     }
 
     public void setToken(String token) {
-        throw new IllegalOperateException();
+//        throw new IllegalOperateException();
+        this.token = token;
     }
 
     public void setName(String name) {
-        throw new IllegalOperateException();
+//        throw new IllegalOperateException();
+        this.name = name;
     }
 
     public void setStatus(Invitation.Status status) {
-        throw new IllegalOperateException();
+//        throw new IllegalOperateException();
+        this.status = status;
     }
 
     @Override

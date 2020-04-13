@@ -1,7 +1,5 @@
 package fudan.se.lab2.controller.request.chair;
 
-import fudan.se.lab2.exception.IllegalOperateException;
-
 /**
  * @author hyf
  * 这个类用于邀请 PC members
@@ -68,7 +66,8 @@ public class ChairInviteReviewersRequest {
     }
 
     public void setName(String name) {
-        throw new IllegalOperateException();
+//        throw new IllegalOperateException();
+        this.name = name;
     }
 
     public void setUsername(String username) {

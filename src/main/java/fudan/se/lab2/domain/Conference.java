@@ -18,7 +18,7 @@ import java.util.Set;
 @Entity
 public class Conference implements Serializable {
 
-    // 14个属性？？？这个类要拆
+    // 15个属性？？？这个类要拆
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 会议ID
@@ -44,6 +44,8 @@ public class Conference implements Serializable {
 
     // 评审结果发布日期
     private LocalDate resultReleaseTime;
+
+    private String introduction;
 
     // 会议申请状态类别:PENDING(待审核), PASS(通过), REJECT(驳回)
     public enum Status {PENDING, PASS, REJECT}
@@ -128,6 +130,10 @@ public class Conference implements Serializable {
         return conferenceLocation;
     }
 
+    public String getIntroduction() {
+        return introduction;
+    }
+
     public User getChairMan() {
         return chairMan;
     }
@@ -178,6 +184,10 @@ public class Conference implements Serializable {
 
     public void setConferenceTime(LocalDate conferenceTime) {
         this.conferenceTime = conferenceTime;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 
     public void setContributeEndTime(LocalDate contributeEndTime) {
@@ -253,6 +263,36 @@ public class Conference implements Serializable {
                     '}';
             return String2Json(str);
         } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject toFullJson() {
+//         ["Dr. Chen", "Dr. Zhang", "Hu YuFeng", "Pan XingYu", "Yan Hua"]
+        String reviewers = "[";
+        for (User reviewer : reviewerSet) {
+            reviewers += "\"" + reviewer.getFullName() + "\", ";
+        }
+        reviewers += "]";
+        try {
+            String str = "{" +
+                    "\"id\":\"" + conferenceId.toString() + '\"' +
+                    ", \"abbreviation\":\"" + conferenceAbbreviation.toString() + '\"' +
+                    ", \"fullName\":\"" + conferenceFullName.toString() + '\"' +
+                    ", \"stage\":\"" + stage.toString() + '\"' +
+                    ", \"chair\":\"" + chairMan.getUsername().toString() + '\"' +
+                    ", \"PCMember\":\"" + reviewers.toString() + '\"' +
+                    ", \"heldDate\":\"" + conferenceTime.toString() + '\"' +
+                    ", \"heldPlace\":\"" + conferenceLocation.toString() + '\"' +
+                    ", \"submissionDeadline\":\"" + contributeEndTime.toString() + '\"' +
+                    ", \"submissionDate\":\"" + contributeStartTime.toString() + '\"' +
+                    ", \"releaseDate\":\"" + resultReleaseTime.toString() + '\"' +
+                    ", \"introduction\":\"" + introduction.toString() + '\"' +
+                    '}';
+            return String2Json(str);
+        } catch (
+                ParseException e) {
             e.printStackTrace();
             return null;
         }
