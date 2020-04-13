@@ -1,5 +1,6 @@
 package fudan.se.lab2.controller;
 
+import fudan.se.lab2.controller.request.auth.GetUserDetailsRequest;
 import fudan.se.lab2.controller.request.auth.LoginRequest;
 import fudan.se.lab2.controller.request.auth.RegisterRequest;
 import fudan.se.lab2.service.AuthService;
@@ -48,6 +49,14 @@ public class AuthController {
         logger.debug(request.toString());
 //        System.out.println(request);
         return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
+    }
+
+    // 来自 localhost:80/login 的请求
+    @PostMapping("/token")
+    public ResponseEntity<?> login(@RequestBody GetUserDetailsRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request);
+        return ResponseEntity.ok(authService.getUserDetails(request));
     }
 
     /**

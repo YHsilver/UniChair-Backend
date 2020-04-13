@@ -1,5 +1,6 @@
 package fudan.se.lab2.service;
 
+import fudan.se.lab2.controller.request.auth.GetUserDetailsRequest;
 import fudan.se.lab2.controller.request.auth.RegisterRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.exception.LoginAndRegisterException.PasswordNotCorrectException;
@@ -8,6 +9,7 @@ import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,12 +63,12 @@ public class AuthService {
         String unit = request.getUnit();
         String area = request.getArea();
         String email = request.getEmail();
-        if (userRepository.findByUsername(username) != null) {
+        if (this.userRepository.findByUsername(username) != null) {
             throw new UsernameHasBeenRegisteredException(username);
         }
-        User newUser = new User(username, passwordEncoder.encode(request.getPassword()), fullName, unit, area, email,
+        User newUser = new User(username, this.passwordEncoder.encode(request.getPassword()), fullName, unit, area, email,
                 new HashSet<>());
-        userRepository.save(newUser);
+        this.userRepository.save(newUser);
         return newUser;
     }
 
@@ -83,17 +85,28 @@ public class AuthService {
         if (username == null || rawPassword == null) {
             throw new UsernameNotFoundException(username == null ? "" : username);
         }
-        User currentUser = userRepository.findByUsername(username);
+        User currentUser = this.userRepository.findByUsername(username);
         if (currentUser == null) {
             throw new UsernameNotFoundException(username);
-        } else if (!passwordEncoder.matches(rawPassword, currentUser.getPassword())) {
+        } else if (!this.passwordEncoder.matches(rawPassword, currentUser.getPassword())) {
             throw new PasswordNotCorrectException(username);
         } else {
             Map<String, Object> response = new HashMap<>();
-            response.put("token", tokenUtil.generateToken(currentUser));
+            response.put("token", this.tokenUtil.generateToken(currentUser));
             response.put("userDetails", currentUser.toStandardJson());
             return response;
         }
+    }
+
+    /**
+     * 前端获取用户信息
+     *
+     * @param request the GetUserDetailsRequest request
+     * @return User Details
+     */
+    public JSONObject getUserDetails(GetUserDetailsRequest request) {
+        User thisUser = this.userRepository.findByUsername(this.tokenUtil.getUsernameFromToken(request.getToken()));
+        return thisUser.toStandardJson();
     }
 
 }
