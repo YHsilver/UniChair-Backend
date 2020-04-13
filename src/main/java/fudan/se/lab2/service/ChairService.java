@@ -90,10 +90,13 @@ public class ChairService {
         String fullName = request.getFullName();
         Iterable<User> users = this.userRepository.findAll();
         List<JSONObject> list = Lists.newArrayList();
+
         users.forEach(eachUser -> {
-            if (eachUser.getFullName() == fullName)
+            if (eachUser.getFullName().equals(fullName)){
                 list.add(eachUser.toStandardJson());
+            }
         });
+
         return list;
     }
 
@@ -105,12 +108,15 @@ public class ChairService {
      */
     public String inviteReviewers(ChairInviteReviewersRequest request) {
         User chair = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        User reviewer = this.userRepository.findByUsername(request.getReviewer());
-        Invitation newInvitation = new Invitation(request.getConferenceId(), request.getConferenceFullName(), chair,
-                reviewer, request.getMessage());
-        this.invitationRepository.save(newInvitation);
-        chair.getSendInvitations().add(newInvitation);
-        reviewer.getMyInvitations().add(newInvitation);
+        String[] targetNames = request.getReviewer();
+        for(int i = 0; i < targetNames.length; i++){
+            User reviewer = this.userRepository.findByUsername(targetNames[i]);
+            Invitation newInvitation = new Invitation(request.getConferenceId(), request.getConferenceFullName(), chair,
+                    reviewer, request.getMessage());
+            this.invitationRepository.save(newInvitation);
+            chair.getSendInvitations().add(newInvitation);
+            reviewer.getMyInvitations().add(newInvitation);
+        }
         //默认成功
         return "{\"message\":\"your invitation has been send!\"}";
     }

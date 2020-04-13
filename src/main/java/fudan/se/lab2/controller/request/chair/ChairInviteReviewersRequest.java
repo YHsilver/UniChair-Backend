@@ -16,7 +16,7 @@ public class ChairInviteReviewersRequest {
 
     private String message;
 
-    private String reviewer;
+    private String[] reviewer;
 
     private String token;
 
@@ -27,7 +27,7 @@ public class ChairInviteReviewersRequest {
     }
 
     // constructor
-    public ChairInviteReviewersRequest(String username, Long conferenceId, String message, String reviewer, String token,
+    public ChairInviteReviewersRequest(String username, Long conferenceId, String message, String[] reviewer, String token,
                                        String conferenceFullName) {
         this.username = username;
         this.conferenceFullName = conferenceFullName;
@@ -45,7 +45,7 @@ public class ChairInviteReviewersRequest {
         return token;
     }
 
-    public String getReviewer() {
+    public String[] getReviewer() {
         return reviewer;
     }
 
@@ -90,7 +90,7 @@ public class ChairInviteReviewersRequest {
         this.conferenceId = conferenceId;
     }
 
-    public void setReviewer(String reviewer) {
+    public void setReviewer(String[] reviewer) {
         this.reviewer = reviewer;
     }
 
@@ -101,7 +101,7 @@ public class ChairInviteReviewersRequest {
                 ", username='" + username + '\'' +
                 ", conferenceId=" + conferenceId +
                 ", message='" + message + '\'' +
-                ", reviewer='" + reviewer + '\'' +
+                ", reviewer='" + reviewer.toString() + '\'' +
                 ", conferenceFullName='" + conferenceFullName + '\'' +
                 '}';
     }
