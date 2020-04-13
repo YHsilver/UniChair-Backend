@@ -25,6 +25,7 @@ public class UserSubmitPaperRequest {
     // 论文文件
     private MultipartFile file;
 
+    // token
     private String token;
 
     // empty constructor
@@ -32,12 +33,14 @@ public class UserSubmitPaperRequest {
     }
 
     // constructor
-    public UserSubmitPaperRequest(String author, Long conferenceId, String title, String summary, MultipartFile file) {
+    public UserSubmitPaperRequest(String author, Long conferenceId, String title, String summary, MultipartFile file,
+                                  String token) {
         this.author = author;
         this.conferenceId = conferenceId;
         this.title = title;
         this.summary = summary;
         this.file = file;
+        this.token = token;
     }
 
     public String getAuthor() {
