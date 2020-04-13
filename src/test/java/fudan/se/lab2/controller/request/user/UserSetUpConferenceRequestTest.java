@@ -15,10 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class UserSetUpConferenceRequestTest {
 
     // suppose that 'gaokao' is a big meeting
-    private UserSetUpConferenceRequest userSetUpConferenceRequest = new UserSetUpConferenceRequest("token", "conferenceAbbreviation",
-            "conferenceFullName",
-            LocalDate.of(2020, 7, 7), "conferenceLocation", LocalDate.of(2020, 7, 8),
-            LocalDate.of(2020, 7, 9));
+    private UserSetUpConferenceRequest userSetUpConferenceRequest
+            = new UserSetUpConferenceRequest("token", "conferenceAbbreviation",
+            "conferenceFullName", LocalDate.of(2020, 7, 7),
+            "conferenceLocation", LocalDate.of(2020, 7, 8),
+            LocalDate.of(2020, 7, 8), LocalDate.of(2020, 7, 9),
+            "introduction");
 
     @Test
     void testGetToken() {

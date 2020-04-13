@@ -44,8 +44,7 @@ public class UserSetUpConferenceRequest {
     // constructor
     public UserSetUpConferenceRequest(String token, String conferenceAbbreviation, String conferenceFullName,
                                       LocalDate conferenceTime, String conferenceLocation, LocalDate contributeStartTime,
-                                      LocalDate contributeEndTime,
-                                      LocalDate resultReleaseTime, String introduction) {
+                                      LocalDate contributeEndTime, LocalDate resultReleaseTime, String introduction) {
         this.token = token;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
