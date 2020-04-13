@@ -1,7 +1,6 @@
 package fudan.se.lab2.controller.request.user;
 
 import fudan.se.lab2.domain.Conference;
-import fudan.se.lab2.exception.ConferencException.IllegalConferenceOperateException;
 
 /**
  * @author hyf
@@ -33,13 +32,15 @@ public class UserGetAllConferenceRequest {
     }
 
     public void setName(String name) {
-        System.out.println(name);
-        throw new IllegalConferenceOperateException();
+//        System.out.println(name);
+//        throw new IllegalConferenceOperateException();
+        this.name = name;
     }
 
     public void setRequestContent(Conference.Status requestContent) {
-        System.out.println(requestContent);
-        throw new IllegalConferenceOperateException();
+//        System.out.println(requestContent);
+//        throw new IllegalConferenceOperateException();
+        this.requestContent = requestContent;
     }
 
     @Override
