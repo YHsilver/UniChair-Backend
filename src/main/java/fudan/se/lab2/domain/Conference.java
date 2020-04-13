@@ -290,7 +290,7 @@ public class Conference implements Serializable {
                     ", \"abbreviation\":\"" + conferenceAbbreviation.toString() + '\"' +
                     ", \"fullName\":\"" + conferenceFullName.toString() + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
-                    ", \"chair\":\"" + chairMan.getUsername().toString() + '\"' +
+                    ", \"chair\":\"" + chairMan.getFullName().toString() + '\"' +
                     ", \"PCMember\":\"" + reviewers.toString().toString() + '\"' +
                     ", \"Author\":\"" + authors.toString().toString() + '\"' +
                     ", \"heldDate\":\"" + conferenceTime.toString() + '\"' +

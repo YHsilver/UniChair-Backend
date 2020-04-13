@@ -160,7 +160,7 @@ public class UserService {
     /**
      * 删除 File，配合 submitPaper
      *
-     * @param files
+     * @param files multiFile
      */
     private void deleteFile(File... files) throws NoSuchFileException, DirectoryNotEmptyException, IOException {
         for (File file : files)

@@ -89,7 +89,7 @@ public class AuthService {
         if (thisUser == null) {
             throw new UsernameNotFoundException(username);
         } else if (!this.passwordEncoder.matches(rawPassword, thisUser.getPassword())) {
-            throw new PasswordNotCorrectException(username, thisUser);
+            throw new PasswordNotCorrectException(username);
         } else {
             Map<String, Object> response = new HashMap<>();
             response.put("token", this.tokenUtil.generateToken(thisUser));

@@ -68,7 +68,7 @@ public class UserController {
     @PostMapping("/system/submitPaper")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserSubmitPaperRequest request) {
         logger.debug(request.toString());
-//        System.out.println(request.toString());
+        System.out.println(request.toString());
         try {
             return ResponseEntity.ok(userService.submitPaper(request));
         } catch (IOException e) {

@@ -65,16 +65,32 @@ public class Lab2Application {
 
                 // Create testRobert if not exists.
                 if (userRepository.findByUsername("testRobert") == null) {
-                    User admin = new User(
+                    User testRobert = new User(
                             "testRobert",
                             passwordEncoder.encode("superModelRuleTheWorld##~"),
-                            "testRobert",
+                            "testRobertRuleTheWorld",
                             "fudan",
                             "software",
                             "testRobert@fudan.edu.cn",
                             new HashSet<>(Collections.singletonList(testRobertAuthority))
                     );
-                    userRepository.save(admin);
+                    userRepository.save(testRobert);
+                }
+
+                Authority AIAuthority = getOrCreateAuthority("AI", authorityRepository);
+
+                // Create testRobert if not exists.
+                if (userRepository.findByUsername("AI") == null) {
+                    User AI = new User(
+                            "AI",
+                            passwordEncoder.encode("superAIBIGGERMind!@@"),
+                            "AIRuleTheWorld",
+                            "fudan",
+                            "software",
+                            "AI@fudan.edu.cn",
+                            new HashSet<>(Collections.singletonList(AIAuthority))
+                    );
+                    userRepository.save(AI);
                 }
             }
 
