@@ -45,6 +45,7 @@ public class Conference implements Serializable {
     // 评审结果发布日期
     private LocalDate resultReleaseTime;
 
+    // 介绍
     private String introduction;
 
     // 会议申请状态类别:PENDING(待审核), PASS(通过), REJECT(驳回)
@@ -79,14 +80,17 @@ public class Conference implements Serializable {
 
     // constructor
     public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, LocalDate conferenceTime,
-                      String conferenceLocation, LocalDate contributeEndTime, LocalDate resultReleaseTime) {
+                      String conferenceLocation, LocalDate contributeStartTime, LocalDate contributeEndTime,
+                      LocalDate resultReleaseTime, String introduction) {
         this.chairMan = chairMan;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
         this.conferenceTime = conferenceTime;
         this.conferenceLocation = conferenceLocation;
+        this.contributeStartTime = contributeStartTime;
         this.contributeEndTime = contributeEndTime;
         this.resultReleaseTime = resultReleaseTime;
+        this.introduction = introduction;
         this.status = Status.PENDING;// 初始化都是待审核状态
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
         this.authorSet = null;// 还没有人投稿

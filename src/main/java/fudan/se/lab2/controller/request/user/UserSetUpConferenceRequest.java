@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class UserSetUpConferenceRequest {
 
-    // 7个参数（含token）
+    // 8个参数（含token）
     // token
     private String token;
 
@@ -25,11 +25,17 @@ public class UserSetUpConferenceRequest {
     // 举办地点
     private String conferenceLocation;
 
+    // 投稿开始日期
+    private LocalDate contributeStartTime;
+
     // 投稿截止日期
     private LocalDate contributeEndTime;
 
     // 评审结果发布日期
     private LocalDate resultReleaseTime;
+
+    // 介绍
+    private String introduction;
 
     // empty constructor
     public UserSetUpConferenceRequest() {
@@ -37,15 +43,18 @@ public class UserSetUpConferenceRequest {
 
     // constructor
     public UserSetUpConferenceRequest(String token, String conferenceAbbreviation, String conferenceFullName,
-                                      LocalDate conferenceTime, String conferenceLocation, LocalDate contributeEndTime,
-                                      LocalDate resultReleaseTime) {
+                                      LocalDate conferenceTime, String conferenceLocation, LocalDate contributeStartTime,
+                                      LocalDate contributeEndTime,
+                                      LocalDate resultReleaseTime, String introduction) {
         this.token = token;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
         this.conferenceTime = conferenceTime;
+        this.contributeStartTime = contributeStartTime;
         this.conferenceLocation = conferenceLocation;
         this.contributeEndTime = contributeEndTime;
         this.resultReleaseTime = resultReleaseTime;
+        this.introduction = introduction;
     }
 
     public String getToken() {
@@ -54,6 +63,14 @@ public class UserSetUpConferenceRequest {
 
     public String getConferenceFullName() {
         return conferenceFullName;
+    }
+
+    public LocalDate getContributeStartTime() {
+        return contributeStartTime;
+    }
+
+    public String getIntroduction() {
+        return introduction;
     }
 
     public LocalDate getResultReleaseTime() {
@@ -90,6 +107,14 @@ public class UserSetUpConferenceRequest {
 
     public void setConferenceLocation(String conferenceLocation) {
         this.conferenceLocation = conferenceLocation;
+    }
+
+    public void setContributeStartTime(LocalDate contributeStartTime) {
+        this.contributeStartTime = contributeStartTime;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
     }
 
     public void setResultReleaseTime(LocalDate resultReleaseTime) {

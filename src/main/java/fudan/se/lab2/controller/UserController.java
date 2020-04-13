@@ -56,7 +56,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllConference(request));
     }
 
-    // 获取所有现在通过的会议，以投稿
+    // 获取会议详细信息
     @PostMapping("/system/getConferenceDetails")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserGetConferenceDetailsRequest request) {
         logger.debug(request.toString());

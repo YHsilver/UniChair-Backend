@@ -78,11 +78,9 @@ public class UserService {
         // System.out.println(chairMan);
         // 这里时间不对，应该有个“时差”的关系？？？
         Conference newConference = new Conference(chairMan,
-                request.getConferenceAbbreviation(), request.getConferenceFullName(),
-                request.getConferenceTime().plusDays(1L),
-                request.getConferenceLocation(), request.getContributeEndTime().plusDays(1L),
-                request.getResultReleaseTime().plusDays(1L)
-        );
+                request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceTime().plusDays(1L),
+                request.getConferenceLocation(), request.getContributeStartTime().plusDays(1L), request.getContributeEndTime().plusDays(1L),
+                request.getResultReleaseTime().plusDays(1L), request.getIntroduction());
 //        System.out.println(newConference);
         chairMan.getConferences().add(newConference);
         conferenceRepository.save(newConference);
@@ -148,10 +146,10 @@ public class UserService {
     }
 
     /**
-     * check whether the UserShowConference request can be successful(用户查看全部通过的会议，以投稿)
+     * 获得详细信息
      *
-     * @param request the UserGetAllConferenceRequest request
-     * @return return conferences' lists
+     * @param request the UserGetConferenceDetailsRequest request
+     * @return return conferences info
      */
     public JSONObject getConferenceDetails(UserGetConferenceDetailsRequest request) {
         Conference thisConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
