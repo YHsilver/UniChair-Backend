@@ -5,6 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * @author hyf
+ * this is a test class for UserGetMyConferenceRequest
+ */
+
 class UserGetMyConferenceRequestTest {
 
     UserGetMyConferenceRequest request = new UserGetMyConferenceRequest(Conference.Status.PASS);

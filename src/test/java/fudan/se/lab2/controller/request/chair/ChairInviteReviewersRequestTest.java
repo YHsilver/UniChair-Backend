@@ -5,6 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+/**
+ * @author hyf
+ * this is a test class for ChairInviteReviewersRequest
+ */
+
 class ChairInviteReviewersRequestTest {
 
     private ChairInviteReviewersRequest chairInviteReviewersRequest = new ChairInviteReviewersRequest("username",
