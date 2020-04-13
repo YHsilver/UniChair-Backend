@@ -21,6 +21,11 @@ public class UserCheckMyInvitationsRequest {
 
     }
 
+    public UserCheckMyInvitationsRequest(String token, Invitation.Status status) {
+        this.token = token;
+        this.status = status;
+    }
+
     public String getName() {
         return name;
     }
@@ -42,7 +47,7 @@ public class UserCheckMyInvitationsRequest {
     }
 
     public void setStatus(Invitation.Status status) {
-        this.status = status;
+        throw new IllegalOperateException();
     }
 
     @Override
