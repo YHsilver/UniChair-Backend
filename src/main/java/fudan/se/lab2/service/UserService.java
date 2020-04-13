@@ -231,7 +231,7 @@ public class UserService {
     public static List<JSONObject> getInvitationJsonObjects(Invitation.Status status, Set<Invitation> Invitations) {
         List<JSONObject> list = Lists.newArrayList();
         for (Invitation eachInvitation : Invitations) {
-            if (eachInvitation.getStatus() == status)
+            //if (eachInvitation.getStatus() == status)
                 list.add(eachInvitation.toStandardJson());
         }
         return list;
