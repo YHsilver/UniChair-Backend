@@ -1,10 +1,10 @@
 package fudan.se.lab2.controller.request.user;
 
 import fudan.se.lab2.domain.Invitation;
-import fudan.se.lab2.exception.IllegalOperateException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class UserCheckMyInvitationsRequestTest {
 
@@ -30,26 +30,23 @@ class UserCheckMyInvitationsRequestTest {
 
     @Test
     void setToken() {
-        Throwable exception = assertThrows(IllegalOperateException.class, () -> {
-            userCheckMyInvitationsRequest.setToken("HELLo");
-        });
-        assertEquals("Invalid operation!", exception.getMessage());
+        userCheckMyInvitationsRequest.setToken("BIUBIU");
+        assertEquals("BIUBIU", userCheckMyInvitationsRequest.getToken());
+        assertNotEquals("HI", userCheckMyInvitationsRequest.getToken());
     }
 
     @Test
     void setName() {
-        Throwable exception = assertThrows(IllegalOperateException.class, () -> {
-            userCheckMyInvitationsRequest.setName("HELLo");
-        });
-        assertEquals("Invalid operation!", exception.getMessage());
+        userCheckMyInvitationsRequest.setName("YEAH");
+        assertEquals("YEAH", userCheckMyInvitationsRequest.getName());
+        assertNotEquals("HH", userCheckMyInvitationsRequest.getName());
     }
 
     @Test
     void setStatus() {
-        Throwable exception = assertThrows(IllegalOperateException.class, () -> {
-            userCheckMyInvitationsRequest.setStatus(Invitation.Status.PASS);
-        });
-        assertEquals("Invalid operation!", exception.getMessage());
+        userCheckMyInvitationsRequest.setStatus(Invitation.Status.PASS);
+        assertEquals(Invitation.Status.PASS, userCheckMyInvitationsRequest.getStatus());
+        assertEquals(Invitation.Status.PASS, userCheckMyInvitationsRequest.getStatus());
     }
 
     @Test

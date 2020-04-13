@@ -1,9 +1,9 @@
 package fudan.se.lab2.controller.request.chair;
 
-import fudan.se.lab2.exception.IllegalOperateException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ChairInviteReviewersRequestTest {
 
@@ -55,10 +55,9 @@ class ChairInviteReviewersRequestTest {
 
     @Test
     void setName() {
-        Throwable exception = assertThrows(IllegalOperateException.class, () -> {
-            chairInviteReviewersRequest.setName("HELLo");
-        });
-        assertEquals("Invalid operation!", exception.getMessage());
+        chairInviteReviewersRequest.setName("HELLo");
+        assertEquals("HELLo", chairInviteReviewersRequest.getName());
+        assertNotEquals("HI", chairInviteReviewersRequest.getName());
     }
 
     @Test

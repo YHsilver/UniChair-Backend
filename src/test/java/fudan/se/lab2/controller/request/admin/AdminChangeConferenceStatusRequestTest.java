@@ -59,7 +59,7 @@ class AdminChangeConferenceStatusRequestTest {
     void testToString() {
         assertNotEquals("AdminChangeConferenceStatusRequest{name=CHANGESTATUS, id=2L, status=PENDING}",
                 adminChangeConferenceStatusRequest.toString());
-        assertEquals("AdminChangeConferenceStatusRequest{name=CHANGESTATUS, id=2, status=PENDING}",
+        assertEquals("AdminChangeConferenceStatusRequest{name=CHANGESTATUS, id=2, status=PENDING, chair=null}",
                 adminChangeConferenceStatusRequest.toString());
     }
 }
