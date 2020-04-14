@@ -83,8 +83,10 @@ public class UserService {
                 request.getConferenceLocation(), request.getContributeStartTime().plusDays(1L), request.getContributeEndTime().plusDays(1L),
                 request.getResultReleaseTime().plusDays(1L), request.getIntroduction());
 //        System.out.println(newConference);
+        // System.out.println("0" + this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())).getConferences());
         chairMan.addConference(newConference);
         conferenceRepository.save(newConference);
+        // System.out.println("1" + this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())).getConferences());
         //默认成功
         return "{\"message\":\"conference application submit success!\"}";
     }
@@ -128,7 +130,7 @@ public class UserService {
      * @param conferences user的会议库（个人）
      * @return Conferences JSONObject list
      */
-    private List<JSONObject> getConferenceJsonObjects(Conference.Status status, Set<Conference> conferences) {
+    public static List<JSONObject> getConferenceJsonObjects(Conference.Status status, Set<Conference> conferences) {
         List<JSONObject> list = Lists.newArrayList();
         for (Conference eachConference : conferences) {
             if (eachConference.getStatus().equals(status))

@@ -111,13 +111,22 @@ public class Lab2Application {
                 testRobertConference2.setStatus(Conference.Status.PASS);
                 testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
 
-                userRepository.findByUsername("AI").addConference(AIConference);
+                User tempUser = userRepository.findByUsername("AI");
+                tempUser.addConference(AIConference);
+                userRepository.save(tempUser);
+//                System.out.println(UserService.getConferenceJsonObjects(Conference.Status.PASS, userRepository.findByUsername("AI").getConferences()));
                 conferenceRepository.save(AIConference);
 
-                userRepository.findByUsername("testRobert").addConference(testRobertConference);
+                tempUser = userRepository.findByUsername("testRobert");
+                tempUser.addConference(testRobertConference);
+                userRepository.save(tempUser);
+//                userRepository.findByUsername("testRobert").addConference(testRobertConference);
                 conferenceRepository.save(testRobertConference);
 
-                userRepository.findByUsername("testRobert").addConference(testRobertConference2);
+                tempUser = userRepository.findByUsername("testRobert");
+                tempUser.addConference(testRobertConference2);
+                userRepository.save(tempUser);
+//                userRepository.findByUsername("testRobert").addConference(testRobertConference2);
                 conferenceRepository.save(testRobertConference2);
             }
 

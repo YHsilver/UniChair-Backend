@@ -93,9 +93,9 @@ public class Conference implements Serializable {
         this.introduction = introduction;
         this.status = Status.PENDING;// 初始化都是待审核状态
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
-        this.authorSet = null;// 还没有人投稿
-        this.reviewerSet = null;// 还没有人成为PC members
-        this.paperSet = null;// 还没有人投稿
+        this.authorSet = new HashSet<>();// 还没有人投稿
+        this.reviewerSet = new HashSet<>();// 还没有人成为PC members
+        this.paperSet = new HashSet<>();// 还没有人投稿
     }
 
     public Long getConferenceId() {
@@ -279,31 +279,31 @@ public class Conference implements Serializable {
             reviewers += reviewer.getFullName() + ", ";
         }
         if (reviewers.length() > 2) {
-            reviewers=reviewers.substring(0, reviewers.length() - 2);
+            reviewers = reviewers.substring(0, reviewers.length() - 2);
         }
         System.out.println(reviewers);
-        String authors ="";
+        StringBuilder authors = new StringBuilder();
         for (User author : authorSet) {
-            authors += author.getFullName() + ", ";
+            authors.append(author.getFullName()).append(", ");
         }
         if (authors.length() > 2) {
-            authors= authors.substring(0, authors.length() - 2);
+            authors = new StringBuilder(authors.substring(0, authors.length() - 2));
         }
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +
-                    ", \"abbreviation\":\"" + conferenceAbbreviation.toString() + '\"' +
-                    ", \"fullName\":\"" + conferenceFullName.toString() + '\"' +
+                    ", \"abbreviation\":\"" + conferenceAbbreviation + '\"' +
+                    ", \"fullName\":\"" + conferenceFullName + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
-                    ", \"chair\":\"" + chairMan.getFullName().toString() + '\"' +
-                    ", \"PCMember\":\"" + reviewers.toString().toString() + '\"' +
-                    ", \"Author\":\"" + authors.toString().toString() + '\"' +
+                    ", \"chair\":\"" + chairMan.getFullName() + '\"' +
+                    ", \"PCMember\":\"" + reviewers + '\"' +
+                    ", \"Author\":\"" + authors.toString() + '\"' +
                     ", \"heldDate\":\"" + conferenceTime.toString() + '\"' +
-                    ", \"heldPlace\":\"" + conferenceLocation.toString() + '\"' +
+                    ", \"heldPlace\":\"" + conferenceLocation + '\"' +
                     ", \"submissionDeadline\":\"" + contributeEndTime.toString() + '\"' +
                     ", \"submissionDate\":\"" + contributeStartTime.toString() + '\"' +
                     ", \"releaseDate\":\"" + resultReleaseTime.toString() + '\"' +
-                    ", \"introduction\":\"" + introduction.toString() + '\"' +
+                    ", \"introduction\":\"" + introduction + '\"' +
                     '}';
             return String2Json(str);
         } catch (
