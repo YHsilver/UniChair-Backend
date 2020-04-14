@@ -93,7 +93,7 @@ public class ChairInviteReviewersRequest {
                 "name='" + name + '\'' +
                 ", conferenceId=" + conferenceId +
                 ", message='" + message + '\'' +
-                ", reviewer='" + reviewer.toString() + '\'' +
+                ", reviewer='" + Arrays.toString(reviewer) + '\'' +
                 ", conferenceFullName='" + conferenceFullName + '\'' +
                 '}';
     }
