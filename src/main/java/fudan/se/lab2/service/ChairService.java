@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Set;
 import java.util.List;
 
@@ -54,14 +55,14 @@ public class ChairService {
 
     // constructor
     @Autowired
-    public ChairService(UserRepository userRepository, AuthorityRepository authorityRepository,InvitationRepository invitationRepository,
+    public ChairService(UserRepository userRepository, AuthorityRepository authorityRepository, InvitationRepository invitationRepository,
                         ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.conferenceRepository = conferenceRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenUtil = tokenUtil;
-        this.invitationRepository=invitationRepository;
+        this.invitationRepository = invitationRepository;
     }
 
     /**
@@ -76,7 +77,7 @@ public class ChairService {
         Conference thisConference = conferenceRepository.findByConferenceId(request.getConferenceId());
         thisConference.setStage(changedStage);
         conferenceRepository.save(thisConference);
-        thisUser.getConferences().add(thisConference);
+        thisUser.addConference(thisConference);
         return thisConference.getConferenceFullName() + "'s Stage is " + thisConference.getStage().toString() + " " +
                 "now!";
     }
@@ -93,7 +94,7 @@ public class ChairService {
         List<JSONObject> list = Lists.newArrayList();
 
         users.forEach(eachUser -> {
-            if (eachUser.getFullName().equals(fullName)){
+            if (eachUser.getFullName().equals(fullName)) {
                 list.add(eachUser.toStandardJson());
             }
         });
@@ -110,7 +111,7 @@ public class ChairService {
     public String inviteReviewers(ChairInviteReviewersRequest request) {
         User chair = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         String[] targetNames = request.getReviewer();
-        for(int i = 0; i < targetNames.length; i++){
+        for (int i = 0; i < targetNames.length; i++) {
             User reviewer = this.userRepository.findByUsername(targetNames[i]);
             Invitation newInvitation = new Invitation(request.getConferenceId(), request.getConferenceFullName(), chair,
                     reviewer, request.getMessage());

@@ -82,7 +82,7 @@ public class AdminService {
         // System.out.println(request);
         thisConference.setStatus(request.getStatus());
         this.conferenceRepository.save(thisConference);
-        thisChair.getConferences().add(thisConference);
+        thisChair.addConference(thisConference);
         return thisConference.getConferenceFullName() + "'s Status is " + thisConference.getStatus().toString() + " now!";
     }
 }

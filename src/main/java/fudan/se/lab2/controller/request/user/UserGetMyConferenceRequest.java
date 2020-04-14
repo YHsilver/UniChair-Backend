@@ -9,10 +9,11 @@ import fudan.se.lab2.domain.Conference;
 
 public class UserGetMyConferenceRequest {
 
+    // 3个属性
+
     // token
     private String token;
 
-    // 2个属性
     private String name = "LOOK";
 
     private Conference.Status requestContent;
@@ -53,7 +54,8 @@ public class UserGetMyConferenceRequest {
     @Override
     public String toString() {
         return "UserGetMyConferenceRequest{" +
-                "name=" + name +
+//                "token='" + token + '\'' +
+                ", name='" + name + '\'' +
                 ", requestContent=" + requestContent +
                 '}';
     }

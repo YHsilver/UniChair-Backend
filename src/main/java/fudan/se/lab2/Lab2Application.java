@@ -96,27 +96,28 @@ public class Lab2Application {
                     userRepository.save(AI);
                 }
 
-                /*
-                *     public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, LocalDate conferenceTime,
-                      String conferenceLocation, LocalDate contributeStartTime, LocalDate contributeEndTime,
-                      LocalDate resultReleaseTime, String introduction)
-                * */
-                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", LocalDate.of(2020,4,12),
-                        "AI location", LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), "AI introduction");
+                // add inner conferences
+                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", LocalDate.of(2020, 4, 12),
+                        "AI location", LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction");
                 AIConference.setStatus(Conference.Status.PASS);
 
-                Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", LocalDate.of(2020,4,12),
-                        "testRobert location", LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), "testRobert introduction");
+                Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", LocalDate.of(2020, 4, 12),
+                        "testRobert location", LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction");
                 testRobertConference.setStatus(Conference.Status.PASS);
                 testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
 
-                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", LocalDate.of(2020,4,12),
-                        "testRobert2 location", LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), LocalDate.of(2020,4,12), "testRobert2 introduction");
+                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", LocalDate.of(2020, 4, 12),
+                        "testRobert2 location", LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction");
                 testRobertConference2.setStatus(Conference.Status.PASS);
                 testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
 
+                userRepository.findByUsername("AI").addConference(AIConference);
                 conferenceRepository.save(AIConference);
+
+                userRepository.findByUsername("testRobert").addConference(testRobertConference);
                 conferenceRepository.save(testRobertConference);
+
+                userRepository.findByUsername("testRobert").addConference(testRobertConference2);
                 conferenceRepository.save(testRobertConference2);
             }
 

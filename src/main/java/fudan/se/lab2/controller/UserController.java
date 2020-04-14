@@ -89,7 +89,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userService.submitPaper(request));
         } catch (IOException e) {
-            logger.trace("context", e);   // Compliant
+            logger.trace("context", e);
             return ResponseEntity.ok("something wrong with your paper qwq");
         }
     }

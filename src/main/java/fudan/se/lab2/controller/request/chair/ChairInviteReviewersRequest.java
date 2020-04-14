@@ -26,7 +26,7 @@ public class ChairInviteReviewersRequest {
     }
 
     // constructor
-    public ChairInviteReviewersRequest( Long conferenceId, String message, String[] reviewer, String token,
+    public ChairInviteReviewersRequest(Long conferenceId, String message, String[] reviewer, String token,
                                        String conferenceFullName) {
 
         this.conferenceFullName = conferenceFullName;

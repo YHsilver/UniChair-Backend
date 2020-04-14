@@ -182,6 +182,10 @@ public class User implements UserDetails {
         this.sendInvitations = sendInvitations;
     }
 
+    public void addConference(Conference conference) {
+        this.conferences.add(conference);
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return false;
@@ -225,13 +229,13 @@ public class User implements UserDetails {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+//                ", password='" + password + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", unit='" + unit + '\'' +
                 ", area='" + area + '\'' +
                 ", email='" + email + '\'' +
-                ", authorities=" + authorities +
-                ", conferences=" + conferences.toString() +
+//                ", authorities=" + authorities +
+//                ", conferences=" + conferences.toString() +
                 '}';
     }
 
