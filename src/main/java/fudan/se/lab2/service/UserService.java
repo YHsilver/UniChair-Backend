@@ -59,9 +59,10 @@ public class UserService {
     // constructor
     @Autowired
     public UserService(UserRepository userRepository, AuthorityRepository authorityRepository, InvitationRepository invitationRepository,
-                       ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder, JwtTokenUtil tokenUtil) {
+                       ConferenceRepository conferenceRepository, PaperRepository paperRepository, PasswordEncoder passwordEncoder, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
+        this.paperRepository = paperRepository;
         this.conferenceRepository = conferenceRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenUtil = tokenUtil;
@@ -212,7 +213,7 @@ public class UserService {
      * @return return message
      */
     public String submitPaper(UserSubmitPaperRequest request) throws IOException {
-        User Author = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        User author = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         MultipartFile multipartFile = request.getFile();
         // 获取文件名
         String fileName = multipartFile.getOriginalFilename();
@@ -221,11 +222,15 @@ public class UserService {
         File excelFile = File.createTempFile(String.valueOf(Math.random()), prefix);
         // MultipartFile to File
         multipartFile.transferTo(excelFile);
-        Paper newPaper = new Paper(Author, request.getConferenceId(), request.getTitle(),
+        Paper newPaper = new Paper(author, request.getConferenceId(), request.getTitle(),
                 request.getSummary(), excelFile);
-        Author.getPapers().add(newPaper);
+        author.getPapers().add(newPaper);
         paperRepository.save(newPaper);
+        userRepository.save(author);
         deleteFile(excelFile);
+        Conference tempConference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        tempConference.addAuthor(author);
+        conferenceRepository.save(tempConference);
         // 成功
         return "{\"message\":\"your paper submit success!\"}";
     }

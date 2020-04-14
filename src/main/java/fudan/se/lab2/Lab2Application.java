@@ -113,21 +113,24 @@ public class Lab2Application {
 
                 User tempUser = userRepository.findByUsername("AI");
                 tempUser.addConference(AIConference);
+                conferenceRepository.save(AIConference);
                 userRepository.save(tempUser);
 //                System.out.println(UserService.getConferenceJsonObjects(Conference.Status.PASS, userRepository.findByUsername("AI").getConferences()));
-                conferenceRepository.save(AIConference);
+
 
                 tempUser = userRepository.findByUsername("testRobert");
                 tempUser.addConference(testRobertConference);
+                conferenceRepository.save(testRobertConference);
                 userRepository.save(tempUser);
 //                userRepository.findByUsername("testRobert").addConference(testRobertConference);
-                conferenceRepository.save(testRobertConference);
+
 
                 tempUser = userRepository.findByUsername("testRobert");
                 tempUser.addConference(testRobertConference2);
+                conferenceRepository.save(testRobertConference2);
                 userRepository.save(tempUser);
 //                userRepository.findByUsername("testRobert").addConference(testRobertConference2);
-                conferenceRepository.save(testRobertConference2);
+
             }
 
             private Authority getOrCreateAuthority(String authorityText, AuthorityRepository authorityRepository) {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -79,13 +80,15 @@ public class UserController {
     public ResponseEntity<?> handleUserRequest(@RequestParam("file") MultipartFile file,
                                                @RequestParam("conferenceId") Long conferenceId,
                                                @RequestParam("title") String title,
-                                               @RequestParam("file") String summary,
+                                               @RequestParam("summary") String summary,
                                                @RequestParam("author") String author,
-                                               @RequestParam("file") String token) {
+                                               @RequestParam("token") String token,
+                                               HttpServletRequest submitRequest) {
         UserSubmitPaperRequest request = new UserSubmitPaperRequest(author, conferenceId, title,
                 summary, file, token);
-        logger.debug(request.toString());
-        System.out.println(request.toString());
+        //System.out.println(submitRequest.toString());
+        //logger.debug(request.toString());
+        //System.out.println(request.toString());
         try {
             return ResponseEntity.ok(userService.submitPaper(request));
         } catch (IOException e) {

@@ -98,6 +98,10 @@ public class Conference implements Serializable {
         this.paperSet = new HashSet<>();// 还没有人投稿
     }
 
+    public void addAuthor(User author){
+        this.authorSet.add(author);
+    }
+
     public Long getConferenceId() {
         return conferenceId;
     }
