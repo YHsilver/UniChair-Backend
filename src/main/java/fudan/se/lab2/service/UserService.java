@@ -58,13 +58,14 @@ public class UserService {
 
     // constructor
     @Autowired
-    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository,
+    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository,InvitationRepository invitationRepository,
                        ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.conferenceRepository = conferenceRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenUtil = tokenUtil;
+        this.invitationRepository=invitationRepository;
     }
 
     /**
@@ -220,22 +221,25 @@ public class UserService {
         return "{\"message\":\"your paper submit success!\"}";
     }
 
-    /**
-     * 得到会议的JSON格式，辅助 checkMyInvitations 方法
-     * public static!!!
-     *
-     * @param status      查找的会议状态
-     * @param Invitations user的会议库（个人）
-     * @return Invitations JSONObject list
-     */
-    public static List<JSONObject> getInvitationJsonObjects(Invitation.Status status, Set<Invitation> Invitations) {
-        List<JSONObject> list = Lists.newArrayList();
-        for (Invitation eachInvitation : Invitations) {
-            //if (eachInvitation.getStatus() == status)
-                list.add(eachInvitation.toStandardJson());
-        }
-        return list;
-    }
+//    /**
+//     * 得到会议的JSON格式，辅助 checkMyInvitations 方法
+//     * public static!!!
+//     *
+//     * @param status      查找的会议状态
+//     * @param Invitations user的会议库（个人）
+//     * @return Invitations JSONObject list
+//     */
+//    public static List<JSONObject> getInvitationJsonObjects(Invitation.Status status, Set<Invitation> Invitations) {
+//        List<JSONObject> list = Lists.newArrayList();
+//        for (Invitation eachInvitation : Invitations) {
+//            System.out.println("all"+eachInvitation.toStandardJson());
+//            if (eachInvitation.getStatus() == status){
+//                list.add(eachInvitation.toStandardJson());
+//                System.out.println("hit"+eachInvitation.toStandardJson());
+//            }
+//        }
+//        return list;
+//    }
 
     /**
      * check my invitations(用户查看自己的邀请函)
@@ -244,8 +248,19 @@ public class UserService {
      * @return return conferences' lists
      */
     public List<JSONObject> checkMyInvitations(UserCheckMyInvitationsRequest request) {
+        System.out.println("checkMyInvitations Called");
         User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        return getInvitationJsonObjects(request.getStatus(), thisUser.getMyInvitations());
+        System.out.println("full name"+thisUser.getFullName());
+        System.out.println("this user's invi"+thisUser.getMyInvitations());
+        List<JSONObject> list = Lists.newArrayList();
+        for (Invitation eachInvitation : invitationRepository.findByReviewer(thisUser)) {
+            System.out.println("all"+eachInvitation.toStandardJson());
+            if (eachInvitation.getStatus() == request.getStatus()){
+                list.add(eachInvitation.toStandardJson());
+                System.out.println("hit"+eachInvitation.toStandardJson());
+            }
+        }
+        return list;
     }
 
     /**
@@ -256,10 +271,14 @@ public class UserService {
      */
     public String decideInvitations(UserDecideInvitationsRequest request) {
         User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        Invitation thisInvitation = this.invitationRepository.findByInvitationId(request.getInvitaionId());
+        Invitation thisInvitation = this.invitationRepository.findByInvitationId(request.getInvitationId());
         thisInvitation.setStatus(request.getStatus());
-        thisUser.getMyInvitations().add(thisInvitation);
+        Conference currConference = conferenceRepository.findByConferenceId(thisInvitation.getConferenceId());
+        currConference.getReviewerSet().add(thisUser);
+        this.conferenceRepository.save(currConference);
+
         this.invitationRepository.save(thisInvitation);
+
         return "Invitation " + thisInvitation.getInvitationId() + "'s Status is " + thisInvitation.getStatus().toString() + " now!";
     }
 

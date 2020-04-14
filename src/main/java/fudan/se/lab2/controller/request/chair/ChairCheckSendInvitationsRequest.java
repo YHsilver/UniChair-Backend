@@ -13,14 +13,25 @@ public class ChairCheckSendInvitationsRequest {
 
     private String token;
 
+    public Long getConferenceId() {
+        return conferenceId;
+    }
+
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
+    }
+
+    private Long conferenceId;
+
     private Invitation.Status status;
 
     public ChairCheckSendInvitationsRequest() {
 
     }
 
-    public ChairCheckSendInvitationsRequest(String token, Invitation.Status status) {
+    public ChairCheckSendInvitationsRequest(String token, Long conferenceId, Invitation.Status status) {
         this.status = status;
+        this.conferenceId = conferenceId;
         this.token = token;
     }
 

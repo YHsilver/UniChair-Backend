@@ -274,16 +274,21 @@ public class Conference implements Serializable {
 
     public JSONObject toFullJson() {
 //         ["Dr. Chen", "Dr. Zhang", "Hu YuFeng", "Pan XingYu", "Yan Hua"]
-        StringBuilder reviewers = new StringBuilder("[");
+        String reviewers = "";
         for (User reviewer : reviewerSet) {
-            reviewers.append("\"").append(reviewer.getFullName()).append("\", ");
+            reviewers += reviewer.getFullName() + ", ";
         }
-        reviewers.append("]");
-        StringBuilder authors = new StringBuilder("[");
+        if (reviewers.length() > 2) {
+            reviewers=reviewers.substring(0, reviewers.length() - 2);
+        }
+        System.out.println(reviewers);
+        String authors ="";
         for (User author : authorSet) {
-            authors.append("\"").append(author.getFullName()).append("\", ");
+            authors += author.getFullName() + ", ";
         }
-        authors.append("]");
+        if (authors.length() > 2) {
+            authors= authors.substring(0, authors.length() - 2);
+        }
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +

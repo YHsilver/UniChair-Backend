@@ -10,7 +10,6 @@ public class ChairInviteReviewersRequest {
     // 7个属性
     private String name = "INVITE";
 
-    private String username;
 
     private Long conferenceId;
 
@@ -27,9 +26,9 @@ public class ChairInviteReviewersRequest {
     }
 
     // constructor
-    public ChairInviteReviewersRequest(String username, Long conferenceId, String message, String[] reviewer, String token,
+    public ChairInviteReviewersRequest( Long conferenceId, String message, String[] reviewer, String token,
                                        String conferenceFullName) {
-        this.username = username;
+
         this.conferenceFullName = conferenceFullName;
         this.conferenceId = conferenceId;
         this.token = token;
@@ -61,18 +60,12 @@ public class ChairInviteReviewersRequest {
         return name;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     public void setName(String name) {
 //        throw new IllegalOperateException();
         this.name = name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public void setConferenceFullName(String conferenceFullName) {
         this.conferenceFullName = conferenceFullName;
@@ -98,7 +91,6 @@ public class ChairInviteReviewersRequest {
     public String toString() {
         return "ChairInviteReviewersRequest{" +
                 "name='" + name + '\'' +
-                ", username='" + username + '\'' +
                 ", conferenceId=" + conferenceId +
                 ", message='" + message + '\'' +
                 ", reviewer='" + reviewer.toString() + '\'' +

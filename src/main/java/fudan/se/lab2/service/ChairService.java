@@ -17,10 +17,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import java.util.Set;
 import java.util.List;
 
-import static fudan.se.lab2.service.UserService.getInvitationJsonObjects;
+//import static fudan.se.lab2.service.UserService.getInvitationJsonObjects;
 
 /**
  * @author hyf
@@ -54,13 +54,14 @@ public class ChairService {
 
     // constructor
     @Autowired
-    public ChairService(UserRepository userRepository, AuthorityRepository authorityRepository,
+    public ChairService(UserRepository userRepository, AuthorityRepository authorityRepository,InvitationRepository invitationRepository,
                         ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.authorityRepository = authorityRepository;
         this.conferenceRepository = conferenceRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenUtil = tokenUtil;
+        this.invitationRepository=invitationRepository;
     }
 
     /**
@@ -129,7 +130,15 @@ public class ChairService {
      */
     public List<JSONObject> checkSendInvitations(ChairCheckSendInvitationsRequest request) {
         User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        return getInvitationJsonObjects(request.getStatus(), thisUser.getMyInvitations());
+        Long conferenceId = request.getConferenceId();
+        Set<Invitation> invitationSet = invitationRepository.findByConferenceId(conferenceId);
+
+        List<JSONObject> list = Lists.newArrayList();
+        for (Invitation eachInvitation : invitationSet) {
+            //if (eachInvitation.getStatus() == status)
+            list.add(eachInvitation.toStandardJson());
+        }
+        return list;
     }
 }
 
