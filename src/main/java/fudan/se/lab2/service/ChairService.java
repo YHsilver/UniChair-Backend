@@ -94,7 +94,7 @@ public class ChairService {
         List<JSONObject> list = Lists.newArrayList();
 
         users.forEach(eachUser -> {
-            if (eachUser.getFullName().equals(fullName)) {
+            if (eachUser.getFullName().contains(fullName)) {
                 list.add(eachUser.toStandardJson());
             }
         });
