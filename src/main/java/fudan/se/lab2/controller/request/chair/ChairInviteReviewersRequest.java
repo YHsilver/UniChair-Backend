@@ -1,5 +1,7 @@
 package fudan.se.lab2.controller.request.chair;
 
+import java.util.Arrays;
+
 /**
  * @author hyf
  * 这个类用于邀请 PC members
