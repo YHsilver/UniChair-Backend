@@ -1,5 +1,8 @@
 package fudan.se.lab2.domain;
 
+import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.domain.conference.Invitation;
+import fudan.se.lab2.domain.conference.Paper;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +11,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static fudan.se.lab2.domain.Conference.String2Json;
+import static fudan.se.lab2.domain.conference.Conference.String2Json;
 
 /**
  * @author LBW
@@ -16,7 +19,7 @@ import static fudan.se.lab2.domain.Conference.String2Json;
  */
 
 @Entity
-public class User implements UserDetails {
+public class User {
 
     private static final long serialVersionUID = -6140085056226164016L;
 
@@ -44,9 +47,6 @@ public class User implements UserDetails {
     // email
     private String email;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<Authority> authorities = new HashSet<>();
-
     // 会议列表
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Conference> conferences = new HashSet<>();
@@ -68,22 +68,19 @@ public class User implements UserDetails {
     }
 
     // constructor
-    public User(String username, String password, String fullName, String unit, String area, String email,
-                Set<Authority> authorities) {
+    public User(String username, String password, String fullName, String unit, String area, String email) {
         this.username = username;
         this.password = password;
         this.fullName = fullName;
         this.unit = unit;
         this.area = area;
         this.email = email;
-        this.authorities = authorities;
     }
 
     public Long getId() {
         return id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
@@ -116,14 +113,8 @@ public class User implements UserDetails {
         return fullName;
     }
 
-    @Override
     public String getPassword() {
         return password;
-    }
-
-    @Override
-    public Set<Authority> getAuthorities() {
-        return authorities;
     }
 
     public Set<Conference> getConferences() {
@@ -154,10 +145,6 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
     public void setConferences(Set<Conference> conferences) {
         this.conferences = conferences;
     }
@@ -184,26 +171,6 @@ public class User implements UserDetails {
 
     public void addConference(Conference conference) {
         this.conferences.add(conference);
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 
     public JSONObject toStandardJson() {

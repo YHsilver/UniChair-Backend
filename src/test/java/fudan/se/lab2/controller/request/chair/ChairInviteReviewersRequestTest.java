@@ -7,12 +7,12 @@
 //
 ///**
 // * @author hyf
-// * this is a test class for ChairInviteReviewersRequest
+// * this is a test class for ChairSendInvitationRequest
 // */
 //
 //class ChairInviteReviewersRequestTest {
 //
-//    private ChairInviteReviewersRequest chairInviteReviewersRequest = new ChairInviteReviewersRequest("username",
+//    private ChairSendInvitationRequest chairInviteReviewersRequest = new ChairSendInvitationRequest("username",
 //            2L, "message", "reviewer", "token",
 //            "conferenceFullName");
 //
@@ -67,29 +67,29 @@
 //
 //    @Test
 //    void setUsername() {
-//        chairInviteReviewersRequest.setUsername("admin");
-//        assertEquals("admin", chairInviteReviewersRequest.getUsername());
+//        chairInviteReviewersRequest.setUsername("adminPage");
+//        assertEquals("adminPage", chairInviteReviewersRequest.getUsername());
 //        assertNotEquals("nobody", chairInviteReviewersRequest.getUsername());
 //    }
 //
 //    @Test
 //    void setConferenceFullName() {
-//        chairInviteReviewersRequest.setConferenceFullName("admin");
-//        assertEquals("admin", chairInviteReviewersRequest.getConferenceFullName());
+//        chairInviteReviewersRequest.setConferenceFullName("adminPage");
+//        assertEquals("adminPage", chairInviteReviewersRequest.getConferenceFullName());
 //        assertNotEquals("nobody", chairInviteReviewersRequest.getConferenceFullName());
 //    }
 //
 //    @Test
 //    void setToken() {
-//        chairInviteReviewersRequest.setToken("admin");
-//        assertEquals("admin", chairInviteReviewersRequest.getToken());
+//        chairInviteReviewersRequest.setToken("adminPage");
+//        assertEquals("adminPage", chairInviteReviewersRequest.getToken());
 //        assertNotEquals("nobody", chairInviteReviewersRequest.getToken());
 //    }
 //
 //    @Test
 //    void setMessage() {
-//        chairInviteReviewersRequest.setMessage("admin");
-//        assertEquals("admin", chairInviteReviewersRequest.getMessage());
+//        chairInviteReviewersRequest.setMessage("adminPage");
+//        assertEquals("adminPage", chairInviteReviewersRequest.getMessage());
 //        assertNotEquals("nobody", chairInviteReviewersRequest.getMessage());
 //    }
 //
@@ -102,15 +102,15 @@
 //
 //    @Test
 //    void setReviewer() {
-//        chairInviteReviewersRequest.setReviewer("admin");
-//        assertEquals("admin", chairInviteReviewersRequest.getReviewer());
+//        chairInviteReviewersRequest.setReviewer("adminPage");
+//        assertEquals("adminPage", chairInviteReviewersRequest.getReviewer());
 //        assertNotEquals("nobody", chairInviteReviewersRequest.getReviewer());
 //    }
 //
 //    @Test
 //    void testToString() {
-//        assertEquals("ChairInviteReviewersRequest{name='INVITE', username='username', conferenceId=2, message='message', reviewer='reviewer', conferenceFullName='conferenceFullName'}", chairInviteReviewersRequest.toString());
-//        assertNotEquals("ChairInviteReviewersRequest{name=INVITE, username='username'}",
+//        assertEquals("ChairSendInvitationRequest{name='INVITE', username='username', conferenceId=2, message='message', reviewer='reviewer', conferenceFullName='conferenceFullName'}", chairInviteReviewersRequest.toString());
+//        assertNotEquals("ChairSendInvitationRequest{name=INVITE, username='username'}",
 //                chairInviteReviewersRequest.toString());
 //    }
 //}

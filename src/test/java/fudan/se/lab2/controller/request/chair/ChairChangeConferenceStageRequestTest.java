@@ -1,6 +1,7 @@
 package fudan.se.lab2.controller.request.chair;
 
-import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairChangeConferenceStageRequest;
+import fudan.se.lab2.domain.conference.Conference;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

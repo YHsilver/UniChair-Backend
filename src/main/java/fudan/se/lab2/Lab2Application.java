@@ -1,9 +1,7 @@
 package fudan.se.lab2;
 
-import fudan.se.lab2.domain.Authority;
-import fudan.se.lab2.domain.Conference;
+import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.User;
-import fudan.se.lab2.repository.AuthorityRepository;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -13,8 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
 
 /**
  * Welcome to 2020 Software Engineering Lab2.
@@ -39,32 +35,26 @@ public class Lab2Application {
      */
 
     @Bean
-    public CommandLineRunner dataLoader(UserRepository userRepository, AuthorityRepository authorityRepository, ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner dataLoader(UserRepository userRepository, ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder) {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
 
                 // Create authorities if not exist.
                 // 管理员、投稿人、审稿人
-                Authority adminAuthority = getOrCreateAuthority("Admin", authorityRepository);
-                Authority contributorAuthority = getOrCreateAuthority("Contributor", authorityRepository);
-                Authority reviewerAuthority = getOrCreateAuthority("Reviewer", authorityRepository);
 
-                // Create an admin if not exists.
-                if (userRepository.findByUsername("admin") == null) {
+                // Create an adminPage if not exists.
+                if (userRepository.findByUsername("adminPage") == null) {
                     User admin = new User(
-                            "admin",
+                            "adminPage",
                             passwordEncoder.encode("ThisisaAdminPASSWORD123$$软工牛逼"),
-                            "admin",
+                            "adminPage",
                             "fudan",
                             "software",
-                            "admin@fudan.edu.cn",
-                            new HashSet<>(Collections.singletonList(adminAuthority))
+                            "adminPage@fudan.edu.cn"
                     );
                     userRepository.save(admin);
                 }
-
-                Authority testRobertAuthority = getOrCreateAuthority("testRobert", authorityRepository);
 
                 // Create testRobert if not exists.
                 if (userRepository.findByUsername("testRobert") == null) {
@@ -74,13 +64,10 @@ public class Lab2Application {
                             "testRobertRuleTheWorld",
                             "fudan",
                             "software",
-                            "testRobert@fudan.edu.cn",
-                            new HashSet<>(Collections.singletonList(testRobertAuthority))
+                            "testRobert@fudan.edu.cn"
                     );
                     userRepository.save(testRobert);
                 }
-
-                Authority AIAuthority = getOrCreateAuthority("AI", authorityRepository);
 
                 // Create testRobert if not exists.
                 if (userRepository.findByUsername("AI") == null) {
@@ -90,24 +77,23 @@ public class Lab2Application {
                             "AIRuleTheWorld",
                             "fudan",
                             "software",
-                            "AI@fudan.edu.cn",
-                            new HashSet<>(Collections.singletonList(AIAuthority))
+                            "AI@fudan.edu.cn"
                     );
                     userRepository.save(AI);
                 }
 
                 // add inner conferences
-                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", LocalDate.of(2020, 4, 12),
-                        "AI location", LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction");
+                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr","AI full name", "AI location",  LocalDate.of(2020, 4, 12),
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction");
                 AIConference.setStatus(Conference.Status.PASS);
 
-                Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", LocalDate.of(2020, 4, 12),
-                        "testRobert location", LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction");
+                Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", "testRobert location", LocalDate.of(2020, 4, 12),
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction");
                 testRobertConference.setStatus(Conference.Status.PASS);
                 testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
 
-                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", LocalDate.of(2020, 4, 12),
-                        "testRobert2 location", LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction");
+                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", "testRobert2 location",  LocalDate.of(2020, 4, 12),
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction");
                 testRobertConference2.setStatus(Conference.Status.PASS);
                 testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
 
@@ -131,15 +117,6 @@ public class Lab2Application {
                 userRepository.save(tempUser);
 //                userRepository.findByUsername("testRobert").addConference(testRobertConference2);
 
-            }
-
-            private Authority getOrCreateAuthority(String authorityText, AuthorityRepository authorityRepository) {
-                Authority authority = authorityRepository.findByAuthority(authorityText);
-                if (authority == null) {
-                    authority = new Authority(authorityText);
-                    authorityRepository.save(authority);
-                }
-                return authority;
             }
         };
     }

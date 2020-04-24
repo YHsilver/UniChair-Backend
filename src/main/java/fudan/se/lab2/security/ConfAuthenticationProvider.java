@@ -1,6 +1,6 @@
 package fudan.se.lab2.security;
 
-import fudan.se.lab2.service.JwtUserDetailsService;
+//import fudan.se.lab2.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,12 +17,12 @@ import java.util.Collection;
 @Component
 class ConfAuthenticationProvider implements AuthenticationProvider {
 
-    private JwtUserDetailsService userDetailsService;
+    //private JwtUserDetailsService userDetailsService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ConfAuthenticationProvider(JwtUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        this.userDetailsService = userDetailsService;
+    public ConfAuthenticationProvider(PasswordEncoder passwordEncoder) {
+        //this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -31,16 +31,17 @@ class ConfAuthenticationProvider implements AuthenticationProvider {
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = (String) authentication.getCredentials();
-        UserDetails user = userDetailsService.loadUserByUsername(username);
-
-        if (!passwordEncoder.encode(password).equals(user.getPassword())) {
-            throw new BadCredentialsException("Wrong password.");
-        }
-
-        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-        return new UsernamePasswordAuthenticationToken(user, password, authorities);
+        return null;
+//        String username = authentication.getName();
+//        String password = (String) authentication.getCredentials();
+//        UserDetails user = userDetailsService.loadUserByUsername(username);
+//
+//        if (!passwordEncoder.encode(password).equals(user.getPassword())) {
+//            throw new BadCredentialsException("Wrong password.");
+//        }
+//
+//        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+//        return new UsernamePasswordAuthenticationToken(user, password, authorities);
     }
 
     @Override

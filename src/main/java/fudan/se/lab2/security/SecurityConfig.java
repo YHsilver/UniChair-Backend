@@ -1,7 +1,7 @@
 package fudan.se.lab2.security;
 
 import fudan.se.lab2.security.jwt.JwtRequestFilter;
-import fudan.se.lab2.service.JwtUserDetailsService;
+//import fudan.se.lab2.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,12 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private JwtUserDetailsService userDetailsService;
+    //private JwtUserDetailsService userDetailsService;
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
-    public SecurityConfig(JwtUserDetailsService userDetailsService, JwtRequestFilter jwtRequestFilter) {
-        this.userDetailsService = userDetailsService;
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+        //this.userDetailsService = userDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/admin/*","/invitation/*","/application","/contribute/*", "/token", "/system/*", "/login", "/register", "/setUpConference")
+                .antMatchers("/adminPage/*","/invitation/*","/application","/contribute/*", "/token", "/system/*", "/login", "/register", "/setUpConference")
                 .permitAll()
                 .anyRequest().authenticated();
 

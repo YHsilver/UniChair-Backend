@@ -1,9 +1,6 @@
 package fudan.se.lab2.controller;
 
-import fudan.se.lab2.controller.request.auth.GetUserDetailsRequest;
-import fudan.se.lab2.controller.request.auth.LoginRequest;
-import fudan.se.lab2.controller.request.auth.RegisterRequest;
-import fudan.se.lab2.service.AuthService;
+import fudan.se.lab2.service.GeneralService.GetUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,38 +22,23 @@ import java.util.Map;
 @RestController
 public class AuthController {
 
-    private AuthService authService;
+    private GetUserDetailsService getUserDetailsService;
 
     // 日志
     Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(GetUserDetailsService getUserDetailsService) {
+        this.getUserDetailsService = getUserDetailsService;
     }
 
-    // 来自 localhost:80/register 的请求
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        logger.debug(request.toString());
-//        System.out.println(request.toString());
-        return ResponseEntity.ok(authService.register(request));
-    }
-
-    // 来自 localhost:80/login 的请求
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        logger.debug(request.toString());
-//        System.out.println(request);
-        return ResponseEntity.ok(authService.login(request.getUsername(), request.getPassword()));
-    }
 
     // 来自 localhost:80/login 的请求
     @PostMapping("/token")
     public ResponseEntity<?> login(@RequestBody GetUserDetailsRequest request) {
         logger.debug(request.toString());
 //        System.out.println(request);
-        return ResponseEntity.ok(authService.getUserDetails(request));
+        return ResponseEntity.ok(getUserDetailsService.getUserDetails(request));
     }
 
     /**

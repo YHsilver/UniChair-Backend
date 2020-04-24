@@ -1,6 +1,6 @@
 //package fudan.se.lab2.controller.request.chair;
 //
-//import fudan.se.lab2.domain.Invitation;
+//import fudan.se.lab2.domain.conference.Invitation;
 //import org.junit.jupiter.api.Test;
 //
 //import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,12 +8,12 @@
 //
 ///**
 // * @author hyf
-// * this is a test class for ChairCheckSendInvitationsRequest
+// * this is a test class for ChairCheckInvitationsRequest
 // */
 //
 //class ChairCheckSendInvitationsRequestTest {
 //
-//    ChairCheckSendInvitationsRequest chairCheckSendInvitationsRequest = new ChairCheckSendInvitationsRequest("token",
+//    ChairCheckInvitationsRequest chairCheckSendInvitationsRequest = new ChairCheckInvitationsRequest("token",
 //            Invitation.Status.PENDING);
 //
 //    @Test
@@ -57,6 +57,6 @@
 //
 //    @Test
 //    void testToString() {
-//        assertEquals("ChairCheckSendInvitationsRequest{name='CHECKSENDINVITATION', token='token', status=PENDING}", chairCheckSendInvitationsRequest.toString());
+//        assertEquals("ChairCheckInvitationsRequest{name='CHECKSENDINVITATION', token='token', status=PENDING}", chairCheckSendInvitationsRequest.toString());
 //    }
 //}

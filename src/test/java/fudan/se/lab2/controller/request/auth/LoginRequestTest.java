@@ -1,5 +1,6 @@
 package fudan.se.lab2.controller.request.auth;
 
+import fudan.se.lab2.controller.indexPage.request.LoginRequest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class LoginRequestTest {
 
-    private String username1 = "admin";
+    private String username1 = "adminPage";
     private String username2 = "Admin";
     private String password1 = "123456";
     private String password2 = "12345";

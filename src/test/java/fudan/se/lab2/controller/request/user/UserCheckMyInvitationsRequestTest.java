@@ -1,6 +1,7 @@
 package fudan.se.lab2.controller.request.user;
 
-import fudan.se.lab2.domain.Invitation;
+import fudan.se.lab2.controller.messagePage.request.UserCheckMyInvitationsRequest;
+import fudan.se.lab2.domain.conference.Invitation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
