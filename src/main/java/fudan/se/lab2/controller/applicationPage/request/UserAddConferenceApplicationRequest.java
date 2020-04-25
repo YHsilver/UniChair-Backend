@@ -111,13 +111,15 @@ public class UserAddConferenceApplicationRequest {
     @Override
     public String toString() {
         return "UserAddConferenceApplicationRequest{" +
-                token +
-                "conferenceAbbreviation='" + conferenceAbbreviation + '\'' +
+                "token='" + token + '\'' +
+                ", conferenceAbbreviation='" + conferenceAbbreviation + '\'' +
                 ", conferenceFullName='" + conferenceFullName + '\'' +
-                ", conferenceTime=" + conferenceTime +
                 ", conferenceLocation='" + conferenceLocation + '\'' +
+                ", conferenceTime=" + conferenceTime +
+                ", contributeStartTime=" + contributeStartTime +
                 ", contributeEndTime=" + contributeEndTime +
                 ", resultReleaseTime=" + resultReleaseTime +
+                ", introduction='" + introduction + '\'' +
                 '}';
     }
 }

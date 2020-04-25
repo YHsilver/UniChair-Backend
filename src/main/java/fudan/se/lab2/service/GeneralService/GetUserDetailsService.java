@@ -19,29 +19,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetUserDetailsService {
 
-    // 用户仓库
     private UserRepository userRepository;
-
-    // 加密密码
-    private PasswordEncoder passwordEncoder;
-
-    // token
     private JwtTokenUtil tokenUtil;
 
-    public GetUserDetailsService() {
-
-    }
-
-    // constructor
     @Autowired
-    public GetUserDetailsService(UserRepository userRepository, ConferenceRepository conferenceRepository,
-                                 PasswordEncoder passwordEncoder, JwtTokenUtil tokenUtil) {
+    public GetUserDetailsService(UserRepository userRepository, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.tokenUtil = tokenUtil;
     }
-
-
 
     /**
      * 前端获取用户信息
@@ -50,8 +35,8 @@ public class GetUserDetailsService {
      * @return User Details
      */
     public JSONObject getUserDetails(GetUserDetailsRequest request) {
-        User thisUser = this.userRepository.findByUsername(this.tokenUtil.getUsernameFromToken(request.getToken()));
-        return thisUser.toStandardJson();
+        User user = this.userRepository.findByUsername(this.tokenUtil.getUsernameFromToken(request.getToken()));
+        return user.toStandardJson();
     }
 
 }

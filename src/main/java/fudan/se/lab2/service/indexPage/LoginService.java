@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class LoginService {
             System.out.println(thisUser.toString());
             throw new PasswordNotCorrectException(username);
         } else {
-            System.out.println(thisUser.toString());
+            System.out.println("loginUser:[" + thisUser.toString() + "] time:[" + new Date(System.currentTimeMillis()).toString() + "]");
             Map<String, Object> response = new HashMap<>();
             response.put("token", this.tokenUtil.generateToken(thisUser));
             response.put("userDetails", thisUser.toStandardJson());

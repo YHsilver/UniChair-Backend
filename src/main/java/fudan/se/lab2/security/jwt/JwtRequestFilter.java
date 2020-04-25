@@ -1,5 +1,6 @@
 package fudan.se.lab2.security.jwt;
 
+import fudan.se.lab2.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author LBW
@@ -20,11 +24,12 @@ import java.util.Enumeration;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    private UserRepository userRepository;
     private JwtTokenUtil tokenUtil;
 
     @Autowired
-    public JwtRequestFilter(JwtTokenUtil tokenUtil) {
-        this.tokenUtil = tokenUtil;
+    public JwtRequestFilter(UserRepository userRepository, JwtTokenUtil tokenUtil) {
+        this.userRepository = userRepository; this.tokenUtil = tokenUtil;
     }
 
     @Override
@@ -54,7 +59,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
 //        System.out.println("[" + username + "] token access");
-        // green light
+
+        if(!username.equals("admin") && request.getRequestURI().startsWith("/admin")){
+            response.sendRedirect("http://114.115.246.37:80/index");
+            return;
+
+        }
         filterChain.doFilter(request, response);
     }
 

@@ -11,16 +11,8 @@ public class UserDecideInvitationsRequest {
 
     // 4个属性
     private String token;
-
-    private String name = "DECIDE";
-
     private Long invitationId;
-
     private Invitation.Status status;
-
-    public UserDecideInvitationsRequest() {
-
-    }
 
     public UserDecideInvitationsRequest(String token, Long invitationId, Invitation.Status status) {
         this.invitationId = invitationId;
@@ -31,31 +23,18 @@ public class UserDecideInvitationsRequest {
     public Long getInvitationId() {
         return invitationId;
     }
-
     public Invitation.Status getStatus() {
         return status;
     }
-
     public String getToken() {
         return token;
     }
-
-    public String getName() {
-        return name;
-    }
-
     public void setStatus(Invitation.Status status) {
         this.status = status;
     }
-
     public void setToken(String token) {
         this.token = token;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setInvitationId(Long invitationId) {
         this.invitationId = invitationId;
     }
@@ -64,7 +43,6 @@ public class UserDecideInvitationsRequest {
     public String toString() {
         return "UserDecideInvitationsRequest{" +
                 "token='" + token + '\'' +
-                ", name='" + name + '\'' +
                 ", invitationId=" + invitationId +
                 ", status=" + status +
                 '}';

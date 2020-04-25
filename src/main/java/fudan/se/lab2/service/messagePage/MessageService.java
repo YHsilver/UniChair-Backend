@@ -20,14 +20,10 @@ import java.util.List;
 public class MessageService {
 
     private UserRepository userRepository;
-    // 会议仓库
     private ConferenceRepository conferenceRepository;
-    // 邀请函仓库
     private InvitationRepository invitationRepository;
-    // token
     private JwtTokenUtil tokenUtil;
-
-    // constructor
+    
     @Autowired
     public MessageService(UserRepository userRepository, InvitationRepository invitationRepository,
                        ConferenceRepository conferenceRepository, JwtTokenUtil tokenUtil) {
@@ -44,17 +40,12 @@ public class MessageService {
      * @param request the UserCheckMyInvitationsRequest request
      * @return return conferences' lists
      */
-    public List<JSONObject> checkMyInvitations(UserCheckMyInvitationsRequest request) {
-        System.out.println("checkMyInvitations Called");
-        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        System.out.println("full name" + thisUser.getFullName());
-        System.out.println("this user's invi" + thisUser.getMyInvitations());
+    public List<JSONObject> userCheckMyInvitations(UserCheckMyInvitationsRequest request) {
+        User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         List<JSONObject> list = Lists.newArrayList();
-        for (Invitation eachInvitation : invitationRepository.findByReviewer(thisUser)) {
-            System.out.println("all" + eachInvitation.toStandardJson());
+        for (Invitation eachInvitation : invitationRepository.findByReviewer(user)) {
             if (eachInvitation.getStatus() == request.getStatus()) {
                 list.add(eachInvitation.toStandardJson());
-                System.out.println("hit" + eachInvitation.toStandardJson());
             }
         }
         return list;
@@ -66,16 +57,19 @@ public class MessageService {
      * @param request the UserDecideInvitationsRequest request
      * @return successful message
      */
-    public String decideInvitations(UserDecideInvitationsRequest request) {
-        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        Invitation thisInvitation = this.invitationRepository.findByInvitationId(request.getInvitationId());
-        thisInvitation.setStatus(request.getStatus());
-        Conference currConference = conferenceRepository.findByConferenceId(thisInvitation.getConferenceId());
-        currConference.getReviewerSet().add(thisUser);
+    public String userDecideInvitations(UserDecideInvitationsRequest request) {
+        User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Invitation invitation = this.invitationRepository.findByInvitationId(request.getInvitationId());
+        // only PENDING to PASS or REJECT
+        if(request.getStatus() != Invitation.Status.PENDING && invitation.getStatus() == Invitation.Status.PENDING){
+            invitation.setStatus(request.getStatus());
+        }else{
+            //TODO: throw exception
+        }
+        Conference currConference = conferenceRepository.findByConferenceId(invitation.getConferenceId());
+        currConference.getReviewerSet().add(user);
         this.conferenceRepository.save(currConference);
-
-        this.invitationRepository.save(thisInvitation);
-
-        return "Invitation " + thisInvitation.getInvitationId() + "'s Status is " + thisInvitation.getStatus().toString() + " now!";
+        this.invitationRepository.save(invitation);
+        return "Invitation " + invitation.getInvitationId() + "'s Status is " + invitation.getStatus().toString() + " now!";
     }
 }

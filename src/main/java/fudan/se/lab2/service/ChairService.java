@@ -49,28 +49,26 @@ public class ChairService {
     }
 
 
-<<<<<<< HEAD
-    /**
-     * chair invite PC members
-     *
-     * @param request the ChairRequest request
-     * @return return successful message
-     */
-    public List<JSONObject> getReviewers(ChairSearchReviewersRequest request) {
-        String fullName = request.getFullName();
-        Iterable<User> users = this.userRepository.findAll();
-        List<JSONObject> list = Lists.newArrayList();
+//    /**
+//     * chair invite PC members
+//     *
+//     * @param request the ChairRequest request
+//     * @return return successful message
+//     */
+//    public List<JSONObject> getReviewers(ChairSearchReviewersRequest request) {
+//        String fullName = request.getFullName();
+//        Iterable<User> users = this.userRepository.findAll();
+//        List<JSONObject> list = Lists.newArrayList();
+//
+//        users.forEach(eachUser -> {
+//            if (eachUser.getFullName().contains(fullName)) {
+//                list.add(eachUser.toStandardJson());
+//            }
+//        });
+//
+//        return list;
+//    }
 
-        users.forEach(eachUser -> {
-            if (eachUser.getFullName().contains(fullName)) {
-                list.add(eachUser.toStandardJson());
-            }
-        });
-
-        return list;
-    }
-=======
->>>>>>> refactor half-implemented
 
 
 
