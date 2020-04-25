@@ -37,6 +37,13 @@ public class StringGenerator {
         return result;
     }
 
+    protected static String getRandomString(){
+        return getRandomString(6, 12, true, true, false);
+    }
+
+    protected static String getRandomString(int minLength, int maxLength){
+        return getRandomString(minLength, maxLength, true, true, false);
+    }
 
     protected static String getRandomString(int minLength, int maxLength, boolean hasLetters,
                                             boolean hasDigits, boolean hasSpecialCharacters){
@@ -46,6 +53,20 @@ public class StringGenerator {
         }
 
         // select charSet
+        char[] charSet = characterSetSelector(hasLetters, hasDigits, hasSpecialCharacters);
+        int setLength = charSet.length;
+        StringBuilder tempString = new StringBuilder();
+        int stringLength = random.nextInt( (maxLength - minLength + 1)) + minLength;
+
+        for(int i = 0; i < stringLength; i++){
+            tempString.append(charSet[random.nextInt( setLength)]);
+        }
+
+        return tempString.toString();
+    }
+
+    private static char[] characterSetSelector(boolean hasLetters,
+                                               boolean hasDigits, boolean hasSpecialCharacters){
         char[] charSet;
         if(hasDigits){
             if(hasLetters){
@@ -72,42 +93,6 @@ public class StringGenerator {
                 charSet = SPECIAL_CHARACTERS_SET;
             }
         }
-
-
-//        if(hasDigits && hasLetters && (!hasSpecialCharacters)){
-//            charSet = DIGITS_AND_LETTERS_SET;
-//        }else if(hasDigits && hasLetters && hasSpecialCharacters){
-//            charSet = ALL_SET;
-//        }else if(hasDigits && (!hasLetters) && hasSpecialCharacters){
-//            charSet = DIGITS_AND_SPECIAL_CHARACTERS_SET;
-//        }else if(hasDigits && (!hasLetters) && (!hasSpecialCharacters)){
-//            charSet = DIGITS_SET;
-//        }else if((!hasDigits) && hasLetters && hasSpecialCharacters){
-//            charSet = LETTERS_AND_SPECIAL_CHARACTERS_SET;
-//        }else if((!hasDigits) && hasLetters && (!hasSpecialCharacters)){
-//            charSet = LETTERS_SET;
-//        }else if((!hasDigits) && (!hasLetters) && hasSpecialCharacters){
-//            charSet = SPECIAL_CHARACTERS_SET;
-//        }else{
-//            charSet = ALL_SET;
-//        }
-
-        int setLength = charSet.length;
-        StringBuilder tempString = new StringBuilder();
-        int stringLength = random.nextInt( (maxLength - minLength + 1)) + minLength;
-
-        for(int i = 0; i < stringLength; i++){
-            tempString.append(charSet[random.nextInt( setLength)]);
-        }
-
-        return tempString.toString();
-    }
-
-    protected static String getRandomString(){
-        return getRandomString(6, 12, true, true, false);
-    }
-
-    protected static String getRandomString(int minLength, int maxLength){
-        return getRandomString(minLength, maxLength, true, true, false);
+        return charSet;
     }
 }

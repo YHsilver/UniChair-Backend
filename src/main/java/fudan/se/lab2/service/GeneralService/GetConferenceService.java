@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class GetConferenceService {
@@ -23,7 +24,6 @@ public class GetConferenceService {
 
     public List<JSONObject> getConference(GetConferenceRequest getConferenceRequest){
         List<JSONObject> list = new ArrayList<>();
-        List<Conference> conferenceList = new ArrayList<>();
         // 指定会议Id
         if(getConferenceRequest.getConferenceId() != -1){
             if(getConferenceRequest.isBrief()){
@@ -34,10 +34,7 @@ public class GetConferenceService {
             return list;
         }
 
-        Iterable<Conference> conferenceIterable = conferenceRepository.findAll();
-        conferenceIterable.forEach(eachConference -> {
-            conferenceList.add(eachConference);
-        });
+        Set<Conference> conferenceList = conferenceRepository.findAll();
 
         if(getConferenceRequest.getChair() != null){
             conferenceList.retainAll(conferenceRepository.findByChairMan(getConferenceRequest.getChair()));

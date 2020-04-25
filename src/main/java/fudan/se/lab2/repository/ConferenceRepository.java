@@ -17,6 +17,7 @@ import java.util.Set;
 public interface ConferenceRepository extends CrudRepository<Conference, Long> {
     Conference findByConferenceId(Long id);
 
+    Set<Conference> findAll();
     Set<Conference> findByConferenceAbbreviation(String conferenceAbbreviation);
     Set<Conference> findByConferenceFullName(String conferenceFullName);
     Set<Conference> findByChairMan(User chairMan);

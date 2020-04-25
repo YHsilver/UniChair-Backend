@@ -107,7 +107,7 @@ public class ChairIdentityService {
         int validNum = 0;
         if(!conference.getChairMan().getId().equals(chair.getId())){
             // invalid send, not chair
-            return "{\"message\":\"" + validNum + " invitation has been send!\"}";
+            return "{\"message\":\" You are not the chair! " + validNum + " invitation has been send!\"}";
         }
 
         String[] targetNames = request.getReviewerUsername();
@@ -117,16 +117,10 @@ public class ChairIdentityService {
             User reviewer = this.userRepository.findByUsername(targetName);
             // chair and PC member cannot be invited
             if(!reviewer.getId().equals(chair.getId()) && !conference.getReviewerSet().contains(reviewer)){
-                Set<Invitation> invitations = invitationRepository.findByReviewer(reviewer);
-                boolean invitationSentBefore = false;
-                for (Invitation invitation:invitations
-                     ) {
-                    if(invitation.getStatus() == Invitation.Status.PENDING && invitation.getConferenceId().equals(conference.getConferenceId())){
-                        invitationSentBefore = true;
-                        break;
-                    }
-                }
-                if(invitationSentBefore){ continue; }
+                // invitation has sent before
+                Set<Invitation> invitations = invitationRepository.findByReviewerAndConferenceIdAndStatus(reviewer, conference.getConferenceId(), Invitation.Status.PENDING);
+                if(invitations.size() == 1){ continue; }
+
                 validNum++;
                 Invitation newInvitation = new Invitation(conference.getConferenceId(), conference.getConferenceFullName(), chair,
                         reviewer, message);
