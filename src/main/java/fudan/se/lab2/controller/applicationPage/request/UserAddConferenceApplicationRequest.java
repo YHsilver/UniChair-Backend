@@ -1,6 +1,7 @@
 package fudan.se.lab2.controller.applicationPage.request;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 /**
  * @author pxy、yh
@@ -21,12 +22,14 @@ public class UserAddConferenceApplicationRequest {
     private LocalDate contributeEndTime;
     private LocalDate resultReleaseTime;
     private String introduction;
+    private String[] topics;
 
     public UserAddConferenceApplicationRequest(){}
 
     public UserAddConferenceApplicationRequest(String token, String conferenceAbbreviation, String conferenceFullName,
                                                LocalDate conferenceTime, String conferenceLocation, LocalDate contributeStartTime,
-                                               LocalDate contributeEndTime, LocalDate resultReleaseTime, String introduction) {
+                                               LocalDate contributeEndTime, LocalDate resultReleaseTime, String introduction,
+                                               String[] topics) {
         this.token = token;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
@@ -36,6 +39,7 @@ public class UserAddConferenceApplicationRequest {
         this.contributeEndTime = contributeEndTime;
         this.resultReleaseTime = resultReleaseTime;
         this.introduction = introduction;
+        this.topics = topics;
     }
 
     public String getToken() {
@@ -74,6 +78,8 @@ public class UserAddConferenceApplicationRequest {
         return conferenceAbbreviation;
     }
 
+    public String[] getTopics() { return topics; }
+
     public void setToken(String token) {
         this.token = token;
     }
@@ -110,6 +116,8 @@ public class UserAddConferenceApplicationRequest {
         this.conferenceAbbreviation = conferenceAbbreviation;
     }
 
+    public void setTopics(String[] topics) { this.topics = topics; }
+
     @Override
     public String toString() {
         return "UserAddConferenceApplicationRequest{" +
@@ -122,6 +130,7 @@ public class UserAddConferenceApplicationRequest {
                 ", contributeEndTime=" + contributeEndTime +
                 ", resultReleaseTime=" + resultReleaseTime +
                 ", introduction='" + introduction + '\'' +
+                ", topics=" + Arrays.toString(topics) +
                 '}';
     }
 }

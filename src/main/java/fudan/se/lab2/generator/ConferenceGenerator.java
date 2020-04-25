@@ -29,9 +29,13 @@ public class ConferenceGenerator {
         LocalDate contributeStartTime = LocalDate.of(2021, random.nextInt( 12) + 1, random.nextInt( 28) + 1);
         LocalDate contributeEndTime = LocalDate.of(2022, random.nextInt( 12) + 1, random.nextInt( 28) + 1);
         LocalDate resultReleaseTime =  LocalDate.of(2022, random.nextInt( 12) + 1, random.nextInt( 28) + 1);
+        String[] topics = new String[random.nextInt(3) + 1];
+        for(int i = 0; i < topics.length; i++){
+            topics[i] = "T" + i + "_" + StringGenerator.getRandomString(4, 4);
+        }
         randomConferenceNum++;
         return new Conference(chairMan, conferenceAbbreviation, conferenceFullName, conferenceLocation,
-                conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime, introduction);
+                conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime, introduction, topics);
     }
 
     public static Set<Conference> getRandomConferences(int randomConferenceNum, Set<User> chairSet){

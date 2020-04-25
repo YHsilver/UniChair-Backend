@@ -4,6 +4,7 @@ import fudan.se.lab2.controller.applicationPage.request.UserGetConferenceApplica
 import fudan.se.lab2.controller.applicationPage.request.UserAddConferenceApplicationRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.exception.ConferencException.IllegalConferenceApplicationException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
@@ -12,7 +13,11 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ApplicationService {
@@ -50,14 +55,39 @@ public class ApplicationService {
      */
     public String addConferenceApplication(UserAddConferenceApplicationRequest request) {
         User chairMan = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        Conference newConference = new Conference(chairMan,
-                request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  request.getConferenceTime().plusDays(1L),
-                request.getContributeStartTime().plusDays(1L), request.getContributeEndTime().plusDays(1L),
-                request.getResultReleaseTime().plusDays(1L), request.getIntroduction());
-        chairMan.addConference(newConference);
-        conferenceRepository.save(newConference);
-        //默认成功
-        return "{\"message\":\"conference application submit success!\"}";
+        // check time order
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate contributeStartTime = request.getContributeStartTime();
+        LocalDate contributeEndTime = request.getContributeEndTime();
+        LocalDate resultReleaseTime = request.getResultReleaseTime();
+        LocalDate conferenceTime = request.getConferenceTime();
+        if(yesterday.isBefore(contributeStartTime) && contributeStartTime.isBefore(contributeEndTime)
+                && contributeEndTime.isBefore(resultReleaseTime) && resultReleaseTime.isBefore(conferenceTime)){
+            throw new IllegalConferenceApplicationException("Time is not well ordered");
+        }
+
+        if(UtilityService.checkStringLength(request.getConferenceAbbreviation(), 1, -1)
+            && UtilityService.checkStringLength(request.getConferenceFullName(), 1, -1)
+            && UtilityService.checkStringLength(request.getConferenceLocation(), 1, -1)
+            && UtilityService.checkStringLength(request.getIntroduction(), 1, -1)
+            && request.getTopics() != null && request.getTopics().length >= 1){
+            // remove all empty strings
+            Set<String> topicList = new HashSet<>(Arrays.asList(request.getTopics()));
+            for (String topic:topicList
+                 ) {
+                if(topic.equals("")) topicList.remove(topic);
+            }
+            Conference newConference = new Conference(chairMan,
+                    request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  conferenceTime.plusDays(1L),
+                    contributeStartTime.plusDays(1L), contributeEndTime.plusDays(1L),
+                    resultReleaseTime.plusDays(1L), request.getIntroduction(), (String[]) topicList.toArray());
+            chairMan.addConference(newConference);
+            conferenceRepository.save(newConference);
+            return "{\"message\":\"conference application submit success!\"}";
+        }
+
+        // required information missing, throw exception
+        throw new IllegalConferenceApplicationException("Required information missing!");
     }
 
 }

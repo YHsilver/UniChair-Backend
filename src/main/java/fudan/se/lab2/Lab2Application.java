@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.jws.soap.SOAPBinding;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -86,18 +87,19 @@ public class Lab2Application {
                     userRepository.save(AI);
                 }
 
+                String[] topicSet = new String[]{"AI", "Robert"};
                 // add inner conferences
                 Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", "AI location", LocalDate.of(2020, 4, 12),
-                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction");
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction", topicSet);
                 AIConference.setStatus(Conference.Status.PASS);
 
                 Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", "testRobert location", LocalDate.of(2020, 4, 12),
-                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction");
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction", topicSet);
                 testRobertConference.setStatus(Conference.Status.PASS);
                 testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
 
                 Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", "testRobert2 location", LocalDate.of(2020, 4, 12),
-                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction");
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction", topicSet);
                 testRobertConference2.setStatus(Conference.Status.PASS);
                 testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
 

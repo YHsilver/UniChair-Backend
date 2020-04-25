@@ -23,30 +23,24 @@ public class Conference implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 会议ID
     private Long conferenceId;
-
     // 会议简称
     private String conferenceAbbreviation;
-
     // 会议全称
     private String conferenceFullName;
-
     // 举办时间
     private LocalDate conferenceTime;
-
     // 举办地点
     private String conferenceLocation;
-
     // 投稿开始日期
     private LocalDate contributeStartTime;
-
     // 投稿截止日期
     private LocalDate contributeEndTime;
-
     // 评审结果发布日期
     private LocalDate resultReleaseTime;
-
     // 介绍
     private String introduction;
+    // 会议 topic
+    private String[] topics;
 
     // 会议申请状态类别:PENDING(待审核), PASS(通过), REJECT(驳回)
     public enum Status {PENDING, PASS, REJECT}
@@ -85,7 +79,7 @@ public class Conference implements Serializable {
     // constructor
     public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, String conferenceLocation,
                       LocalDate conferenceTime, LocalDate contributeStartTime, LocalDate contributeEndTime,
-                      LocalDate resultReleaseTime, String introduction) {
+                      LocalDate resultReleaseTime, String introduction, String[] topics) {
         this.chairMan = chairMan;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
@@ -95,6 +89,7 @@ public class Conference implements Serializable {
         this.contributeEndTime = contributeEndTime;
         this.resultReleaseTime = resultReleaseTime;
         this.introduction = introduction;
+        this.topics = topics;
         this.status = Status.PENDING;// 初始化都是待审核状态
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
         this.authorSet = new HashSet<>();// 还没有人投稿
@@ -148,6 +143,8 @@ public class Conference implements Serializable {
     public String getIntroduction() {
         return introduction;
     }
+
+    public String[] getTopics() { return topics; }
 
     public User getChairMan() {
         return chairMan;
@@ -204,6 +201,8 @@ public class Conference implements Serializable {
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
     }
+
+    public void setTopics(String[] topics) { this.topics = topics; }
 
     public void setContributeEndTime(LocalDate contributeEndTime) {
         this.contributeEndTime = contributeEndTime;
@@ -324,7 +323,7 @@ public class Conference implements Serializable {
                     ", \"stage\":\"" + stage.toString() + '\"' +
                     ", \"chair\":\"" + chairMan.getFullName() + '\"' +
                     ", \"PCMember\":\"" + reviewers + '\"' +
-                    ", \"Author\":\"" + authors.toString() + '\"' +
+                    ", \"Author\":\"" + authors + '\"' +
                     ", \"heldDate\":\"" + conferenceTime.toString() + '\"' +
                     ", \"heldPlace\":\"" + conferenceLocation + '\"' +
                     ", \"submissionDeadline\":\"" + contributeEndTime.toString() + '\"' +

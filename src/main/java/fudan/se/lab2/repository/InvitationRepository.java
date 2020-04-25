@@ -15,5 +15,6 @@ import java.util.Set;
 public interface InvitationRepository extends CrudRepository<Invitation, Long> {
     Invitation findByInvitationId(Long id);
     Set<Invitation> findByConferenceId(Long conferenceId);
+    Set<Invitation> findByReviewer(User reviewer);
     Set<Invitation> findByReviewerAndConferenceIdAndStatus(User reviewer, Long conferenceId, Invitation.Status status);
 }

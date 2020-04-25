@@ -24,4 +24,9 @@ public class UtilityService {
         return list;
     }
 
+    public static boolean checkStringLength(String tar, int minLength, int maxLength){
+        if(minLength < 0){ minLength = 0; }
+        return !(tar == null || tar.length() < minLength || (minLength <= maxLength && tar.length() > maxLength));
+    }
+
 }
