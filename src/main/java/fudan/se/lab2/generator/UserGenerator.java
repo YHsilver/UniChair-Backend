@@ -2,6 +2,9 @@ package fudan.se.lab2.generator;
 
 import fudan.se.lab2.domain.User;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /*
 * This is a class to generate random users.
 * All username will start with "G_".
@@ -26,5 +29,13 @@ public class UserGenerator {
         return new User(username, password, fullName, unit, area, email);
     }
 
+    public static Set<User> getRandomUsers(int randomUserNum){
+        Set<User> userSet = new HashSet<>();
+        for(int i = 0; i < randomUserNum; i++){
+            User randomUser = UserGenerator.getRandomUser();
+            userSet.add(randomUser);
+        }
+        return userSet;
+    }
 
 }

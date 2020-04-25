@@ -2,6 +2,8 @@ package fudan.se.lab2;
 
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.User;
+import fudan.se.lab2.generator.ConferenceGenerator;
+import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -10,7 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.jws.soap.SOAPBinding;
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * Welcome to 2020 Software Engineering Lab2.
@@ -114,6 +118,18 @@ public class Lab2Application {
                 conferenceRepository.save(testRobertConference2);
                 userRepository.save(tempUser);
 //                userRepository.findByUsername("testRobert").addConference(testRobertConference2);
+
+                Set<User> userSet = UserGenerator.getRandomUsers(20);
+                Set<Conference> conferenceSet = ConferenceGenerator.getRandomConferences(20, userSet);
+                for (User user:userSet
+                     ) {
+                    userRepository.save(user);
+                }
+                for (Conference conference:conferenceSet
+                     ) {
+                    conferenceRepository.save(conference);
+                }
+
 
             }
         };

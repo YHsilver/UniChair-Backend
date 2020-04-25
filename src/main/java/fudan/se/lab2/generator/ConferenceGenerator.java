@@ -4,6 +4,8 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ConferenceGenerator {
     /*
@@ -28,6 +30,17 @@ public class ConferenceGenerator {
         randomConferenceNum++;
         return new Conference(chairMan, conferenceAbbreviation, conferenceFullName, conferenceLocation,
                 conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime, introduction);
+    }
+
+    public static Set<Conference> getRandomConferences(int randomConferenceNum, Set<User> chairSet){
+        Set<Conference> conferenceSet = new HashSet<>();
+        User[] chairs = new User[chairSet.size()];
+        chairSet.toArray(chairs);
+        for(int i = 0; i < randomConferenceNum; i++){
+            Conference randomConference = ConferenceGenerator.getRandomConference(chairs[(int)(Math.random() * chairs.length)]);
+            conferenceSet.add(randomConference);;
+        }
+        return conferenceSet;
     }
 
 }
