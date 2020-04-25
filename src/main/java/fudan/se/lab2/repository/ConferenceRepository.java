@@ -22,5 +22,7 @@ public interface ConferenceRepository extends CrudRepository<Conference, Long> {
     Set<Conference> findByChairMan(User chairMan);
     Set<Conference> findConferencesByAuthorSetContains(User author);
     Set<Conference> findConferencesByReviewerSetContains(User reviewer);
+    Set<Conference> findConferencesByStatus(Conference.Status status);
+    Set<Conference> findConferencesByStage(Conference.Stage stage);
 
 }

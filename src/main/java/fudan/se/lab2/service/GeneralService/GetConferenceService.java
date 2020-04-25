@@ -61,6 +61,14 @@ public class GetConferenceService {
             conferenceList.retainAll(conferenceRepository.findByConferenceFullName(getConferenceRequest.getConferenceFullName()));
         }
 
+        if(getConferenceRequest.getStatus() != null){
+            conferenceList.retainAll(conferenceRepository.findConferencesByStatus(getConferenceRequest.getStatus()));
+        }
+
+        if(getConferenceRequest.getStage() != null){
+            conferenceList.retainAll(conferenceRepository.findConferencesByStage(getConferenceRequest.getStage()));
+        }
+
         if(getConferenceRequest.isBrief()){
             for (Conference tmpConference: conferenceList
             ) {
