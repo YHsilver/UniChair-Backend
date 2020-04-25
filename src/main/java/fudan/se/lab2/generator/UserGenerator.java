@@ -19,12 +19,12 @@ public class UserGenerator {
     public static User getRandomUser(){
         //String username = PERFIX + randomUserNum + "_" + StringGenerator.getRandomString();
         String username = PERFIX + randomUserNum + "_" + "user";
-        String password = DEFAULT_PASS + randomUserNum + "_" + StringGenerator.getRandomString(8,8,true,true,true);
+        String password = DEFAULT_PASS + randomUserNum + "_" + StringGenerator.getRandomString(8,8,StringGenerator.ALL_SET);
         //String password = StringGenerator.getRandomString(12, 20, true, true, true);
         String fullName = StringGenerator.getRandomString();
         String unit = StringGenerator.getRandomString() + " Unit";
         String area = StringGenerator.getRandomString() + " Area";
-        String email = StringGenerator.getRandomString(6, 10, true, false, false) + "@generator.com";
+        String email = StringGenerator.getRandomString(6, 10, StringGenerator.LETTERS_SET) + "@generator.com";
         randomUserNum++;
         return new User(username, password, fullName, unit, area, email);
     }

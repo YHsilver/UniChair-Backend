@@ -6,23 +6,23 @@ import java.util.Random;
 public class StringGenerator {
 
     private static Random random = new Random();
-    private static final char[] DIGITS_SET = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    private static final char[] LETTERS_SET = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+    protected static final char[] DIGITS_SET = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    protected static final char[] LETTERS_SET = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
                                         'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
                                         'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
                                         'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-    private static final char[] SPECIAL_CHARACTERS_SET = {'`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-',
+    protected static final char[] SPECIAL_CHARACTERS_SET = {'`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-',
                                                     '=', '_', '+', '[', ']', '{', '}', '|', '\\', '/', '?', ';', ':'};
 
-    private static final char[] DIGITS_AND_LETTERS_SET = concat(DIGITS_SET, LETTERS_SET);
+    protected static final char[] DIGITS_AND_LETTERS_SET = concat(DIGITS_SET, LETTERS_SET);
 
-    private static final char[] DIGITS_AND_SPECIAL_CHARACTERS_SET = concat(DIGITS_SET, SPECIAL_CHARACTERS_SET);
+    protected static final char[] DIGITS_AND_SPECIAL_CHARACTERS_SET = concat(DIGITS_SET, SPECIAL_CHARACTERS_SET);
 
-    private static final char[] LETTERS_AND_SPECIAL_CHARACTERS_SET = concat(LETTERS_SET, SPECIAL_CHARACTERS_SET, new char[]{' '});
+    protected static final char[] LETTERS_AND_SPECIAL_CHARACTERS_SET = concat(LETTERS_SET, SPECIAL_CHARACTERS_SET);
 
-    private static final char[] ALL_SET = concat(DIGITS_SET, LETTERS_SET, SPECIAL_CHARACTERS_SET);
+    protected static final char[] ALL_SET = concat(DIGITS_SET, LETTERS_SET, SPECIAL_CHARACTERS_SET);
 
-    private static char[] concat(char[]...chars){
+    protected static char[] concat(char[]...chars){
         int totalLength = 0;
         int currIndex= 0;
         for(int i = 0; i < chars.length; i++){
@@ -38,61 +38,24 @@ public class StringGenerator {
     }
 
     protected static String getRandomString(){
-        return getRandomString(6, 12, true, true, false);
+        return getRandomString(6, 12, DIGITS_AND_LETTERS_SET);
     }
 
     protected static String getRandomString(int minLength, int maxLength){
-        return getRandomString(minLength, maxLength, true, true, false);
+        return getRandomString(minLength, maxLength, DIGITS_AND_LETTERS_SET);
     }
 
-    protected static String getRandomString(int minLength, int maxLength, boolean hasLetters,
-                                            boolean hasDigits, boolean hasSpecialCharacters){
+    protected static String getRandomString(int minLength, int maxLength, char[] charSet){
         // invalid request
-        if((minLength < 1) || (maxLength < minLength) || ((!hasLetters)&&(!hasDigits)&&(!hasSpecialCharacters))){
+        if((minLength < 1) || (maxLength < minLength) || (charSet == null) || (charSet.length == 0)){
             return null;
         }
-
-        // select charSet
-        char[] charSet = characterSetSelector(hasLetters, hasDigits, hasSpecialCharacters);
         int setLength = charSet.length;
         StringBuilder tempString = new StringBuilder();
         int stringLength = random.nextInt( (maxLength - minLength + 1)) + minLength;
-
         for(int i = 0; i < stringLength; i++){
             tempString.append(charSet[random.nextInt( setLength)]);
         }
-
         return tempString.toString();
-    }
-
-    private static char[] characterSetSelector(boolean hasLetters,
-                                               boolean hasDigits, boolean hasSpecialCharacters){
-        char[] charSet;
-        if(hasDigits){
-            if(hasLetters){
-                if(hasSpecialCharacters){
-                    charSet = ALL_SET;
-                }else{
-                    charSet = DIGITS_AND_LETTERS_SET;
-                }
-            }else{
-                if(hasSpecialCharacters){
-                    charSet = DIGITS_AND_SPECIAL_CHARACTERS_SET;
-                }else{
-                    charSet = DIGITS_SET;
-                }
-            }
-        }else{
-            if(hasLetters){
-                if(hasSpecialCharacters){
-                    charSet = LETTERS_AND_SPECIAL_CHARACTERS_SET;
-                }else{
-                    charSet = LETTERS_SET;
-                }
-            }else{
-                charSet = SPECIAL_CHARACTERS_SET;
-            }
-        }
-        return charSet;
     }
 }

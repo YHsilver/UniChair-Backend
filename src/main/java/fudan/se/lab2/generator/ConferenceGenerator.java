@@ -15,15 +15,16 @@ public class ConferenceGenerator {
                       LocalDate resultReleaseTime, String introduction)
     * */
     private static Random random = new Random();
+    private static final char[] SPACE_ARRAY = new char[]{' '};
     private final static String PERFIX = "G";
     private static int randomConferenceNum = 0;
     private final static String[] locationSet = new String[]{"Beijing", "Shanghai", "HK", "Los Angles", "New York", "Berlin", "Paris", "London", "WuHan"};
 
     public static Conference getRandomConference(User chairMan){
-        String conferenceAbbreviation = PERFIX + randomConferenceNum + "_" + StringGenerator.getRandomString(3, 4, true, false, false).toUpperCase();
+        String conferenceAbbreviation = PERFIX + randomConferenceNum + "_" + StringGenerator.getRandomString(3, 4, StringGenerator.LETTERS_SET).toUpperCase();
         String conferenceFullName = conferenceAbbreviation + " " + StringGenerator.getRandomString();
         String conferenceLocation = locationSet[random.nextInt( locationSet.length)];
-        String introduction = StringGenerator.getRandomString(80, 120, true, false, true);
+        String introduction = StringGenerator.getRandomString(80, 120, StringGenerator.concat(StringGenerator.LETTERS_SET, SPACE_ARRAY));
         LocalDate conferenceTime = LocalDate.of(2020, random.nextInt( 12) + 1, random.nextInt( 28) + 1);
         LocalDate contributeStartTime = LocalDate.of(2021, random.nextInt( 12) + 1, random.nextInt( 28) + 1);
         LocalDate contributeEndTime = LocalDate.of(2022, random.nextInt( 12) + 1, random.nextInt( 28) + 1);
