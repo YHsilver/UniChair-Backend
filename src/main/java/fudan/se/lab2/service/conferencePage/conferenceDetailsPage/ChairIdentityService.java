@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -74,12 +75,13 @@ public class ChairIdentityService {
             return null;
         }
         List<JSONObject> list = new ArrayList<>();
-        Set<User> users = userRepository.findAll();
+        Set<User> usersAll = userRepository.findAll();
+        Set<User> users = new HashSet<>();
         String targetFullname = request.getTargetFullName();
-        for (User user:users
+        for (User user:usersAll
              ) {
-            if(!user.getFullName().contains(targetFullname)){
-                users.remove(user);
+            if(user.getFullName().contains(targetFullname)){
+                users.add(user);
             }
         }
         // avoid inviting chair himself
