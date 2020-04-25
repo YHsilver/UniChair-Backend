@@ -11,12 +11,15 @@ public class ChairSendInvitationRequest {
 
     private String token;
     private Long conferenceId;
+    // TODO: id will be better
     private String[] reviewerUsername;
+    private String message;
 
-    public ChairSendInvitationRequest(String token, Long conferenceId, String[] reviewerUsername){
+    public ChairSendInvitationRequest(String token, Long conferenceId, String[] reviewerUsername, String message) {
         this.token = token;
         this.conferenceId = conferenceId;
         this.reviewerUsername = reviewerUsername;
+        this.message = message;
     }
 
     public String getToken() {
@@ -43,12 +46,21 @@ public class ChairSendInvitationRequest {
         this.reviewerUsername = reviewerUsername;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "ChairSendInvitationRequest{" +
                 "token='" + token + '\'' +
                 ", conferenceId=" + conferenceId +
                 ", reviewerUsername=" + Arrays.toString(reviewerUsername) +
+                ", message='" + message + '\'' +
                 '}';
     }
 }

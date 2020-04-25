@@ -1,4 +1,4 @@
-package fudan.se.lab2.domain.Generator;
+package fudan.se.lab2.generator;
 
 import fudan.se.lab2.domain.User;
 
@@ -21,7 +21,7 @@ public class UserGenerator {
         String fullName = StringGenerator.getRandomString();
         String unit = StringGenerator.getRandomString() + " Unit";
         String area = StringGenerator.getRandomString() + " Area";
-        String email = StringGenerator.getRandomString(6, 10, true, false, false) + "@Generator.com";
+        String email = StringGenerator.getRandomString(6, 10, true, false, false) + "@generator.com";
         randomUserNum++;
         return new User(username, password, fullName, unit, area, email);
     }

@@ -1,4 +1,4 @@
-package fudan.se.lab2.service.conferencePage;
+package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
@@ -47,7 +47,8 @@ public class GenericConferenceService {
      */
     public JSONObject getConferenceDetails(UserGetConferenceDetailsRequest request) {
         Conference thisConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
-        return thisConference.toFullJson();
+        if(thisConference != null) return thisConference.toFullJson();
+        return null;
     }
 
     /**
@@ -57,7 +58,12 @@ public class GenericConferenceService {
      * @return return message
      */
     public String submitPaper(UserSubmitPaperRequest request) throws IOException {
-        User author = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        if(conference.getChairMan().getId().equals(author.getId())){
+            return "{\"message\":\"chair cannot submit paper!\"}";
+        }
+
         MultipartFile multipartFile = request.getFile();
         // 获取文件名
         String fileName = multipartFile.getOriginalFilename();
@@ -72,9 +78,8 @@ public class GenericConferenceService {
         paperRepository.save(newPaper);
         userRepository.save(author);
         deleteFile(excelFile);
-        Conference tempConference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        tempConference.addAuthor(author);
-        conferenceRepository.save(tempConference);
+        conference.addAuthor(author);
+        conferenceRepository.save(conference);
         // 成功
         return "{\"message\":\"your paper submit success!\"}";
     }
@@ -84,43 +89,25 @@ public class GenericConferenceService {
      *
      * @param files multiFile
      */
-    private void deleteFile(File... files) throws NoSuchFileException, DirectoryNotEmptyException, IOException {
-        for (File file : files)
-            if (file.exists()) {
-                Files.delete(Paths.get(file.getPath()));
-            }
+    private void deleteFile(File... files) throws IOException {
+        for (File file : files) {if (file.exists()) { Files.delete(Paths.get(file.getPath())); }}
     }
 
 
     /**
-     * ???
+     * user get identity
      *
-     * @param request ???
-     * @return ???
+     * @param request userGetIdentityRequest
+     * @return an int array indicating user's identity
      */
     public String getIdentity(UserGetIdentityRequest request) {
+        // three bits indicates user's identity
         String resp = "[";
         User currUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference currConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
-
-        if (currUser.getId().equals(currConference.getChairMan().getId())) {
-            resp += "0,";
-        } else {
-            resp += "1,";
-        }
-
-        if (currConference.getReviewerSet().contains(currUser)) {
-            resp += "0,";
-        } else {
-            resp += "1,";
-        }
-
-        if (currConference.getAuthorSet().contains(currUser)) {
-            resp += "0";
-        } else {
-            resp += "1";
-        }
-
+        if (currUser.getId().equals(currConference.getChairMan().getId())) { resp += "0,"; } else { resp += "1,"; }
+        if (currConference.getReviewerSet().contains(currUser)) { resp += "0,"; } else { resp += "1,"; }
+        if (currConference.getAuthorSet().contains(currUser)) { resp += "0"; } else { resp += "1"; }
         return resp + "]";
     }
 

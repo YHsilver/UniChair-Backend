@@ -1,5 +1,7 @@
 package fudan.se.lab2.domain.Generator;
 
+import fudan.se.lab2.generator.ConferenceGenerator;
+import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import org.junit.jupiter.api.Test;

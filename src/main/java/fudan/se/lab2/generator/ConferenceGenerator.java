@@ -1,4 +1,4 @@
-package fudan.se.lab2.domain.Generator;
+package fudan.se.lab2.generator;
 
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;

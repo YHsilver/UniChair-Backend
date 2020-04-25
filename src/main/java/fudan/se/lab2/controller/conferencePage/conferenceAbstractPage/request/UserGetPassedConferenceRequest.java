@@ -9,8 +9,8 @@ public class UserGetPassedConferenceRequest {
 
     private String token;
     private String identity;
-    private int startIndex;
     // -1 indicates all conferences after startIndex
+    private int startIndex;
     private int listLength;
 
     public UserGetPassedConferenceRequest(String token, String identity, int startIndex, int listLength){

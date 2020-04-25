@@ -2,7 +2,6 @@ package fudan.se.lab2.controller.messagePage;
 
 import fudan.se.lab2.controller.messagePage.request.UserCheckMyInvitationsRequest;
 import fudan.se.lab2.controller.messagePage.request.UserDecideInvitationsRequest;
-import fudan.se.lab2.service.UserService;
 import fudan.se.lab2.service.messagePage.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

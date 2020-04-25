@@ -2,7 +2,7 @@ package fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.ge
 
 /**
  * @author hyf
- * 这个类获取m某会议具体信息
+ * 这个类获取某会议具体信息
  */
 
 public class UserGetConferenceDetailsRequest {

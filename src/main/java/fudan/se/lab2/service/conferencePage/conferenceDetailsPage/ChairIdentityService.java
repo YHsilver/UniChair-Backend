@@ -16,6 +16,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,21 +38,27 @@ public class ChairIdentityService {
     }
 
 
-//    /**
-//     * changeConferenceStatus(chair 改变会议阶段)
-//     *
-//     * @param request the UserRequest request
-//     * @return return conference's id and changed stage
-//     */
-//    public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
-//        User chair = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-//        Conference.Stage changedStage = request.getChangedStage();
-//        Conference thisConference = conferenceRepository.findByConferenceId(request.getConferenceId());
-//        thisConference.setStage(changedStage);
-//        conferenceRepository.save(thisConference);
-//        thisUser.addConference(thisConference);
-//        return thisConference.getConferenceFullName() + "'s Stage is " + thisConference.getStage().toString();
-//    }
+    /**
+     * changeConferenceStatus(chair 改变会议阶段)
+     *
+     * @param request the UserRequest request
+     * @return return conference's id and changed stage
+     */
+    public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
+        User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        if(conference.getChairMan().getId().equals(chair.getId())){
+            // invalid check, not chair
+            return null;
+        }
+        // chair can only change stage step by step, only admin can trace back or skip steps
+        if(conference.isNextStage(request.getChangedStage())){
+            conference.setStage(request.getChangedStage());
+            conferenceRepository.save(conference);
+            chair.addConference(conference);
+        }
+        return conference.getConferenceFullName() + "'s Stage is " + conference.getStage().toString();
+    }
 
     /**
      * chair invite PC members
@@ -59,40 +66,58 @@ public class ChairIdentityService {
      * @param request the ChairRequest request
      * @return return successful message
      */
-    public List<JSONObject> getReviewers(ChairSearchReviewersRequest request) {
-        String fullName = request.getFullName();
-        Iterable<User> users = this.userRepository.findAll();
-        List<JSONObject> list = Lists.newArrayList();
-
-        users.forEach(eachUser -> {
-            if (eachUser.getFullName().equals(fullName)) {
-                list.add(eachUser.toStandardJson());
-            }
-        });
-
+    public List<JSONObject> searchReviewers(ChairSearchReviewersRequest request) {
+        User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        if(conference.getChairMan().getId().equals(chair.getId())){
+            // invalid search, not chair
+            return null;
+        }
+        List<JSONObject> list = new ArrayList<>();
+        Set<User> users = userRepository.findUsersByFullNameContains(request.getTargetFullName());
+        // avoid inviting chair himself
+        users.remove(chair);
+        // avoid inviting reviewers have been invited and accepted
+        users.removeAll(conference.getReviewerSet());
+        for (User user:users
+             ) {
+            list.add(user.toStandardJson());
+        }
         return list;
     }
 
-//    /**
-//     * chair invite PC members
-//     *
-//     * @param request the ChairRequest request
-//     * @return return successful message
-//     */
-//    public String inviteReviewers(ChairSendInvitationRequest request) {
-//        User chair = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-//        String[] targetNames = request.getReviewer();
-//        for (int i = 0; i < targetNames.length; i++) {
-//            User reviewer = this.userRepository.findByUsername(targetNames[i]);
-//            Invitation newInvitation = new Invitation(request.getConferenceId(), request.getConferenceFullName(), chair,
-//                    reviewer, request.getMessage());
-//            this.invitationRepository.save(newInvitation);
-//            chair.getSendInvitations().add(newInvitation);
-//            reviewer.getMyInvitations().add(newInvitation);
-//        }
-//        //默认成功
-//        return "{\"message\":\"your invitation has been send!\"}";
-//    }
+    /**
+     * chair invite PC members
+     *
+     * @param request the ChairRequest request
+     * @return return successful message
+     */
+    public String sendInvitation(ChairSendInvitationRequest request) {
+        User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        int validNum = 0;
+        if(conference.getChairMan().getId().equals(chair.getId())){
+            // invalid send, not chair
+            return "{\"message\":\"" + validNum + " invitation has been send!\"}";
+        }
+
+        String[] targetNames = request.getReviewerUsername();
+        String message = request.getMessage();
+
+        for (String targetName: targetNames) {
+            User reviewer = this.userRepository.findByUsername(targetName);
+            if(!reviewer.getId().equals(chair.getId()) && !conference.getReviewerSet().contains(reviewer)){
+                validNum++;
+                Invitation newInvitation = new Invitation(conference.getConferenceId(), conference.getConferenceFullName(), chair,
+                        reviewer, message);
+                this.invitationRepository.save(newInvitation);
+                chair.getSendInvitations().add(newInvitation);
+                reviewer.getMyInvitations().add(newInvitation);
+            }
+        }
+        // return how many valid invitations has been send
+        return "{\"message\":\"" + validNum + " invitation has been send!\"}";
+    }
 
     /**
      * check send invitations(用户查看自己发出的邀请函)
@@ -100,15 +125,26 @@ public class ChairIdentityService {
      * @param request the ChairCheckInvitationsRequest request
      * @return return conferences' lists
      */
-    public List<JSONObject> checkSendInvitations(ChairCheckInvitationsRequest request) {
-        User thisUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        Long conferenceId = request.getConferenceId();
-        Set<Invitation> invitationSet = invitationRepository.findByConferenceId(conferenceId);
+    public List<JSONObject> checkInvitations(ChairCheckInvitationsRequest request) {
+        User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        if(conference.getChairMan().getId().equals(chair.getId())){
+            // invalid check, not chair
+            return null;
+        }
 
+        Set<Invitation> invitationSet = invitationRepository.findByConferenceId(conference.getConferenceId());
         List<JSONObject> list = Lists.newArrayList();
-        for (Invitation eachInvitation : invitationSet) {
-            //if (eachInvitation.getStatus() == status)
-            list.add(eachInvitation.toStandardJson());
+        if(request.getStatus() == null){
+            for (Invitation eachInvitation : invitationSet) {
+                list.add(eachInvitation.toStandardJson());
+            }
+        }else{
+            Invitation.Status statusLimit = request.getStatus();
+            for (Invitation eachInvitation : invitationSet) {
+                if (eachInvitation.getStatus() == statusLimit)
+                    list.add(eachInvitation.toStandardJson());
+            }
         }
         return list;
     }

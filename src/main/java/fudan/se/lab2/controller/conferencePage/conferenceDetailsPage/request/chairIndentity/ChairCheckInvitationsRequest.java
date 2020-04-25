@@ -22,23 +22,18 @@ public class ChairCheckInvitationsRequest {
     public String getToken() {
         return token;
     }
-
     public void setToken(String token) {
         this.token = token;
     }
-
     public Long getConferenceId() {
         return conferenceId;
     }
-
     public void setConferenceId(Long conferenceId) {
         this.conferenceId = conferenceId;
     }
-
     public Invitation.Status getStatus() {
         return status;
     }
-
     public void setStatus(Invitation.Status status) {
         this.status = status;
     }

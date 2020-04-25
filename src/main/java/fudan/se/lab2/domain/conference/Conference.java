@@ -250,6 +250,22 @@ public class Conference implements Serializable {
                 '}';
     }
 
+    public boolean isNextStage(Stage tarStage){
+        switch (stage){
+            case PREPARATION:
+                return tarStage == Stage.CONTRIBUTION;
+            case CONTRIBUTION:
+                return  tarStage == Stage.REVIEWING;
+            case REVIEWING:
+                return  tarStage == Stage.GRADING;
+            case GRADING:
+                return  tarStage == Stage.ENDING;
+            case ENDING:
+                return false;
+        }
+        return false;
+    }
+
     /**
      * change a JSON String 2 JSONObject
      * public static!!!

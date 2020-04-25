@@ -15,51 +15,40 @@ public class UserSubmitPaperRequest {
     private String summary;
     private MultipartFile file;
 
-    public UserSubmitPaperRequest(Long conferenceId, String title, String summary, MultipartFile file,
-                                  String token) {
+    public UserSubmitPaperRequest(String token, Long conferenceId, String title, String summary, MultipartFile file
+                                  ) {
+        this.token = token;
         this.conferenceId = conferenceId;
         this.title = title;
         this.summary = summary;
         this.file = file;
-        this.token = token;
     }
 
     public String getToken() {
         return token;
     }
-
     public void setToken(String token) {
         this.token = token;
     }
-
     public Long getConferenceId() {
         return conferenceId;
     }
-
     public void setConferenceId(Long conferenceId) {
         this.conferenceId = conferenceId;
     }
-
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public String getSummary() {
         return summary;
     }
-
     public void setSummary(String summary) {
         this.summary = summary;
     }
-
-    public MultipartFile getFile() {
-        return file;
-    }
-
+    public MultipartFile getFile() { return file; }
     public void setFile(MultipartFile file) {
         this.file = file;
     }

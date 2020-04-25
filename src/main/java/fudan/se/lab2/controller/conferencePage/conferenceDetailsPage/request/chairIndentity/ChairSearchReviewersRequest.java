@@ -2,40 +2,45 @@ package fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.ch
 
 public class ChairSearchReviewersRequest {
 
-    private String name = "GET";
+    // get the chair
+    private String token;
+    // get the conferenceId to check the validation of chair
+    // ignore Reviews who have accepted invitations before
+    private Long conferenceId;
+    // search target
+    private String targetFullName;
 
-    // 真实姓名
-    private String fullName;
-
-    public ChairSearchReviewersRequest() {
-
+    public ChairSearchReviewersRequest(String token, Long conferenceId, String targetFullName) {
+        this.token = token;
+        this.conferenceId = conferenceId;
+        this.targetFullName = targetFullName;
     }
 
-    public ChairSearchReviewersRequest(String fullName) {
-        this.fullName = fullName;
+    public String getToken() {
+        return token;
     }
-
-    public String getName() {
-        return name;
+    public void setToken(String token) {
+        this.token = token;
     }
-
-    public String getFullName() {
-        return fullName;
+    public Long getConferenceId() {
+        return conferenceId;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setConferenceId(Long conferenceId) {
+        this.conferenceId = conferenceId;
     }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public String getTargetFullName() {
+        return targetFullName;
+    }
+    public void setTargetFullName(String targetFullName) {
+        this.targetFullName = targetFullName;
     }
 
     @Override
     public String toString() {
         return "ChairSearchReviewersRequest{" +
-                "name='" + name + '\'' +
-                ", fullName='" + fullName + '\'' +
+                "token='" + token + '\'' +
+                ", conferenceId=" + conferenceId +
+                ", targetFullName='" + targetFullName + '\'' +
                 '}';
     }
 }

@@ -101,8 +101,6 @@ public class Lab2Application {
                 tempUser.addConference(AIConference);
                 conferenceRepository.save(AIConference);
                 userRepository.save(tempUser);
-//                System.out.println(UserService.getConferenceJsonObjects(Conference.Status.PASS, userRepository.findByUsername("AI").getConferences()));
-
 
                 tempUser = userRepository.findByUsername("testRobert");
                 tempUser.addConference(testRobertConference);
