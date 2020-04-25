@@ -61,7 +61,7 @@ public class ChairIdentityService {
     }
 
     /**
-     * chair invite PC members
+     * chair search Reviewers to invite
      *
      * @param request the ChairRequest request
      * @return return successful message
@@ -87,7 +87,7 @@ public class ChairIdentityService {
     }
 
     /**
-     * chair invite PC members
+     * chair send invitations
      *
      * @param request the ChairRequest request
      * @return return successful message
@@ -106,7 +106,18 @@ public class ChairIdentityService {
 
         for (String targetName: targetNames) {
             User reviewer = this.userRepository.findByUsername(targetName);
+            // chair and PC member cannot be invited
             if(!reviewer.getId().equals(chair.getId()) && !conference.getReviewerSet().contains(reviewer)){
+                Set<Invitation> invitations = invitationRepository.findByReviewer(reviewer);
+                boolean invitationSentBefore = false;
+                for (Invitation invitation:invitations
+                     ) {
+                    if(invitation.getStatus() == Invitation.Status.PENDING && invitation.getConferenceId().equals(conference.getConferenceId())){
+                        invitationSentBefore = true;
+                        break;
+                    }
+                }
+                if(invitationSentBefore){ continue; }
                 validNum++;
                 Invitation newInvitation = new Invitation(conference.getConferenceId(), conference.getConferenceFullName(), chair,
                         reviewer, message);

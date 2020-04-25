@@ -19,10 +19,8 @@ public class AdminGetConferenceApplicationsRequest {
     public Conference.Status getStatus() {
         return status;
     }
+    public void setStatus(Conference.Status status) { this.status = status; }
 
-    public void setContent(Conference.Status status) {
-        this.status = status;
-    }
 
     @Override
     public String toString() {

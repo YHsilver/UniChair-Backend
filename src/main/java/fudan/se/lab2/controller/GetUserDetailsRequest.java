@@ -10,10 +10,6 @@ public class GetUserDetailsRequest {
 
     private String token;
 
-    public GetUserDetailsRequest() {
-
-    }
-
     public GetUserDetailsRequest(String token) {
         this.token = token;
     }

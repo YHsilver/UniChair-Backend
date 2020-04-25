@@ -29,7 +29,7 @@ public class ConferenceAbstractPageService {
     }
 
     /**
-     * user get passed conference to do operations
+     * user get passed conference to do operation
      *
      * @param request the UserGetPassedConferenceRequest request
      * @return return conferences' lists

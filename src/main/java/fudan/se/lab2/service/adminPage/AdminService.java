@@ -52,8 +52,11 @@ public class AdminService {
      */
     public String changeConferenceStatus(AdminChangeConferenceStatusRequest request) {
         Conference targetConference = this.conferenceRepository.findByConferenceId(request.getId());
-        targetConference.setStatus(request.getStatus());
-        this.conferenceRepository.save(targetConference);
-        return targetConference.getConferenceFullName() + "'s Status is " + targetConference.getStatus().toString() + " now!";
+        if(request.getStatus() != null && targetConference != null){
+            targetConference.setStatus(request.getStatus());
+            this.conferenceRepository.save(targetConference);
+            return targetConference.getConferenceFullName() + "'s Status is " + targetConference.getStatus().toString() + " now!";
+        }
+        return "Invalid Request";
     }
 }
