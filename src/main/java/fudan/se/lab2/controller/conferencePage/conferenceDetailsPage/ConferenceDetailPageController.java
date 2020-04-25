@@ -65,7 +65,7 @@ public class ConferenceDetailPageController {
     }
 
     // chair查看自己发出的邀请函
-    @PostMapping("/system/checkInvitations")
+    @PostMapping("/system/chairCheckInvitations")
     public ResponseEntity<?> handleUserRequest(@RequestBody ChairCheckInvitationsRequest request) {
         logger.debug(request.toString());
         System.out.println(request.toString());
