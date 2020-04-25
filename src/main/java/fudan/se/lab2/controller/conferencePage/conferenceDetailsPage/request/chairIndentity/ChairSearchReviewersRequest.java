@@ -10,6 +10,8 @@ public class ChairSearchReviewersRequest {
     // search target
     private String targetFullName;
 
+    public ChairSearchReviewersRequest(){}
+
     public ChairSearchReviewersRequest(String token, Long conferenceId, String targetFullName) {
         this.token = token;
         this.conferenceId = conferenceId;

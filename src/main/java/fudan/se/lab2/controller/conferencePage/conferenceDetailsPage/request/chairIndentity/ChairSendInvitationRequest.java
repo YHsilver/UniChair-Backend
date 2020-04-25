@@ -15,6 +15,8 @@ public class ChairSendInvitationRequest {
     private String[] reviewerUsername;
     private String message;
 
+    public ChairSendInvitationRequest(){}
+
     public ChairSendInvitationRequest(String token, Long conferenceId, String[] reviewerUsername, String message) {
         this.token = token;
         this.conferenceId = conferenceId;

@@ -13,6 +13,8 @@ public class UserCheckMyInvitationsRequest {
     private String token;
     private Invitation.Status status;
 
+    public UserCheckMyInvitationsRequest(){}
+
     public UserCheckMyInvitationsRequest(String token, Invitation.Status status) {
         this.token = token;
         this.status = status;

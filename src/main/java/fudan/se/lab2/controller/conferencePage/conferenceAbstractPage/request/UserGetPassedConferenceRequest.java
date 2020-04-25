@@ -13,6 +13,8 @@ public class UserGetPassedConferenceRequest {
     private int startIndex;
     private int listLength;
 
+    public UserGetPassedConferenceRequest(){}
+
     public UserGetPassedConferenceRequest(String token, String identity, int startIndex, int listLength){
         this.token = token;
         this.identity = identity;

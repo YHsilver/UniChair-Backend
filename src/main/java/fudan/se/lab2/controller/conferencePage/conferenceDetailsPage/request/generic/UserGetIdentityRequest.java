@@ -5,6 +5,8 @@ public class UserGetIdentityRequest {
     private String token;
     private Long conferenceId;
 
+    public UserGetIdentityRequest(){}
+
     public UserGetIdentityRequest(String token, Long conferenceId){
         this.token = token;
         this.conferenceId = conferenceId;

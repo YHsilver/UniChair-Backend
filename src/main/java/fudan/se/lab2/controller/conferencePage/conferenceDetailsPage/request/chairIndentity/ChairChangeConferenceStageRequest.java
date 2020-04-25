@@ -14,6 +14,8 @@ public class ChairChangeConferenceStageRequest {
     private Long conferenceId;
     private Conference.Stage changedStage;
 
+    public ChairChangeConferenceStageRequest(){}
+
     public ChairChangeConferenceStageRequest(String token, Conference.Stage changedStage, Long conferenceId) {
         this.token = token;
         this.changedStage = changedStage;

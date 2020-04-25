@@ -12,6 +12,8 @@ public class AdminChangeConferenceStatusRequest {
     private Long id;
     private Conference.Status status;
 
+    public AdminChangeConferenceStatusRequest(){}
+
     public AdminChangeConferenceStatusRequest(Long id, Conference.Status status) {
         this.id = id;
         this.status = status;

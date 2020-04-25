@@ -11,6 +11,8 @@ public class AdminGetConferenceApplicationsRequest {
 
     private Conference.Status status;
 
+    public AdminGetConferenceApplicationsRequest(){}
+
     // constructor
     public AdminGetConferenceApplicationsRequest(Conference.Status status) {
         this.status = status;

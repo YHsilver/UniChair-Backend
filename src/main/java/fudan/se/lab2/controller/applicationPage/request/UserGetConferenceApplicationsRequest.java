@@ -13,6 +13,8 @@ public class UserGetConferenceApplicationsRequest {
     private String token;
     private Conference.Status status;
 
+    public UserGetConferenceApplicationsRequest(){}
+
     public UserGetConferenceApplicationsRequest(String token, Conference.Status status){
         this.token = token;
         this.status = status;

@@ -15,6 +15,8 @@ public class UserSubmitPaperRequest {
     private String summary;
     private MultipartFile file;
 
+    public UserSubmitPaperRequest(){}
+
     public UserSubmitPaperRequest(String token, Long conferenceId, String title, String summary, MultipartFile file
                                   ) {
         this.token = token;

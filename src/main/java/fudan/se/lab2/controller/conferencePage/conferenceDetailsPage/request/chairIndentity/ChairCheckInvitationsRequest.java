@@ -13,6 +13,8 @@ public class ChairCheckInvitationsRequest {
     private Long conferenceId;
     private Invitation.Status status;
 
+    public ChairCheckInvitationsRequest(){}
+
     public ChairCheckInvitationsRequest(String token, Long conferenceId, Invitation.Status status) {
         this.token = token;
         this.conferenceId = conferenceId;

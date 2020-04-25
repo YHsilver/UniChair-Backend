@@ -22,6 +22,8 @@ public class UserAddConferenceApplicationRequest {
     private LocalDate resultReleaseTime;
     private String introduction;
 
+    public UserAddConferenceApplicationRequest(){}
+
     public UserAddConferenceApplicationRequest(String token, String conferenceAbbreviation, String conferenceFullName,
                                                LocalDate conferenceTime, String conferenceLocation, LocalDate contributeStartTime,
                                                LocalDate contributeEndTime, LocalDate resultReleaseTime, String introduction) {

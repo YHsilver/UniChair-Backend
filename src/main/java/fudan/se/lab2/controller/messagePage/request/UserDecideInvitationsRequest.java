@@ -14,6 +14,8 @@ public class UserDecideInvitationsRequest {
     private Long invitationId;
     private Invitation.Status status;
 
+    public UserDecideInvitationsRequest(){}
+
     public UserDecideInvitationsRequest(String token, Long invitationId, Invitation.Status status) {
         this.invitationId = invitationId;
         this.status = status;
