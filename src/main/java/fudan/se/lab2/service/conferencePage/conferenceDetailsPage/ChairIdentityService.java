@@ -70,7 +70,7 @@ public class ChairIdentityService {
     public List<JSONObject> searchReviewers(ChairSearchReviewersRequest request) {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairMan().getId().equals(chair.getId())){
             // invalid search, not chair
             return null;
         }
