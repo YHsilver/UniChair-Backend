@@ -74,7 +74,14 @@ public class ChairIdentityService {
             return null;
         }
         List<JSONObject> list = new ArrayList<>();
-        Set<User> users = userRepository.findUsersByFullNameContains(request.getTargetFullName());
+        Set<User> users = userRepository.findAll();
+        String targetFullname = request.getTargetFullName();
+        for (User user:users
+             ) {
+            if(!user.getFullName().contains(targetFullname)){
+                users.remove(user);
+            }
+        }
         // avoid inviting chair himself
         users.remove(chair);
         // avoid inviting reviewers have been invited and accepted
