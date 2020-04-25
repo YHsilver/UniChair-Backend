@@ -1,11 +1,10 @@
 package fudan.se.lab2.service.adminPage;
 
-import fudan.se.lab2.controller.GetConferenceRequest;
 import fudan.se.lab2.controller.adminPage.request.AdminChangeConferenceStatusRequest;
 import fudan.se.lab2.controller.adminPage.request.AdminGetConferenceApplicationsRequest;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.repository.ConferenceRepository;
-import fudan.se.lab2.service.GeneralService.GetConferenceService;
+import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +21,11 @@ import java.util.List;
 public class AdminService {
 
     private ConferenceRepository conferenceRepository;
-    private GetConferenceService getConferenceService;
 
     // constructor
     @Autowired
-    public AdminService(ConferenceRepository conferenceRepository, GetConferenceService getConferenceService) {
+    public AdminService(ConferenceRepository conferenceRepository) {
         this.conferenceRepository = conferenceRepository;
-        this.getConferenceService = getConferenceService;
     }
 
     /**
@@ -38,10 +35,7 @@ public class AdminService {
      * @return return conferences' lists
      */
     public List<JSONObject> getConferenceApplications(AdminGetConferenceApplicationsRequest request) {
-        GetConferenceRequest getConferenceRequest = new GetConferenceRequest();
-        getConferenceRequest.setStatus(request.getStatus());
-        getConferenceRequest.setBrief(true);
-        return getConferenceService.getConference(getConferenceRequest);
+        return UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.findConferencesByStatus(request.getStatus()), true);
     }
 
     /**

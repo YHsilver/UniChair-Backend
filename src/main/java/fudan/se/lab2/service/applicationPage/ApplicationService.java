@@ -1,6 +1,5 @@
 package fudan.se.lab2.service.applicationPage;
 
-import fudan.se.lab2.controller.GetConferenceRequest;
 import fudan.se.lab2.controller.applicationPage.request.UserGetConferenceApplicationsRequest;
 import fudan.se.lab2.controller.applicationPage.request.UserAddConferenceApplicationRequest;
 import fudan.se.lab2.domain.User;
@@ -8,7 +7,7 @@ import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
-import fudan.se.lab2.service.GeneralService.GetConferenceService;
+import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,16 +19,14 @@ public class ApplicationService {
 
     private UserRepository userRepository;
     private ConferenceRepository conferenceRepository;
-    private GetConferenceService getConferenceService;
     private JwtTokenUtil tokenUtil;
 
     // constructor
     @Autowired
     public ApplicationService(UserRepository userRepository, ConferenceRepository conferenceRepository,
-                              GetConferenceService getConferenceService, JwtTokenUtil tokenUtil) {
+                              JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.conferenceRepository = conferenceRepository;
-        this.getConferenceService = getConferenceService;
         this.tokenUtil = tokenUtil;
     }
 
@@ -40,12 +37,9 @@ public class ApplicationService {
      * @return return conferences' lists
      */
     public List<JSONObject> getConferenceApplications(UserGetConferenceApplicationsRequest request) {
-        GetConferenceRequest getConferenceRequest = new GetConferenceRequest();
-        // WARNING!! low efficiency
-        getConferenceRequest.setChair(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())));
-        getConferenceRequest.setStatus(request.getStatus());
-        getConferenceRequest.setBrief(true);
-        return getConferenceService.getConference(getConferenceRequest);
+        return UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.
+                findConferencesByChairManAndStatus(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
+                        request.getStatus()), true);
     }
 
     /**
