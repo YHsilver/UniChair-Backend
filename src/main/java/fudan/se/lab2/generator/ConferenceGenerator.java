@@ -14,13 +14,12 @@ public class ConferenceGenerator {
                       LocalDate conferenceTime, LocalDate contributeStartTime, LocalDate contributeEndTime,
                       LocalDate resultReleaseTime, String introduction)
     * */
-
+    private static Random random = new Random();
     private final static String PERFIX = "G";
     private static int randomConferenceNum = 0;
     private final static String[] locationSet = new String[]{"Beijing", "Shanghai", "HK", "Los Angles", "New York", "Berlin", "Paris", "London", "WuHan"};
 
     public static Conference getRandomConference(User chairMan){
-        Random random = new Random();
         String conferenceAbbreviation = PERFIX + randomConferenceNum + "_" + StringGenerator.getRandomString(3, 4, true, false, false).toUpperCase();
         String conferenceFullName = conferenceAbbreviation + " " + StringGenerator.getRandomString();
         String conferenceLocation = locationSet[random.nextInt( locationSet.length)];
@@ -35,7 +34,6 @@ public class ConferenceGenerator {
     }
 
     public static Set<Conference> getRandomConferences(int randomConferenceNum, Set<User> chairSet){
-        Random random = new Random();
         Set<Conference> conferenceSet = new HashSet<>();
         User[] chairs = new User[chairSet.size()];
         chairSet.toArray(chairs);

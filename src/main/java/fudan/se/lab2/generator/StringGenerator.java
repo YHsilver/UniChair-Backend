@@ -1,9 +1,11 @@
 package fudan.se.lab2.generator;
 
+import java.security.*;
 import java.util.Random;
 
 public class StringGenerator {
 
+    private static Random random = new Random();
     private static final char[] DIGITS_SET = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     private static final char[] LETTERS_SET = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
                                         'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
@@ -38,7 +40,6 @@ public class StringGenerator {
 
     protected static String getRandomString(int minLength, int maxLength, boolean hasLetters,
                                             boolean hasDigits, boolean hasSpecialCharacters){
-        Random random = new Random();
         // invalid request
         if((minLength < 1) || (maxLength < minLength) || ((!hasLetters)&&(!hasDigits)&&(!hasSpecialCharacters))){
             return null;
@@ -46,23 +47,50 @@ public class StringGenerator {
 
         // select charSet
         char[] charSet;
-        if(hasDigits && hasLetters && (!hasSpecialCharacters)){
-            charSet = DIGITS_AND_LETTERS_SET;
-        }else if(hasDigits && hasLetters && hasSpecialCharacters){
-            charSet = ALL_SET;
-        }else if(hasDigits && (!hasLetters) && hasSpecialCharacters){
-            charSet = DIGITS_AND_SPECIAL_CHARACTERS_SET;
-        }else if(hasDigits && (!hasLetters) && (!hasSpecialCharacters)){
-            charSet = DIGITS_SET;
-        }else if((!hasDigits) && hasLetters && hasSpecialCharacters){
-            charSet = LETTERS_AND_SPECIAL_CHARACTERS_SET;
-        }else if((!hasDigits) && hasLetters && (!hasSpecialCharacters)){
-            charSet = LETTERS_SET;
-        }else if((!hasDigits) && (!hasLetters) && hasSpecialCharacters){
-            charSet = SPECIAL_CHARACTERS_SET;
+        if(hasDigits){
+            if(hasLetters){
+                if(hasSpecialCharacters){
+                    charSet = ALL_SET;
+                }else{
+                    charSet = DIGITS_AND_LETTERS_SET;
+                }
+            }else{
+                if(hasSpecialCharacters){
+                    charSet = DIGITS_AND_SPECIAL_CHARACTERS_SET;
+                }else{
+                    charSet = DIGITS_SET;
+                }
+            }
         }else{
-            charSet = ALL_SET;
+            if(hasLetters){
+                if(hasSpecialCharacters){
+                    charSet = LETTERS_AND_SPECIAL_CHARACTERS_SET;
+                }else{
+                    charSet = LETTERS_SET;
+                }
+            }else{
+                charSet = SPECIAL_CHARACTERS_SET;
+            }
         }
+
+
+//        if(hasDigits && hasLetters && (!hasSpecialCharacters)){
+//            charSet = DIGITS_AND_LETTERS_SET;
+//        }else if(hasDigits && hasLetters && hasSpecialCharacters){
+//            charSet = ALL_SET;
+//        }else if(hasDigits && (!hasLetters) && hasSpecialCharacters){
+//            charSet = DIGITS_AND_SPECIAL_CHARACTERS_SET;
+//        }else if(hasDigits && (!hasLetters) && (!hasSpecialCharacters)){
+//            charSet = DIGITS_SET;
+//        }else if((!hasDigits) && hasLetters && hasSpecialCharacters){
+//            charSet = LETTERS_AND_SPECIAL_CHARACTERS_SET;
+//        }else if((!hasDigits) && hasLetters && (!hasSpecialCharacters)){
+//            charSet = LETTERS_SET;
+//        }else if((!hasDigits) && (!hasLetters) && hasSpecialCharacters){
+//            charSet = SPECIAL_CHARACTERS_SET;
+//        }else{
+//            charSet = ALL_SET;
+//        }
 
         int setLength = charSet.length;
         StringBuilder tempString = new StringBuilder();
