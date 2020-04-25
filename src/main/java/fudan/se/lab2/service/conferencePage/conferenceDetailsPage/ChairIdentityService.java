@@ -48,7 +48,7 @@ public class ChairIdentityService {
     public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairMan().getId().equals(chair.getId())){
             // invalid check, not chair
             return null;
         }
@@ -105,7 +105,7 @@ public class ChairIdentityService {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         int validNum = 0;
-        if(conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairMan().getId().equals(chair.getId())){
             // invalid send, not chair
             return "{\"message\":\"" + validNum + " invitation has been send!\"}";
         }
@@ -148,7 +148,7 @@ public class ChairIdentityService {
     public List<JSONObject> checkInvitations(ChairCheckInvitationsRequest request) {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairMan().getId().equals(chair.getId())){
             // invalid check, not chair
             return null;
         }

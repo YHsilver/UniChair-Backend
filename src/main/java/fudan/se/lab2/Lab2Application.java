@@ -48,11 +48,11 @@ public class Lab2Application {
                 // 管理员、投稿人、审稿人
 
                 // Create an adminPage if not exists.
-                if (userRepository.findByUsername("adminPage") == null) {
+                if (userRepository.findByUsername("admin") == null) {
                     User admin = new User(
-                            "adminPage",
+                            "admin",
                             passwordEncoder.encode("ThisisaAdminPASSWORD123$$软工牛逼"),
-                            "adminPage",
+                            "admin",
                             "fudan",
                             "software",
                             "adminPage@fudan.edu.cn"
@@ -87,7 +87,7 @@ public class Lab2Application {
                 }
 
                 // add inner conferences
-                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr","AI full name", "AI location",  LocalDate.of(2020, 4, 12),
+                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", "AI location", LocalDate.of(2020, 4, 12),
                         LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction");
                 AIConference.setStatus(Conference.Status.PASS);
 
@@ -96,7 +96,7 @@ public class Lab2Application {
                 testRobertConference.setStatus(Conference.Status.PASS);
                 testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
 
-                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", "testRobert2 location",  LocalDate.of(2020, 4, 12),
+                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", "testRobert2 location", LocalDate.of(2020, 4, 12),
                         LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction");
                 testRobertConference2.setStatus(Conference.Status.PASS);
                 testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
@@ -121,12 +121,13 @@ public class Lab2Application {
 
                 Set<User> userSet = UserGenerator.getRandomUsers(20);
                 Set<Conference> conferenceSet = ConferenceGenerator.getRandomConferences(20, userSet);
-                for (User user:userSet
-                     ) {
+                for (User user : userSet
+                ) {
                     userRepository.save(user);
                 }
-                for (Conference conference:conferenceSet
-                     ) {
+                for (Conference conference : conferenceSet
+                ) {
+                    conference.setStatus(Conference.Status.PASS);
                     conferenceRepository.save(conference);
                 }
 
