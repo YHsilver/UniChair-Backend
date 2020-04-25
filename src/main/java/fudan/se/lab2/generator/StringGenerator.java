@@ -1,5 +1,7 @@
 package fudan.se.lab2.generator;
 
+import java.util.Random;
+
 public class StringGenerator {
 
     private static final char[] DIGITS_SET = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
@@ -36,6 +38,7 @@ public class StringGenerator {
 
     protected static String getRandomString(int minLength, int maxLength, boolean hasLetters,
                                             boolean hasDigits, boolean hasSpecialCharacters){
+        Random random = new Random();
         // invalid request
         if((minLength < 1) || (maxLength < minLength) || ((!hasLetters)&&(!hasDigits)&&(!hasSpecialCharacters))){
             return null;
@@ -63,10 +66,10 @@ public class StringGenerator {
 
         int setLength = charSet.length;
         StringBuilder tempString = new StringBuilder();
-        int stringLength = (int)(Math.random() * (maxLength - minLength + 1)) + minLength;
+        int stringLength = random.nextInt( (maxLength - minLength + 1)) + minLength;
 
         for(int i = 0; i < stringLength; i++){
-            tempString.append(charSet[(int)(Math.random() * setLength)]);
+            tempString.append(charSet[random.nextInt( setLength)]);
         }
 
         return tempString.toString();

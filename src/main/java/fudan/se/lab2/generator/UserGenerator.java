@@ -19,7 +19,7 @@ public class UserGenerator {
     public static User getRandomUser(){
         //String username = PERFIX + randomUserNum + "_" + StringGenerator.getRandomString();
         String username = PERFIX + randomUserNum + "_" + "user";
-        String password = DEFAULT_PASS;
+        String password = DEFAULT_PASS + randomUserNum + "_" + StringGenerator.getRandomString(8,8,true,true,true);
         //String password = StringGenerator.getRandomString(12, 20, true, true, true);
         String fullName = StringGenerator.getRandomString();
         String unit = StringGenerator.getRandomString() + " Unit";
