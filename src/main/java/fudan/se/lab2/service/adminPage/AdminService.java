@@ -2,8 +2,11 @@ package fudan.se.lab2.service.adminPage;
 
 import fudan.se.lab2.controller.adminPage.request.AdminChangeConferenceStatusRequest;
 import fudan.se.lab2.controller.adminPage.request.AdminGetConferenceApplicationsRequest;
+import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.domain.conference.Topic;
 import fudan.se.lab2.repository.ConferenceRepository;
+import fudan.se.lab2.repository.TopicRepository;
 import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +24,13 @@ import java.util.List;
 public class AdminService {
 
     private ConferenceRepository conferenceRepository;
+    private TopicRepository topicRepository;
 
     // constructor
     @Autowired
-    public AdminService(ConferenceRepository conferenceRepository) {
+    public AdminService(ConferenceRepository conferenceRepository, TopicRepository topicRepository) {
         this.conferenceRepository = conferenceRepository;
+        this.topicRepository = topicRepository;
     }
 
     /**
@@ -47,7 +52,21 @@ public class AdminService {
     public String changeConferenceStatus(AdminChangeConferenceStatusRequest request) {
         Conference targetConference = this.conferenceRepository.findByConferenceId(request.getId());
         if(request.getStatus() != null && targetConference != null){
+            User chair = targetConference.getChairMan();
             targetConference.setStatus(request.getStatus());
+            // if passed, add topic entities to repository and this conference instance
+            if(request.getStatus() == Conference.Status.PASS){
+                String[] topics = targetConference.getTopics();
+                for(String topic: topics){
+                    // chair is default reviewer for each topic
+                    Topic tempTopic = new Topic(targetConference, topic);
+                    tempTopic.getReviewers().add(chair);
+                    targetConference.getTopicSet().add(tempTopic);
+                }
+                this.topicRepository.saveAll(targetConference.getTopicSet());
+            }
+            // chair is a default reviewer
+            targetConference.getReviewerSet().add(chair);
             this.conferenceRepository.save(targetConference);
             return targetConference.getConferenceFullName() + "'s Status is " + targetConference.getStatus().toString() + " now!";
         }

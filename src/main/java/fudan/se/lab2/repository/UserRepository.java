@@ -14,6 +14,5 @@ import java.util.Set;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     User findByUsername(String username);
-    User findUserByFullName(String fullName);
     Set<User> findAll();
 }

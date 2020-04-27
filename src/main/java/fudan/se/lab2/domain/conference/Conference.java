@@ -1,6 +1,7 @@
 package fudan.se.lab2.domain.conference;
 
 import fudan.se.lab2.domain.User;
+import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -68,12 +69,11 @@ public class Conference implements Serializable {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Paper> paperSet = new HashSet<>();
 
-    //private ConferenceAbstract conferenceAbstract;
+    @OneToMany
+    private Set<Topic> topicSet = new HashSet<>();
 
     // empty constructor
     public Conference() {
-        //this.conferenceAbstract = new ConferenceAbstract();
-        //this.conferenceAbstract.setConferenceId(this.conferenceId);
     }
 
     // constructor
@@ -92,9 +92,7 @@ public class Conference implements Serializable {
         this.topics = topics;
         this.status = Status.PENDING;// 初始化都是待审核状态
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
-        this.authorSet = new HashSet<>();// 还没有人投稿
-        this.reviewerSet = new HashSet<>();// 还没有人成为PC members
-        this.paperSet = new HashSet<>();// 还没有人投稿
+
         //this.conferenceAbstract = new ConferenceAbstract(this.conferenceId, conferenceAbbreviation, conferenceFullName,
                 //conferenceLocation, conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime,
                 //introduction, this.status, this.stage);
@@ -228,6 +226,14 @@ public class Conference implements Serializable {
         this.reviewerSet = reviewerSet;
     }
 
+    public Set<Topic> getTopicSet() {
+        return topicSet;
+    }
+
+    public void setTopicSet(Set<Topic> topicSet) {
+        this.topicSet = topicSet;
+    }
+
     // print all info, not safe!
     @Override
     public String toString() {
@@ -265,17 +271,16 @@ public class Conference implements Serializable {
         return false;
     }
 
-    /**
-     * change a JSON String 2 JSONObject
-     * public static!!!
-     *
-     * @param str JSON 格式字符串
-     * @return JSON 对象
-     * @throws ParseException 出错啦
-     */
-    public static JSONObject String2Json(String str) throws ParseException {
-        return (JSONObject) (new JSONParser().parse(str));
+    public Topic findTopic(String topicName){
+        for(Topic topicInSet: topicSet){
+            if(topicInSet.getTopic().equals(topicName)){
+                return topicInSet;
+            }
+        }
+        return null;
     }
+
+
 
     public JSONObject toBriefJson() {
         try {
@@ -291,7 +296,7 @@ public class Conference implements Serializable {
                     ", \"stage\":\"" + stage.toString() + '\"' +
                     ", \"chairMan\":\"" + chairMan.getUsername().toString() + '\"' +
                     '}';
-            return String2Json(str);
+            return UtilityService.String2Json(str);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -299,22 +304,23 @@ public class Conference implements Serializable {
     }
 
     public JSONObject toFullJson() {
-//         ["Dr. Chen", "Dr. Zhang", "Hu YuFeng", "Pan XingYu", "Yan Hua"]
-        String reviewers = "";
+        //["Dr. Chen", "Dr. Zhang", "Hu YuFeng", "Pan XingYu", "Yan Hua"]
+
+        // get json array as string for all reviewers' full name
+        int i = 0;
+        String[] reviewerFullNames = new String[reviewerSet.size()];
         for (User reviewer : reviewerSet) {
-            reviewers += reviewer.getFullName() + ", ";
+            reviewerFullNames[i++] = reviewer.getFullName();
         }
-        if (reviewers.length() > 2) {
-            reviewers = reviewers.substring(0, reviewers.length() - 2);
-        }
-        System.out.println(reviewers);
-        StringBuilder authors = new StringBuilder();
+        String reviewers = UtilityService.getJsonStringFromArray(reviewerFullNames);
+        // get json array as string for all authors' full name
+        i = 0;
+        String[] authorFullNames = new String[authorSet.size()];
         for (User author : authorSet) {
-            authors.append(author.getFullName()).append(", ");
+            authorFullNames[i++] = author.getFullName();
         }
-        if (authors.length() > 2) {
-            authors = new StringBuilder(authors.substring(0, authors.length() - 2));
-        }
+        String authors = UtilityService.getJsonStringFromArray(authorFullNames);
+
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +
@@ -331,7 +337,7 @@ public class Conference implements Serializable {
                     ", \"releaseDate\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"introduction\":\"" + introduction + '\"' +
                     '}';
-            return String2Json(str);
+            return UtilityService.String2Json(str);
         } catch (
                 ParseException e) {
             e.printStackTrace();

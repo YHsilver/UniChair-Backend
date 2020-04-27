@@ -52,7 +52,7 @@ public class Lab2Application {
                 if (userRepository.findByUsername("admin") == null) {
                     User admin = new User(
                             "admin",
-                            passwordEncoder.encode("ThisisaAdminPASSWORD123$$软工牛逼"),
+                            passwordEncoder.encode("adminPass"),
                             "admin",
                             "fudan",
                             "software",
@@ -65,7 +65,7 @@ public class Lab2Application {
                 if (userRepository.findByUsername("testRobert") == null) {
                     User testRobert = new User(
                             "testRobert",
-                            passwordEncoder.encode("superModelRuleTheWorld##~"),
+                            passwordEncoder.encode("testRobertPass"),
                             "testRobertRuleTheWorld",
                             "fudan",
                             "software",
@@ -78,7 +78,7 @@ public class Lab2Application {
                 if (userRepository.findByUsername("AI") == null) {
                     User AI = new User(
                             "AI",
-                            passwordEncoder.encode("superAIBIGGERMind!@@"),
+                            passwordEncoder.encode("AIPass"),
                             "AIRuleTheWorld",
                             "fudan",
                             "software",

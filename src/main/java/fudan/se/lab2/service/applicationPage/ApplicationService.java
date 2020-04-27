@@ -6,6 +6,7 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.exception.ConferencException.IllegalConferenceApplicationException;
 import fudan.se.lab2.repository.ConferenceRepository;
+import fudan.se.lab2.repository.TopicRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
@@ -72,15 +73,19 @@ public class ApplicationService {
             && UtilityService.checkStringLength(request.getIntroduction(), 1, -1)
             && request.getTopics() != null && request.getTopics().length >= 1){
             // remove all empty strings
-            Set<String> topicList = new HashSet<>(Arrays.asList(request.getTopics()));
-            for (String topic:topicList
+            Set<String> topics = new HashSet<>(Arrays.asList(request.getTopics()));
+            for (String topic:topics
                  ) {
-                if(topic.equals("")) topicList.remove(topic);
+                if(topic == null || topic.equals("")) topics.remove(topic);
+            }
+            // valid topic num is zero
+            if(topics.size() == 0){
+                throw new IllegalConferenceApplicationException("Required information missing!");
             }
             Conference newConference = new Conference(chairMan,
                     request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  conferenceTime.plusDays(1L),
                     contributeStartTime.plusDays(1L), contributeEndTime.plusDays(1L),
-                    resultReleaseTime.plusDays(1L), request.getIntroduction(), (String[]) topicList.toArray());
+                    resultReleaseTime.plusDays(1L), request.getIntroduction(), topics.toArray(new String[0]));
             chairMan.addConference(newConference);
             conferenceRepository.save(newConference);
             return "{\"message\":\"conference application submit success!\"}";

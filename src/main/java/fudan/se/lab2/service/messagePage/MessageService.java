@@ -9,6 +9,7 @@ import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.InvitationRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import fudan.se.lab2.service.UtilityService;
 import org.assertj.core.util.Lists;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class MessageService {
         return list;
     }
 
+
     /**
      * decide my invitation（用户决定是否接受邀请）
      *
@@ -61,12 +63,28 @@ public class MessageService {
         User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Invitation invitation = this.invitationRepository.findByInvitationId(request.getInvitationId());
         // only PENDING to PASS or REJECT
-        if(request.getStatus() != Invitation.Status.PENDING && invitation.getStatus() == Invitation.Status.PENDING){
-            invitation.setStatus(request.getStatus());
+        if(invitation.getReviewer().getId().equals(user.getId())
+                && request.getStatus() != Invitation.Status.PENDING
+                && invitation.getStatus() == Invitation.Status.PENDING){
+
         }else{
             //TODO: throw exception
+            return "Invalid request";
         }
         Conference currConference = conferenceRepository.findByConferenceId(invitation.getConferenceId());
+        invitation.setStatus(request.getStatus());
+        String[] selectedTopics = request.getTopics();
+        if(request.getStatus() == Invitation.Status.PASS){
+            // if accept the invitation, the user should select topics.
+            if(selectedTopics == null || selectedTopics.length == 0
+                    || !UtilityService.isTopicsValidInConference(currConference, selectedTopics)){
+                return "Invalid topics selected";
+            }
+            for (String selectedTopic: selectedTopics) {
+                currConference.findTopic(selectedTopic).getReviewers().add(user);
+            }
+        }
+
         currConference.getReviewerSet().add(user);
         this.conferenceRepository.save(currConference);
         this.invitationRepository.save(invitation);

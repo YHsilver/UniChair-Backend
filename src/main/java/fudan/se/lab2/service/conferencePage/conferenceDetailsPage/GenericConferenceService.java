@@ -6,10 +6,12 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.gen
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.domain.conference.Topic;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class GenericConferenceService {
@@ -64,16 +69,36 @@ public class GenericConferenceService {
             return "{\"message\":\"chair cannot submit paper!\"}";
         }
 
+        if(conference.getStage() != Conference.Stage.CONTRIBUTION){
+            return "{\"message\":\"Not Contribution Stage!\"}";
+        }
+
         MultipartFile multipartFile = request.getFile();
         // 获取文件名
         String fileName = multipartFile.getOriginalFilename();
         // 获取文件后缀
-        String prefix = fileName.substring(fileName.lastIndexOf('.'));
-        File excelFile = File.createTempFile(String.valueOf(Math.random()), prefix);
+        String suffix = fileName.substring(fileName.lastIndexOf('.'));
+        if(!suffix.toLowerCase().equals("pdf") || !isAuthorsValid(request.getAuthors())){
+            return "{\"message\":\"paper submit wrong, file or information format error!\"}";
+        }
+
+        File excelFile = File.createTempFile(String.valueOf(Math.random()), suffix);
         // MultipartFile to File
         multipartFile.transferTo(excelFile);
-        Paper newPaper = new Paper(author, request.getConferenceId(), request.getTitle(),
-                request.getSummary(), excelFile);
+        Paper newPaper = new Paper(conference, author, request.getTitle(),
+                request.getAuthors(), request.getSummary(), excelFile);
+
+        // check the validation of all topics
+        if(!UtilityService.isTopicsValidInConference(conference, request.getTopics())){
+            return "{\"message\":\"paper submit wrong, topics selected error!\"}";
+        }
+
+        for(String topic: request.getTopics()){
+            Topic currTopic = conference.findTopic(topic);
+            currTopic.getAuthors().add(author);
+            currTopic.getPapers().add(newPaper);
+        }
+
         author.getPapers().add(newPaper);
         paperRepository.save(newPaper);
         userRepository.save(author);
@@ -91,6 +116,20 @@ public class GenericConferenceService {
      */
     private void deleteFile(File... files) throws IOException {
         for (File file : files) {if (file.exists()) { Files.delete(Paths.get(file.getPath())); }}
+    }
+
+    /*
+    * 检查authors数组是否合法
+    *
+    * */
+    private boolean isAuthorsValid(String[][] authors){
+        for(String[] author: authors){
+            if(author.length != 4 || !(UtilityService.checkStringLength(author[0], 1) && UtilityService.checkStringLength(author[1], 1)
+                && UtilityService.checkStringLength(author[2], 1) && UtilityService.checkEmail(author[3]))){
+                return false;
+            }
+        }
+        return false;
     }
 
 

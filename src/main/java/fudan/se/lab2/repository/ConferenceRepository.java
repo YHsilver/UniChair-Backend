@@ -18,17 +18,9 @@ public interface ConferenceRepository extends CrudRepository<Conference, Long> {
     Conference findByConferenceId(Long id);
 
     Set<Conference> findAll();
-    Set<Conference> findByConferenceAbbreviation(String conferenceAbbreviation);
-    Set<Conference> findByConferenceFullName(String conferenceFullName);
-
-    Set<Conference> findByChairMan(User chairMan);
     Set<Conference> findConferencesByChairManAndStatus(User chairMan, Conference.Status status);
-    Set<Conference> findConferencesByAuthorSetContains(User author);
     Set<Conference> findConferencesByAuthorSetContainsAndStatus(User author, Conference.Status status);
-    Set<Conference> findConferencesByReviewerSetContains(User reviewer);
     Set<Conference> findConferencesByReviewerSetContainsAndStatus(User reviewer, Conference.Status status);
-
     Set<Conference> findConferencesByStatus(Conference.Status status);
-    Set<Conference> findConferencesByStage(Conference.Stage stage);
 
 }

@@ -1,5 +1,6 @@
 package fudan.se.lab2.controller;
 
+import fudan.se.lab2.service.GeneralService.GetConferenceTopicsService;
 import fudan.se.lab2.service.GeneralService.GetUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +24,15 @@ import java.util.Map;
 public class AuthController {
 
     private GetUserDetailsService getUserDetailsService;
+    private GetConferenceTopicsService getConferenceTopicsService;
 
     // 日志
     Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(GetUserDetailsService getUserDetailsService) {
+    public AuthController(GetUserDetailsService getUserDetailsService, GetConferenceTopicsService getConferenceTopicsService) {
         this.getUserDetailsService = getUserDetailsService;
+        this.getConferenceTopicsService = getConferenceTopicsService;
     }
 
 
@@ -39,6 +42,13 @@ public class AuthController {
         logger.debug(request.toString());
 //        System.out.println(request);
         return ResponseEntity.ok(getUserDetailsService.getUserDetails(request));
+    }
+
+    @PostMapping("/getConferenceTopics")
+    public ResponseEntity<?> getConferenceTopics(@RequestBody GetConferenceTopicsRequest request) {
+        logger.debug(request.toString());
+//        System.out.println(request);
+        return ResponseEntity.ok(getConferenceTopicsService.getConferenceTopics(request));
     }
 
     /**

@@ -11,6 +11,7 @@ import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.InvitationRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import fudan.se.lab2.service.UtilityService;
 import org.assertj.core.util.Lists;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,8 @@ public class ChairIdentityService {
             // invalid check, not chair
             return null;
         }
-        // chair can only change stage step by step, only admin can trace back or skip steps
-        if(conference.isNextStage(request.getChangedStage())){
+        // chair can only change stage step by step with limits, only admin can trace back or skip steps
+        if(UtilityService.isConferenceChangeStageValid(conference, request.getChangedStage())){
             conference.setStage(request.getChangedStage());
             conferenceRepository.save(conference);
             chair.addConference(conference);
