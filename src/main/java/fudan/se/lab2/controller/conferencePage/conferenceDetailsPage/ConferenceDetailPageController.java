@@ -1,12 +1,12 @@
 package fudan.se.lab2.controller.conferencePage.conferenceDetailsPage;
 
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairSendInvitationRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPaperDetailsRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPapersRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorModifyPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.*;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairChangeConferenceStageRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairCheckInvitationsRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairSearchReviewersRequest;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.AuthorIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ChairIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.GenericConferenceService;
@@ -47,6 +47,30 @@ public class ConferenceDetailPageController {
     }
     /* AUTHOR IDENTITY */
 
+    // author get all details of a paper
+    @PostMapping("/system/authorGetMyPaperDetails")
+    public ResponseEntity<?> handleUserRequest(@RequestBody AuthorGetMyPaperDetailsRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(authorIdentityService.getMyPaperDetails(request));
+    }
+
+    // author get all papers or all papers in a certain conference
+    @PostMapping("/system/authorGetMyPapers")
+    public ResponseEntity<?> handleUserRequest(@RequestBody AuthorGetMyPapersRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(authorIdentityService.getMyPapers(request));
+    }
+
+    // author modify a submitted paper
+    @PostMapping("/system/authorModifyPaper")
+    public ResponseEntity<?> handleUserRequest(@RequestBody AuthorModifyPaperRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(authorIdentityService.modifyPaper(request));
+    }
+
     /* CHAIR IDENTITY */
     // chair获取用户信息以邀请 PC member
     @PostMapping("/system/chairSearchReviews")
@@ -55,6 +79,8 @@ public class ConferenceDetailPageController {
         System.out.println(request.toString());
         return ResponseEntity.ok(chairIdentityService.searchReviewers(request));
     }
+
+
 
     // chair发出邀请请别人成为 PC member
     @PostMapping("/system/chairSendInvitation")
@@ -80,6 +106,14 @@ public class ConferenceDetailPageController {
         return ResponseEntity.ok(chairIdentityService.changeConferenceStage(request));
     }
 
+    // chair开启审稿
+    @PostMapping("/system/chairStartReviewing")
+    public ResponseEntity<?> handleUserRequest(@RequestBody ChairStartReviewingRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(chairIdentityService.startReviewing(request));
+    }
+
     /* REVIEWER IDENTITY */
 
     /* GENERAL IDENTITY */
@@ -88,12 +122,14 @@ public class ConferenceDetailPageController {
     @PostMapping("/system/userSubmitPaper")
     public ResponseEntity<?> handleUserRequest(@RequestParam("file") MultipartFile file,
                                                @RequestParam("conferenceId") Long conferenceId,
+                                               @RequestParam("topics") String[] topics,
                                                @RequestParam("title") String title,
+                                               @RequestParam("authors") String[][] authors,
                                                @RequestParam("summary") String summary,
                                                @RequestParam("token") String token,
                                                HttpServletRequest submitRequest) {
-        UserSubmitPaperRequest request = new UserSubmitPaperRequest(token, conferenceId, title,
-                summary, file);
+        UserSubmitPaperRequest request = new UserSubmitPaperRequest(token, conferenceId, topics, title,
+                authors, summary, file);
         try {
             return ResponseEntity.ok(genericConferenceService.submitPaper(request));
         } catch (IOException e) {

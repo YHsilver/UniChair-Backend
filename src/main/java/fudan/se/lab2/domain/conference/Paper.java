@@ -44,7 +44,7 @@ public class Paper implements Serializable {
     private String[][] paperAuthors;
     private String summary;
     // review status(CONTRIBUTION->Conference.Stage.CONTRIBUTION)
-    private enum Status {CONTRIBUTION, REVIEWING, REVIEWED}
+    public enum Status {CONTRIBUTION, REVIEWING, REVIEWED}
     // default status CONTRIBUTION
     private Status status = Status.CONTRIBUTION;
     // pdf file

@@ -1,13 +1,11 @@
 package fudan.se.lab2.domain.conference;
 
 import fudan.se.lab2.domain.User;
+import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-
 import javax.persistence.*;
 import java.io.Serializable;
-
-import static fudan.se.lab2.domain.conference.Conference.String2Json;
 
 /**
  * @author hyf
@@ -151,7 +149,7 @@ public class Invitation implements Serializable {
                     ", \"message\":\"" + message.toString() + '\"' +
                     ", \"status\":\"" + status.toString() + '\"' +
                     '}';
-            return String2Json(str);
+            return UtilityService.String2Json(str);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;

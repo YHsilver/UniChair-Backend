@@ -9,7 +9,9 @@ import org.json.simple.parser.ParseException;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -71,6 +73,9 @@ public class Conference implements Serializable {
 
     @OneToMany
     private Set<Topic> topicSet = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Map<User, Set<Paper>> reviewerAndPapersMap = new HashMap<>();
 
     // empty constructor
     public Conference() {
@@ -232,6 +237,14 @@ public class Conference implements Serializable {
 
     public void setTopicSet(Set<Topic> topicSet) {
         this.topicSet = topicSet;
+    }
+
+    public Map<User, Set<Paper>> getReviewerAndPapersMap() {
+        return reviewerAndPapersMap;
+    }
+
+    public void setReviewerAndPapersMap(Map<User, Set<Paper>> reviewerAndPapersMap) {
+        this.reviewerAndPapersMap = reviewerAndPapersMap;
     }
 
     // print all info, not safe!

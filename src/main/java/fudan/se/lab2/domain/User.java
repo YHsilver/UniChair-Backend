@@ -3,15 +3,12 @@ package fudan.se.lab2.domain;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Invitation;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-
-import static fudan.se.lab2.domain.conference.Conference.String2Json;
 
 /**
  * @author LBW
@@ -183,7 +180,7 @@ public class User {
                     ", \"area\":\"" + area.toString() + '\"' +
                     ", \"unit\":\"" + unit.toString() + '\"' +
                     '}';
-            return String2Json(str);
+            return UtilityService.String2Json(str);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;

@@ -1,8 +1,12 @@
 package fudan.se.lab2.repository;
 
+import fudan.se.lab2.domain.User;
+import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Set;
 
 /**
  * @author LBW
@@ -11,5 +15,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PaperRepository extends CrudRepository<Paper, Long> {
-    Paper findByConferenceId(Long id);
+    Paper findByPaperId(Long id);
+    Set<Paper> findPapersByConference(Conference conference);
+    Set<Paper> findPapersByAuthor(User author);
+    Set<Paper> findPapersByAuthorAndConference(User author, Conference conference);
 }

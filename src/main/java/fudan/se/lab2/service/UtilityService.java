@@ -1,6 +1,9 @@
 package fudan.se.lab2.service;
 
+import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.domain.conference.Topic;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -129,6 +132,89 @@ public class UtilityService {
             result = new StringBuilder(result.substring(0, result.length() - 2));
         }
         return result.toString();
+    }
+
+    /*
+     * 检查authors数组是否合法
+     *
+     * */
+    public static boolean isAuthorsValid(String[][] authors){
+        for(String[] author: authors){
+            if(author.length != 4 || !(UtilityService.checkStringLength(author[0], 1) && UtilityService.checkStringLength(author[1], 1)
+                    && UtilityService.checkStringLength(author[2], 1) && UtilityService.checkEmail(author[3]))){
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public static boolean paperAssignment_TOPIC_RELATED(Conference conference){
+        Random random = new Random();
+        for(User reviewer: conference.getReviewerSet()){
+            conference.getReviewerAndPapersMap().put(reviewer, new HashSet<>());
+        }
+        for(Paper paper : conference.getPaperSet()){
+            Set<User> allValidReviewers = new HashSet<>();
+            for(Topic topic : paper.getTopics()){
+                allValidReviewers.addAll(topic.getReviewers());
+            }
+            if(allValidReviewers.size() < 3){
+                allValidReviewers = conference.getReviewerSet();
+            }
+
+            Set<User> selectedReviewers = selectObjectsFromBaseSet(allValidReviewers, 3);
+            if(selectedReviewers == null){
+                return false;
+            }
+            for(User reviewer : selectedReviewers){
+                conference.getReviewerAndPapersMap().get(reviewer).add(paper);
+            }
+        }
+
+        return true;
+    }
+
+    private static <T> Set<T> selectObjectsFromBaseSet(Set<T> baseSet, int num){
+        if(num < 0){
+            return null;
+        }
+        if(num == 0){
+            return new HashSet<>();
+        }
+        if(num >= baseSet.size()){
+            return new HashSet<>(baseSet);
+        }
+        Random random = new Random();
+        List<T> copyBaseSet = new ArrayList<>(baseSet);
+        Set<T> resultSet = new HashSet<>();
+        for(int i = 0; i < num; i++){
+            T selectedObject = copyBaseSet.get(random.nextInt(copyBaseSet.size()));
+            resultSet.add(selectedObject);
+            copyBaseSet.remove(selectedObject);
+        }
+        return resultSet;
+    }
+
+    public static boolean paperAssignment_RANDOM(Conference conference){
+        Random random = new Random();
+        List<User> reviewersCopy = new ArrayList<>(conference.getReviewerSet());
+        List<Paper> papersCopy = new ArrayList<>(conference.getPaperSet());
+        int average = papersCopy.size() / reviewersCopy.size();
+        for(User reviewer: reviewersCopy){
+            Set<Paper> paperSet = new HashSet<>();
+            for(int i = 0; i < average; i++){
+                Paper randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
+                paperSet.add(randomPaper);
+                papersCopy.remove(randomPaper);
+            }
+            conference.getReviewerAndPapersMap().put(reviewer, paperSet);
+        }
+        for(Paper paper: papersCopy){
+            User randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
+            conference.getReviewerAndPapersMap().get(randomReviewer).add(paper);
+            reviewersCopy.remove(randomReviewer);
+        }
+        return true;
     }
 
 }

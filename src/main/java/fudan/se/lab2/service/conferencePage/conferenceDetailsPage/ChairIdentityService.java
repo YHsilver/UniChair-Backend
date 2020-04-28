@@ -1,12 +1,10 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairChangeConferenceStageRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairCheckInvitationsRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairSendInvitationRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairSearchReviewersRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.*;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Invitation;
+import fudan.se.lab2.domain.conference.Paper;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.InvitationRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -47,6 +45,11 @@ public class ChairIdentityService {
      * @return return conference's id and changed stage
      */
     public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
+        // TODO: Better implementation should be found
+        if(request.getChangedStage() == Conference.Stage.REVIEWING){
+            return "{\"message\":\" You should not start reviewing by this request\"}";
+        }
+
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         if(!conference.getChairMan().getId().equals(chair.getId())){
@@ -60,6 +63,41 @@ public class ChairIdentityService {
             chair.addConference(conference);
         }
         return conference.getConferenceFullName() + "'s Stage is " + conference.getStage().toString();
+    }
+
+    /**
+     *
+     * @param request request from user
+     * @return message of dealing result
+     */
+    public String startReviewing(ChairStartReviewingRequest request){
+        User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        ChairStartReviewingRequest.Strategy strategy = request.getStrategy();
+        if(chair == null || conference == null || strategy == null || conference.getChairMan() != chair){
+            return "{\"message\":\" Invalid request!\"}";
+        }
+
+        if(conference.getReviewerSet().size() < 3 || conference.getPaperSet().size() == 0){
+            return "{\"message\":\" Too less PC Members or No paper to review!\"}";
+        }
+
+        if(strategy == ChairStartReviewingRequest.Strategy.TOPIC_RELATED){
+            if(UtilityService.paperAssignment_TOPIC_RELATED(conference)){
+                return "{\"message\":\" Reviewing start!\"}";
+            }else{
+                return "{\"message\":\" No valid assignment!\"}";
+            }
+        }else if(strategy == ChairStartReviewingRequest.Strategy.RANDOM){
+            if(UtilityService.paperAssignment_RANDOM(conference)){
+                return "{\"message\":\" Reviewing start!\"}";
+            }else{
+                return "{\"message\":\" No valid assignment!\"}";
+            }
+        }
+
+
+        return "{\"message\":\" Unknown assignment strategy!\"}";
     }
 
     /**

@@ -1,5 +1,6 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorModifyPaperRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
@@ -65,21 +66,29 @@ public class GenericConferenceService {
     public String submitPaper(UserSubmitPaperRequest request) throws IOException {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(conference.getChairMan().getId().equals(author.getId())){
+        if(conference == null || conference.getChairMan().getId().equals(author.getId())){
             return "{\"message\":\"chair cannot submit paper!\"}";
         }
-
         if(conference.getStage() != Conference.Stage.CONTRIBUTION){
             return "{\"message\":\"Not Contribution Stage!\"}";
         }
 
         MultipartFile multipartFile = request.getFile();
-        // 获取文件名
+        if(multipartFile == null){
+            return "{\"message\":\"pdf file missing!\"}";
+        }
+        // get file name
         String fileName = multipartFile.getOriginalFilename();
-        // 获取文件后缀
+        // get file suffix
         String suffix = fileName.substring(fileName.lastIndexOf('.'));
-        if(!suffix.toLowerCase().equals("pdf") || !isAuthorsValid(request.getAuthors())){
-            return "{\"message\":\"paper submit wrong, file or information format error!\"}";
+        if(!suffix.toLowerCase().equals("pdf")){
+            return "{\"message\":\"paper submit wrong, not pdf file!\"}";
+        }
+
+        if(!UtilityService.checkStringLength(request.getTitle(), 1, 50)
+                || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
+                || !UtilityService.isAuthorsValid(request.getAuthors())){
+            return "{\"message\":\"paper modify wrong, information format error!\"}";
         }
 
         File excelFile = File.createTempFile(String.valueOf(Math.random()), suffix);
@@ -87,25 +96,24 @@ public class GenericConferenceService {
         multipartFile.transferTo(excelFile);
         Paper newPaper = new Paper(conference, author, request.getTitle(),
                 request.getAuthors(), request.getSummary(), excelFile);
-
         // check the validation of all topics
         if(!UtilityService.isTopicsValidInConference(conference, request.getTopics())){
             return "{\"message\":\"paper submit wrong, topics selected error!\"}";
         }
-
+        // check over and modify databases
         for(String topic: request.getTopics()){
             Topic currTopic = conference.findTopic(topic);
             currTopic.getAuthors().add(author);
             currTopic.getPapers().add(newPaper);
+            newPaper.getTopics().add(currTopic);
         }
-
         author.getPapers().add(newPaper);
         paperRepository.save(newPaper);
         userRepository.save(author);
         deleteFile(excelFile);
         conference.addAuthor(author);
         conferenceRepository.save(conference);
-        // 成功
+        // submit success
         return "{\"message\":\"your paper submit success!\"}";
     }
 
@@ -116,20 +124,6 @@ public class GenericConferenceService {
      */
     private void deleteFile(File... files) throws IOException {
         for (File file : files) {if (file.exists()) { Files.delete(Paths.get(file.getPath())); }}
-    }
-
-    /*
-    * 检查authors数组是否合法
-    *
-    * */
-    private boolean isAuthorsValid(String[][] authors){
-        for(String[] author: authors){
-            if(author.length != 4 || !(UtilityService.checkStringLength(author[0], 1) && UtilityService.checkStringLength(author[1], 1)
-                && UtilityService.checkStringLength(author[2], 1) && UtilityService.checkEmail(author[3]))){
-                return false;
-            }
-        }
-        return false;
     }
 
 
