@@ -1,6 +1,5 @@
 package fudan.se.lab2.security.jwt;
 
-import fudan.se.lab2.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,10 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author LBW
@@ -45,22 +41,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String token = request.getHeader("token");
         //System.out.println("[URI]: " + request.getRequestURI() + " [token]: " + token);
         if (token == null) {
-            response.sendRedirect("http://localhost:80/index");
+            response.sendRedirect("http://localhost:80/");
             return;
         }
         // check whether the token is
-        String username = null;
+        String username;
         try {
             username = tokenUtil.getUsernameFromToken(token);
         } catch (ExpiredJwtException ex) {
 //            System.out.println("[" + ex.getClaims().getSubject() + "] token out of time");
-            response.sendRedirect("http://114.115.246.37:80/index");
+            response.sendRedirect("http://114.115.246.37:80/");
             return;
         }
 //        System.out.println("[" + username + "] token access");
 
-        if(!username.equals("admin") && request.getRequestURI().startsWith("/admin")){
-            response.sendRedirect("http://114.115.246.37:80/index");
+        if (!username.equals("admin") && request.getRequestURI().startsWith("/admin")) {
+            response.sendRedirect("http://114.115.246.37:80/");
             return;
 
         }

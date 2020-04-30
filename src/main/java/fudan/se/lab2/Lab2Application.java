@@ -1,7 +1,7 @@
 package fudan.se.lab2;
 
-import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.User;
+import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.generator.ConferenceGenerator;
 import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.ConferenceRepository;
@@ -12,9 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.jws.soap.SOAPBinding;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -43,7 +41,7 @@ public class Lab2Application {
     public CommandLineRunner dataLoader(UserRepository userRepository, ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder) {
         return new CommandLineRunner() {
             @Override
-            public void run(String... args) throws Exception {
+            public void run(String... args) {
 
                 // Create authorities if not exist.
                 // 管理员、投稿人、审稿人

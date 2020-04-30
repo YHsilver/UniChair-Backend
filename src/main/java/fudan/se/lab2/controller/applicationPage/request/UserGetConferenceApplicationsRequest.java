@@ -36,7 +36,13 @@ public class UserGetConferenceApplicationsRequest {
         this.status = status;
     }
 
-
+    @Override
+    public String toString() {
+        return "UserGetConferenceApplicationsRequest{" +
+                "token='" + token + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }
 
 
