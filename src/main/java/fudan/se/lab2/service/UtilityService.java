@@ -3,12 +3,15 @@ package fudan.se.lab2.service;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.domain.conference.Review;
 import fudan.se.lab2.domain.conference.Topic;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.util.*;
+
+import static fudan.se.lab2.domain.conference.Conference.Stage.*;
 
 public class UtilityService {
 
@@ -98,7 +101,7 @@ public class UtilityService {
      */
     public static boolean isConferenceChangeStageValid(Conference conference, Conference.Stage stage){
         if(conference.isNextStage(stage)){
-            if(stage == Conference.Stage.CONTRIBUTION){
+            if(stage == CONTRIBUTION){
                 // default true
                 return true;
             }
@@ -116,6 +119,22 @@ public class UtilityService {
             }
         }
         return false;
+    }
+
+    public static Conference.Stage getNextStage(Conference.Stage stage){
+        switch (stage){
+            case PREPARATION:
+                return CONTRIBUTION;
+            case CONTRIBUTION:
+                return REVIEWING;
+            case REVIEWING:
+                return GRADING;
+            case GRADING:
+                return ENDING;
+            case ENDING:
+                return null;
+        }
+        return null;
     }
 
     /**
@@ -149,10 +168,7 @@ public class UtilityService {
     }
 
     public static boolean paperAssignment_TOPIC_RELATED(Conference conference){
-        Random random = new Random();
-        for(User reviewer: conference.getReviewerSet()){
-            conference.getReviewerAndPapersMap().put(reviewer, new HashSet<>());
-        }
+        Set<Review> reviews = conference.getReviewerAndPapersMap();
         for(Paper paper : conference.getPaperSet()){
             Set<User> allValidReviewers = new HashSet<>();
             for(Topic topic : paper.getTopics()){
@@ -167,7 +183,7 @@ public class UtilityService {
                 return false;
             }
             for(User reviewer : selectedReviewers){
-                conference.getReviewerAndPapersMap().get(reviewer).add(paper);
+                conference.getPapersOfReviewer(reviewer).add(paper);
             }
         }
 
@@ -201,17 +217,17 @@ public class UtilityService {
         List<Paper> papersCopy = new ArrayList<>(conference.getPaperSet());
         int average = papersCopy.size() / reviewersCopy.size();
         for(User reviewer: reviewersCopy){
-            Set<Paper> paperSet = new HashSet<>();
+            Set<Paper> paperSet = conference.getPapersOfReviewer(reviewer);
             for(int i = 0; i < average; i++){
                 Paper randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
                 paperSet.add(randomPaper);
                 papersCopy.remove(randomPaper);
             }
-            conference.getReviewerAndPapersMap().put(reviewer, paperSet);
         }
         for(Paper paper: papersCopy){
             User randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
-            conference.getReviewerAndPapersMap().get(randomReviewer).add(paper);
+            conference.getPapersOfReviewer(randomReviewer).add(paper);
+            //conference.getReviewerAndPapersMap().get(randomReviewer).add(paper);
             reviewersCopy.remove(randomReviewer);
         }
         return true;

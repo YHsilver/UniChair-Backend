@@ -5,8 +5,10 @@ import fudan.se.lab2.controller.messagePage.request.UserDecideInvitationsRequest
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Invitation;
+import fudan.se.lab2.domain.conference.Review;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.InvitationRepository;
+import fudan.se.lab2.repository.ReviewRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
@@ -15,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -23,15 +26,17 @@ public class MessageService {
     private UserRepository userRepository;
     private ConferenceRepository conferenceRepository;
     private InvitationRepository invitationRepository;
+    private ReviewRepository reviewRepository;
     private JwtTokenUtil tokenUtil;
     
     @Autowired
     public MessageService(UserRepository userRepository, InvitationRepository invitationRepository,
-                       ConferenceRepository conferenceRepository, JwtTokenUtil tokenUtil) {
+                       ConferenceRepository conferenceRepository, ReviewRepository reviewRepository, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.conferenceRepository = conferenceRepository;
         this.tokenUtil = tokenUtil;
         this.invitationRepository = invitationRepository;
+        this.reviewRepository = reviewRepository;
     }
 
 
@@ -83,11 +88,14 @@ public class MessageService {
             for (String selectedTopic: selectedTopics) {
                 currConference.findTopic(selectedTopic).getReviewers().add(user);
             }
+            Review review = new Review(currConference, user, new HashSet<>());
+            reviewRepository.save(review);
+            currConference.getReviewerAndPapersMap().add(review);
+            currConference.getReviewerSet().add(user);
+            this.conferenceRepository.save(currConference);
+            this.invitationRepository.save(invitation);
         }
 
-        currConference.getReviewerSet().add(user);
-        this.conferenceRepository.save(currConference);
-        this.invitationRepository.save(invitation);
         return "Invitation " + invitation.getInvitationId() + "'s Status is " + invitation.getStatus().toString() + " now!";
     }
 }

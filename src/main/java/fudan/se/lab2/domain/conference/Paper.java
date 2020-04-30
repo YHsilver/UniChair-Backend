@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity
 public class Paper implements Serializable {
 
-    private static final int REVIEWER_NUM = 3;
+    public static final int REVIEWER_NUM = 3;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +34,8 @@ public class Paper implements Serializable {
     @ManyToOne
     private User author;
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<User> reviewerSet = new HashSet<>();
+//    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+//    private Set<User> reviewerSet = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Topic> topics = new HashSet<>();
@@ -53,12 +53,13 @@ public class Paper implements Serializable {
     // three allocated reviewers
     private User[] reviewers = new User[REVIEWER_NUM];
     // three comments from reviewers
+    private Boolean[] isReviewed = new Boolean[REVIEWER_NUM];
     private String[] comments = new String[REVIEWER_NUM];
     // three grades from reviewers
     private Integer[] grades = new Integer[REVIEWER_NUM];
     // three confidence from reviewers
-    public enum Confidence {VERY_LOW, LOW, HIGH, VERY_HIGH};
-    private Confidence[] confidences = new Confidence[REVIEWER_NUM];
+    //public enum Confidence {VERY_LOW, LOW, HIGH, VERY_HIGH}
+    private String[] confidences = new String[REVIEWER_NUM];
 
     // empty constructor
     public Paper() {}
@@ -90,12 +91,12 @@ public class Paper implements Serializable {
     public void setAuthor(User author) {
         this.author = author;
     }
-    public Set<User> getReviewerSet() {
-        return reviewerSet;
-    }
-    public void setReviewerSet(Set<User> reviewerSet) {
-        this.reviewerSet = reviewerSet;
-    }
+//    public Set<User> getReviewerSet() {
+//        return reviewerSet;
+//    }
+//    public void setReviewerSet(Set<User> reviewerSet) {
+//        this.reviewerSet = reviewerSet;
+//    }
     public Set<Topic> getTopics() {
         return topics;
     }
@@ -138,8 +139,10 @@ public class Paper implements Serializable {
     public void setComments(String[] comments) { this.comments = comments; }
     public Integer[] getGrades() { return grades; }
     public void setGrades(Integer[] grades) { this.grades = grades; }
-    public Confidence[] getConfidence() { return confidences; }
-    public void setConfidence(Confidence[] confidences) { this.confidences = confidences; }
+    public Boolean[] getIsReviewed() { return isReviewed; }
+    public void setIsReviewed(Boolean[] isReviewed) { this.isReviewed = isReviewed; }
+    public String[] getConfidences() { return confidences; }
+    public void setConfidences(String[] confidences) { this.confidences = confidences; }
 
     @Override
     public String toString() {
@@ -147,7 +150,7 @@ public class Paper implements Serializable {
                 "paperId=" + paperId +
                 ", conference=" + conference +
                 ", author=" + author +
-                ", reviewerSet=" + reviewerSet +
+                //", reviewerSet=" + reviewerSet +
                 ", topics=" + topics +
                 ", title='" + title + '\'' +
                 ", paperAuthors=" + Arrays.toString(paperAuthors) +
@@ -184,10 +187,10 @@ public class Paper implements Serializable {
 
     public JSONObject toStandardJson(){
         try {
-            Long[] reviewerIds = new Long[reviewerSet.size()];
-            String[] reviewerFullNames = new String[reviewerSet.size()];
+            Long[] reviewerIds = new Long[REVIEWER_NUM];
+            String[] reviewerFullNames = new String[REVIEWER_NUM];
             int i = 0;
-            for (User reviewer: reviewerSet
+            for (User reviewer: reviewers
                  ) {
                 reviewerIds[i] = reviewer.getId();
                 reviewerFullNames[i] = reviewer.getFullName();
@@ -208,6 +211,7 @@ public class Paper implements Serializable {
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
                     ", \"reviewerIds\":\"" + UtilityService.getJsonStringFromArray(reviewerIds) + '\"' +
                     ", \"reviewerFullNames\":\"" + UtilityService.getJsonStringFromArray(reviewerFullNames) + '\"' +
+                    ", \"isReviewed\":\"" + UtilityService.getJsonStringFromArray(isReviewed) + '\"' +
                     ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topicArray) + '\"' +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +

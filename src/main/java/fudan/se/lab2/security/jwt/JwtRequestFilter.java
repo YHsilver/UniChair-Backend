@@ -24,12 +24,11 @@ import java.util.Set;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private UserRepository userRepository;
     private JwtTokenUtil tokenUtil;
 
     @Autowired
-    public JwtRequestFilter(UserRepository userRepository, JwtTokenUtil tokenUtil) {
-        this.userRepository = userRepository; this.tokenUtil = tokenUtil;
+    public JwtRequestFilter(JwtTokenUtil tokenUtil) {
+        this.tokenUtil = tokenUtil;
     }
 
     @Override

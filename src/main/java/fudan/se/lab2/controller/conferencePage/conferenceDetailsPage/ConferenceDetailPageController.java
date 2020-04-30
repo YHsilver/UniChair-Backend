@@ -7,6 +7,9 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.cha
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPaperDetailsRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPapersRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerSubmitPaperReviewedRequest;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.AuthorIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ChairIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.GenericConferenceService;
@@ -115,6 +118,27 @@ public class ConferenceDetailPageController {
     }
 
     /* REVIEWER IDENTITY */
+
+    @PostMapping("/system/reviewerGetPapers")
+    public ResponseEntity<?> handleUserRequest(@RequestBody ReviewerGetPapersRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.getPapers(request));
+    }
+
+    @PostMapping("/system/reviewerGetPaperDetails")
+    public ResponseEntity<?> handleUserRequest(@RequestBody ReviewerGetPaperDetailsRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.getPaperDetails(request));
+    }
+
+    @PostMapping("/system/submitPaperReviewed")
+    public ResponseEntity<?> handleUserRequest(@RequestBody ReviewerSubmitPaperReviewedRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.submitPaperReviewed(request));
+    }
 
     /* GENERAL IDENTITY */
 

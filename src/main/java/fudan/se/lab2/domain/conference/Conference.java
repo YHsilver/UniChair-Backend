@@ -74,8 +74,8 @@ public class Conference implements Serializable {
     @OneToMany
     private Set<Topic> topicSet = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Map<User, Set<Paper>> reviewerAndPapersMap = new HashMap<>();
+    @OneToMany
+    private Set<Review> reviewerAndPapersMap = new HashSet<>();
 
     // empty constructor
     public Conference() {
@@ -239,12 +239,21 @@ public class Conference implements Serializable {
         this.topicSet = topicSet;
     }
 
-    public Map<User, Set<Paper>> getReviewerAndPapersMap() {
+    public Set<Review> getReviewerAndPapersMap() {
         return reviewerAndPapersMap;
     }
 
-    public void setReviewerAndPapersMap(Map<User, Set<Paper>> reviewerAndPapersMap) {
+    public void setReviewerAndPapersMap(Set<Review> reviewerAndPapersMap) {
         this.reviewerAndPapersMap = reviewerAndPapersMap;
+    }
+
+    public Set<Paper> getPapersOfReviewer(User reviewer){
+        for (Review review : reviewerAndPapersMap) {
+            if(review.getReviewer() == reviewer){
+                return review.getPapers();
+            }
+        }
+        return null;
     }
 
     // print all info, not safe!
@@ -280,6 +289,16 @@ public class Conference implements Serializable {
                 return  tarStage == Stage.ENDING;
             case ENDING:
                 return false;
+        }
+        return false;
+    }
+
+    public boolean isAfterOrEqualsStage(Stage tarStage){
+        while(tarStage != null){
+            if(tarStage == stage){
+                return true;
+            }
+            tarStage = UtilityService.getNextStage(tarStage);
         }
         return false;
     }
