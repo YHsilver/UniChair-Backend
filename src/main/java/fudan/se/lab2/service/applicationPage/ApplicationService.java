@@ -62,10 +62,10 @@ public class ApplicationService {
         LocalDate contributeEndTime = request.getContributeEndTime();
         LocalDate resultReleaseTime = request.getResultReleaseTime();
         LocalDate conferenceTime = request.getConferenceTime();
-        if(yesterday.isBefore(contributeStartTime) || yesterday.isEqual(contributeStartTime)
-            || contributeStartTime.isBefore(contributeEndTime) || contributeStartTime.isEqual(contributeEndTime)
-                || contributeEndTime.isBefore(resultReleaseTime) || contributeEndTime.isEqual(resultReleaseTime)
-            || resultReleaseTime.isBefore(conferenceTime) || resultReleaseTime.equals(conferenceTime)){
+        if(yesterday.isAfter(contributeStartTime) || yesterday.isEqual(contributeStartTime)
+            || contributeStartTime.isAfter(contributeEndTime) || contributeStartTime.isEqual(contributeEndTime)
+                || contributeEndTime.isAfter(resultReleaseTime) || contributeEndTime.isEqual(resultReleaseTime)
+            || resultReleaseTime.isAfter(conferenceTime) || resultReleaseTime.equals(conferenceTime)){
             throw new IllegalConferenceApplicationException("Time is not well ordered");
         }
 
