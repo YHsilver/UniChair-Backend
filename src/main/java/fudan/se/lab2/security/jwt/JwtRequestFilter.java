@@ -39,9 +39,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         // get token from the request header and check whether it exists
         String token = request.getHeader("token");
-        //System.out.println("[URI]: " + request.getRequestURI() + " [token]: " + token);
+        // System.out.println("[token]: " + token);
         if (token == null) {
-            response.sendRedirect("http://localhost:80/");
+            response.sendRedirect("http://114.115.246.37:80/");
             return;
         }
         // check whether the token is
@@ -58,8 +58,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (!username.equals("admin") && request.getRequestURI().startsWith("/admin")) {
             response.sendRedirect("http://114.115.246.37:80/");
             return;
-
         }
+
         filterChain.doFilter(request, response);
     }
 
