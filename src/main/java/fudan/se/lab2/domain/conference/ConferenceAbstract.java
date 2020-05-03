@@ -50,8 +50,8 @@ public class ConferenceAbstract{
         this.introduction = introduction;
     }
 
-    public void setChairMan(User chairMan) {
-        this.chairMan = chairMan;
+    public void setChairman(User chairman) {
+        this.chairman = chairman;
     }
 
     public void setStatus(Conference.Status status) {
@@ -90,7 +90,7 @@ public class ConferenceAbstract{
     // 简介
     private String introduction;
 
-    private User chairMan;
+    private User chairman;
 
     // 会议申请状态
     private Conference.Status status;
@@ -130,7 +130,7 @@ public class ConferenceAbstract{
                 ", \"introduction\":\"" + introduction + '\"' +
                 ", \"status\":\"" + status.toString() + '\"' +
                 ", \"stage\":\"" + stage.toString() + '\"' +
-                ", \"chairMan\":\"" + chairMan.getUsername() + '\"' +
+                ", \"chairman\":\"" + chairman.getUsername() + '\"' +
                 '}';
     }
 }

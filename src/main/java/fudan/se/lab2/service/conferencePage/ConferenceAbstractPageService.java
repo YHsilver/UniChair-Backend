@@ -38,7 +38,7 @@ public class ConferenceAbstractPageService {
         // TODO: implement the paging query
 
         if(request.getIdentity().equals("Chair")){
-            return UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.findConferencesByChairManAndStatus(
+            return UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.findConferencesByChairmanAndStatus(
                     userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())), Conference.Status.PASS),
                     true);
         }else if(request.getIdentity().equals("Author")){

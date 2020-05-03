@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class ConferenceGenerator {
     /*
-    (User chairMan, String conferenceAbbreviation, String conferenceFullName, String conferenceLocation,
+    (User chairman, String conferenceAbbreviation, String conferenceFullName, String conferenceLocation,
                       LocalDate conferenceTime, LocalDate contributeStartTime, LocalDate contributeEndTime,
                       LocalDate resultReleaseTime, String introduction)
     * */
@@ -20,7 +20,7 @@ public class ConferenceGenerator {
     private static int randomConferenceNum = 0;
     private final static String[] locationSet = new String[]{"Beijing", "Shanghai", "HK", "Los Angles", "New York", "Berlin", "Paris", "London", "WuHan"};
 
-    public static Conference getRandomConference(User chairMan){
+    public static Conference getRandomConference(User chairman){
         String conferenceAbbreviation = PERFIX + randomConferenceNum + "_" + StringGenerator.getRandomString(3, 4, StringGenerator.LETTERS_SET).toUpperCase();
         String conferenceFullName = conferenceAbbreviation + " " + StringGenerator.getRandomString();
         String conferenceLocation = locationSet[random.nextInt( locationSet.length)];
@@ -34,7 +34,7 @@ public class ConferenceGenerator {
             topics[i] = "T" + i + "_" + StringGenerator.getRandomString(4, 4);
         }
         randomConferenceNum++;
-        return new Conference(chairMan, conferenceAbbreviation, conferenceFullName, conferenceLocation,
+        return new Conference(chairman, conferenceAbbreviation, conferenceFullName, conferenceLocation,
                 conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime, introduction, topics);
     }
 

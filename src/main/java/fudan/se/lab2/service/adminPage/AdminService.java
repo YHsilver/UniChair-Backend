@@ -52,7 +52,7 @@ public class AdminService {
     public String changeConferenceStatus(AdminChangeConferenceStatusRequest request) {
         Conference targetConference = this.conferenceRepository.findByConferenceId(request.getId());
         if(request.getStatus() != null && targetConference != null){
-            User chair = targetConference.getChairMan();
+            User chair = targetConference.getChairman();
             targetConference.setStatus(request.getStatus());
             // if passed, add topic entities to repository and this conference instance
             if(request.getStatus() == Conference.Status.PASS){

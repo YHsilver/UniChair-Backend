@@ -59,7 +59,7 @@ public class Conference implements Serializable {
 
     // users in the conference
     @ManyToOne
-    private User chairMan;
+    private User chairman;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<User> authorSet = new HashSet<>();
@@ -82,10 +82,10 @@ public class Conference implements Serializable {
     }
 
     // constructor
-    public Conference(User chairMan, String conferenceAbbreviation, String conferenceFullName, String conferenceLocation,
+    public Conference(User chairman, String conferenceAbbreviation, String conferenceFullName, String conferenceLocation,
                       LocalDate conferenceTime, LocalDate contributeStartTime, LocalDate contributeEndTime,
                       LocalDate resultReleaseTime, String introduction, String[] topics) {
-        this.chairMan = chairMan;
+        this.chairman = chairman;
         this.conferenceAbbreviation = conferenceAbbreviation;
         this.conferenceFullName = conferenceFullName;
         this.conferenceTime = conferenceTime;
@@ -149,8 +149,8 @@ public class Conference implements Serializable {
 
     public String[] getTopics() { return topics; }
 
-    public User getChairMan() {
-        return chairMan;
+    public User getChairman() {
+        return chairman;
     }
 
     public LocalDate getResultReleaseTime() {
@@ -189,8 +189,8 @@ public class Conference implements Serializable {
         this.authorSet = authorSet;
     }
 
-    public void setChairMan(User chairMan) {
-        this.chairMan = chairMan;
+    public void setChairman(User chairman) {
+        this.chairman = chairman;
     }
 
     public void setConferenceLocation(String conferenceLocation) {
@@ -270,7 +270,7 @@ public class Conference implements Serializable {
                 ", resultReleaseTime=" + resultReleaseTime +
                 ", status=" + status +
                 ", stage=" + stage +
-                ", chairMan=" + chairMan +
+                ", chairman=" + chairman +
                 ", authorSet=" + authorSet +
                 ", reviewerSet=" + reviewerSet +
                 ", paperSet=" + paperSet +
@@ -326,7 +326,7 @@ public class Conference implements Serializable {
                     ", \"resultReleaseTime\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"status\":\"" + status.toString() + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
-                    ", \"chairMan\":\"" + chairMan.getUsername().toString() + '\"' +
+                    ", \"chairman\":\"" + chairman.getUsername().toString() + '\"' +
                     '}';
             return UtilityService.String2Json(str);
         } catch (ParseException e) {
@@ -359,7 +359,7 @@ public class Conference implements Serializable {
                     ", \"abbreviation\":\"" + conferenceAbbreviation + '\"' +
                     ", \"fullName\":\"" + conferenceFullName + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
-                    ", \"chair\":\"" + chairMan.getFullName() + '\"' +
+                    ", \"chair\":\"" + chairman.getFullName() + '\"' +
                     ", \"PCMember\":\"" + reviewers + '\"' +
                     ", \"Author\":\"" + authors + '\"' +
                     ", \"heldDate\":\"" + conferenceTime.toString() + '\"' +

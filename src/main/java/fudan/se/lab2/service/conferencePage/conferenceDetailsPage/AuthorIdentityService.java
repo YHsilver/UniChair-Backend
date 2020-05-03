@@ -82,7 +82,7 @@ public class AuthorIdentityService {
         if (conference == null || paper == null || !conference.getPaperSet().contains(paper)) {
             return "{\"message\":\"bad request!\"}";
         }
-        if (conference.getChairMan().getId().equals(author.getId())) {
+        if (conference.getChairman().getId().equals(author.getId())) {
             return "{\"message\":\"invalid submit or change from chair!\"}";
         }
         if (conference.getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {

@@ -43,7 +43,7 @@ class ConferenceTest {
     }
 
     @Test
-    void getChairMan() {
+    void getChairman() {
     }
 
     @Test
@@ -83,7 +83,7 @@ class ConferenceTest {
     }
 
     @Test
-    void setChairMan() {
+    void setChairman() {
     }
 
     @Test

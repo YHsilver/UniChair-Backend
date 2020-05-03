@@ -66,7 +66,7 @@ public class GenericConferenceService {
     public String submitPaper(UserSubmitPaperRequest request) throws IOException {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(conference == null || conference.getChairMan().getId().equals(author.getId())){
+        if(conference == null || conference.getChairman().getId().equals(author.getId())){
             return "{\"message\":\"chair cannot submit paper!\"}";
         }
         if(conference.getStage() != Conference.Stage.CONTRIBUTION){
@@ -138,7 +138,7 @@ public class GenericConferenceService {
         String resp = "[";
         User currUser = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference currConference = this.conferenceRepository.findByConferenceId(request.getConferenceId());
-        if (currUser.getId().equals(currConference.getChairMan().getId())) { resp += "0,"; } else { resp += "1,"; }
+        if (currUser.getId().equals(currConference.getChairman().getId())) { resp += "0,"; } else { resp += "1,"; }
         if (currConference.getReviewerSet().contains(currUser)) { resp += "0,"; } else { resp += "1,"; }
         if (currConference.getAuthorSet().contains(currUser)) { resp += "0"; } else { resp += "1"; }
         return resp + "]";

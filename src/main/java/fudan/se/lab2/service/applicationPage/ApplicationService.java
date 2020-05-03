@@ -44,7 +44,7 @@ public class ApplicationService {
      */
     public List<JSONObject> getConferenceApplications(UserGetConferenceApplicationsRequest request) {
         return UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.
-                findConferencesByChairManAndStatus(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
+                findConferencesByChairmanAndStatus(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),
                         request.getStatus()), true);
     }
 
@@ -55,7 +55,7 @@ public class ApplicationService {
      * @return return a successful message if success
      */
     public String addConferenceApplication(UserAddConferenceApplicationRequest request) {
-        User chairMan = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        User chairman = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         // check time order
         LocalDate yesterday = LocalDate.now().minusDays(1);
         LocalDate contributeStartTime = request.getContributeStartTime();
@@ -84,11 +84,11 @@ public class ApplicationService {
             if(topics.size() == 0){
                 throw new IllegalConferenceApplicationException("Required information missing!");
             }
-            Conference newConference = new Conference(chairMan,
+            Conference newConference = new Conference(chairman,
                     request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  conferenceTime.plusDays(1L),
                     contributeStartTime.plusDays(1L), contributeEndTime.plusDays(1L),
                     resultReleaseTime.plusDays(1L), request.getIntroduction(), topics.toArray(new String[0]));
-            chairMan.addConference(newConference);
+            chairman.addConference(newConference);
             conferenceRepository.save(newConference);
             return "{\"message\":\"conference application submit success!\"}";
         }

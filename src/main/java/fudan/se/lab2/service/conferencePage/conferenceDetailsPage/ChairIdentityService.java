@@ -52,7 +52,7 @@ public class ChairIdentityService {
 
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(!conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairman().getId().equals(chair.getId())){
             // invalid check, not chair
             return null;
         }
@@ -74,7 +74,7 @@ public class ChairIdentityService {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         ChairStartReviewingRequest.Strategy strategy = request.getStrategy();
-        if(chair == null || conference == null || strategy == null || conference.getChairMan() != chair){
+        if(chair == null || conference == null || strategy == null || conference.getChairman() != chair){
             return "{\"message\":\" Invalid request!\"}";
         }
 
@@ -109,7 +109,7 @@ public class ChairIdentityService {
     public List<JSONObject> searchReviewers(ChairSearchReviewersRequest request) {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(!conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairman().getId().equals(chair.getId())){
             // invalid search, not chair
             return null;
         }
@@ -144,7 +144,7 @@ public class ChairIdentityService {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         int validNum = 0;
-        if(!conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairman().getId().equals(chair.getId())){
             // invalid send, not chair
             return "{\"message\":\" You are not the chair! " + validNum + " invitation has been send!\"}";
         }
@@ -181,7 +181,7 @@ public class ChairIdentityService {
     public List<JSONObject> checkInvitations(ChairCheckInvitationsRequest request) {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(!conference.getChairMan().getId().equals(chair.getId())){
+        if(!conference.getChairman().getId().equals(chair.getId())){
             // invalid check, not chair
             return null;
         }
