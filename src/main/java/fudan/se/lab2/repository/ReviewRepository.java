@@ -4,9 +4,11 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Review;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
+@Repository
 public interface ReviewRepository extends CrudRepository<Review, Long> {
     Review findByReviewId(Long reviewId);
 
