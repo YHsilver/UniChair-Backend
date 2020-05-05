@@ -82,7 +82,7 @@ public class ApplicationService {
             }
             // valid topic num is zero
             if(topics.size() == 0){
-                throw new IllegalConferenceApplicationException("Required information missing!");
+                throw new IllegalConferenceApplicationException("Required topic information missing!");
             }
             Conference newConference = new Conference(chairman,
                     request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  conferenceTime.plusDays(1L),
