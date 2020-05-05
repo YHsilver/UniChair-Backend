@@ -16,10 +16,10 @@ public class Review {
     @ManyToOne
     private Conference conference;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private User reviewer;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Paper> papers;
 
     public Review() {
