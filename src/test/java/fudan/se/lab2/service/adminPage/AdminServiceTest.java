@@ -48,9 +48,10 @@ class AdminServiceTest {
         );
 
         //todo  bug
-       userRepository.save(UserTest1);
+        userRepository.save(UserTest1);
 
-        String[] topicSet ={"testTopic1", "testTopic2"};
+
+        String[] topicSet = {"testTopic1", "testTopic2"};
         testConference1 = new Conference(userRepository.findByUsername("UserTest1"),
                 "UserTest1", "AI full name", "AI location",
                 LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12),
@@ -76,6 +77,7 @@ class AdminServiceTest {
         this.conferenceRepository.save(testConference2);
         this.conferenceRepository.save(testConference3);
 
+        System.out.println( conferenceRepository.findByConferenceId(1L).getChairman());
     }
 
 
@@ -88,32 +90,32 @@ class AdminServiceTest {
         List<JSONObject> list;
 
         list = adminService.getConferenceApplications(pass_request);
-        assertEquals(testConference1.getConferenceId().toString(), list.get(0).get("id"));
+        assertEquals(testConference1.toBriefJson(), list.get(0));
         list = adminService.getConferenceApplications(pending_request);
-        assertEquals(testConference2.getConferenceId().toString(), list.get(0).get("id"));
+        assertEquals(testConference2.toBriefJson(), list.get(0));
         list = adminService.getConferenceApplications(reject_request);
-        assertEquals(testConference3.getConferenceId().toString(), list.get(0).get("id"));
+        assertEquals(testConference3.toBriefJson(), list.get(0));
     }
 
     @Test
     void changeConferenceStatus() {
 
-        AdminChangeConferenceStatusRequest adminChangeConferenceStatusRequest=new AdminChangeConferenceStatusRequest(1L,Conference.Status.REJECT);
+        AdminChangeConferenceStatusRequest adminChangeConferenceStatusRequest = new AdminChangeConferenceStatusRequest(1L, Conference.Status.REJECT);
         adminService.changeConferenceStatus(adminChangeConferenceStatusRequest);
         Conference conference = conferenceRepository.findByConferenceId(1L);
-        assertEquals(Conference.Status.REJECT,conference.getStatus());
+        assertEquals(Conference.Status.REJECT, conference.getStatus());
 
 
         //todo bug
-//        AdminChangeConferenceStatusRequest   adminChangeConferenceStatusRequest2=new AdminChangeConferenceStatusRequest(1L,Conference.Status.PASS);
-//        adminService.changeConferenceStatus(adminChangeConferenceStatusRequest2);
-//        Conference   conference2 = conferenceRepository.findByConferenceId(1L);
-//        assertEquals(Conference.Status.PASS,conference2.getStatus());
-//
-//        AdminChangeConferenceStatusRequest    adminChangeConferenceStatusRequest3=new AdminChangeConferenceStatusRequest(1L,Conference.Status.PENDING);
-//        adminService.changeConferenceStatus(adminChangeConferenceStatusRequest3);
-//        Conference  conference3 = conferenceRepository.findByConferenceId(1L);
-//        assertEquals(Conference.Status.PENDING,conference3.getStatus());
+        AdminChangeConferenceStatusRequest adminChangeConferenceStatusRequest2 = new AdminChangeConferenceStatusRequest(1L, Conference.Status.PASS);
+        adminService.changeConferenceStatus(adminChangeConferenceStatusRequest2);
+        Conference conference2 = conferenceRepository.findByConferenceId(1L);
+        assertEquals(Conference.Status.PASS, conference2.getStatus());
+
+        AdminChangeConferenceStatusRequest adminChangeConferenceStatusRequest3 = new AdminChangeConferenceStatusRequest(1L, Conference.Status.PENDING);
+        adminService.changeConferenceStatus(adminChangeConferenceStatusRequest3);
+        Conference conference3 = conferenceRepository.findByConferenceId(1L);
+        assertEquals(Conference.Status.PENDING, conference3.getStatus());
 
 
     }

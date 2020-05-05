@@ -71,10 +71,10 @@ public class Conference implements Serializable {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Paper> paperSet = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Topic> topicSet = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Review> reviewerAndPapersMap = new HashSet<>();
 
     // empty constructor
