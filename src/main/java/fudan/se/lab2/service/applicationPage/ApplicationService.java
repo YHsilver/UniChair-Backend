@@ -85,9 +85,9 @@ public class ApplicationService {
                 throw new IllegalConferenceApplicationException("Required topic information missing!");
             }
             Conference newConference = new Conference(chairman,
-                    request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  conferenceTime.plusDays(1L),
-                    contributeStartTime.plusDays(1L), contributeEndTime.plusDays(1L),
-                    resultReleaseTime.plusDays(1L), request.getIntroduction(), topics.toArray(new String[0]));
+                    request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  conferenceTime,
+                    contributeStartTime, contributeEndTime,
+                    resultReleaseTime, request.getIntroduction(), topics.toArray(new String[0]));
             chairman.addConference(newConference);
             conferenceRepository.save(newConference);
             return "{\"message\":\"conference application submit success!\"}";

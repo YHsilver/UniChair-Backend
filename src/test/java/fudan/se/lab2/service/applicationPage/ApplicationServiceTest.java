@@ -15,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -50,7 +53,6 @@ class ApplicationServiceTest {
         conference2.setStatus(Conference.Status.PENDING);
         conferenceRepository.save(conference2);
 
-
         UserGetConferenceApplicationsRequest userGetConferenceApplicationsRequest=
                 new UserGetConferenceApplicationsRequest(tokenUtil.generateToken(user),Conference.Status.PENDING);
         assertEquals(conference.toBriefJson(),applicationService.getConferenceApplications(userGetConferenceApplicationsRequest).get(0));
@@ -77,8 +79,15 @@ class ApplicationServiceTest {
                         legalConference.getIntroduction(),
                         legalConference.getTopics()
                 );
+        Set<Conference> beforeSet = conferenceRepository.findConferencesByChairmanAndStatus(user, Conference.Status.PENDING);
         assertEquals("{\"message\":\"conference application submit success!\"}",
                 applicationService.addConferenceApplication(legalUserAddConferenceApplicationRequest));
+        Set<Conference> afterSet = conferenceRepository.findConferencesByChairmanAndStatus(user, Conference.Status.PENDING);
+        afterSet.removeAll(beforeSet);
+        assertEquals(1, afterSet.size());
+        Long id = new ArrayList<Conference>(afterSet).get(0).getConferenceId();
+        legalConference.setConferenceId(id);
+        assertEquals(legalConference.toBriefJson(), conferenceRepository.findByConferenceId(id).toBriefJson());
 
 
         UserAddConferenceApplicationRequest illegalTimeUserAddConferenceApplicationRequest=
