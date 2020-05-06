@@ -166,7 +166,7 @@ public class UtilityService {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     public static boolean paperAssignment_TOPIC_RELATED(Conference conference) {

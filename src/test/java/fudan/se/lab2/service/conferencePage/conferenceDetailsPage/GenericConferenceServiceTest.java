@@ -5,20 +5,27 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.gen
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.domain.conference.Topic;
 import fudan.se.lab2.generator.ConferenceGenerator;
 import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
+import fudan.se.lab2.repository.TopicRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,16 +36,18 @@ class GenericConferenceServiceTest {
     private ConferenceRepository conferenceRepository;
     private PaperRepository paperRepository;
     private JwtTokenUtil tokenUtil;
+    private TopicRepository topicRepository;
     private GenericConferenceService genericConferenceService;
 
     @Autowired
     public GenericConferenceServiceTest(UserRepository userRepository, ConferenceRepository conferenceRepository,
-                                        PaperRepository paperRepository, JwtTokenUtil tokenUtil) {
+                                        PaperRepository paperRepository, JwtTokenUtil tokenUtil, TopicRepository topicRepository) {
         this.userRepository = userRepository;
         this.paperRepository = paperRepository;
+       this.topicRepository=topicRepository;
         this.conferenceRepository = conferenceRepository;
         this.tokenUtil = tokenUtil;
-        genericConferenceService = new GenericConferenceService(userRepository, conferenceRepository, paperRepository, tokenUtil);
+        genericConferenceService = new GenericConferenceService(userRepository, conferenceRepository, paperRepository,topicRepository, tokenUtil);
     }
 
     @Test
@@ -55,35 +64,43 @@ class GenericConferenceServiceTest {
     void submitPaper() {
         User chair = UserGenerator.getRandomUser();
         userRepository.save(chair);
-        User anthor = UserGenerator.getRandomUser();
-        userRepository.save(anthor);
+        User author = UserGenerator.getRandomUser();
+        userRepository.save(author);
 
         Conference conference = ConferenceGenerator.getRandomConference(chair);
         conference.setStatus(Conference.Status.PASS);
         conference.setStage(Conference.Stage.CONTRIBUTION);
+       conferenceRepository.save(conference);
+
+        for (String topic: conference.getTopics()
+        ) {
+            Topic tmpTopic = new Topic(conference, topic);
+            conference.getTopicSet().add(tmpTopic);
+            topicRepository.save(tmpTopic);
+        }
+
         conferenceRepository.save(conference);
 
-
-        MultipartFile file;
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(
+                "test.pdf",    //filename
+                "Hallo World".getBytes()); //content
 
         UserSubmitPaperRequest userSubmitPaperRequest = new UserSubmitPaperRequest(
-                tokenUtil.generateToken(anthor),
+                tokenUtil.generateToken(author),
                 conference.getConferenceId(),
                 conference.getTopics(),
                 "title",
-                new String[][]{},
+                new String[][]{{"name","a","a","a@eamil.com"}},
                 "summary",
-               null
+                mockMultipartFile
         );
         try {
-            genericConferenceService.submitPaper(userSubmitPaperRequest);
-        }catch (IOException e){
-           e.printStackTrace();
+            System.out.println(  genericConferenceService.submitPaper(userSubmitPaperRequest));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-
-
-
+        assertEquals(1,userRepository.findByUsername(author.getUsername()).getPapers().size());
+        assertEquals(new ArrayList<>(conferenceRepository.findByConferenceId(conference.getConferenceId()).getAuthorSet()).get(0).toString(), author.toString());
 
 
     }
