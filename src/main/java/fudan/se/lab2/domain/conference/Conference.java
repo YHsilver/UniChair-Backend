@@ -96,11 +96,11 @@ public class Conference implements Serializable {
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
 
         //this.conferenceAbstract = new ConferenceAbstract(this.conferenceId, conferenceAbbreviation, conferenceFullName,
-        //conferenceLocation, conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime,
-        //introduction, this.status, this.stage);
+                //conferenceLocation, conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime,
+                //introduction, this.status, this.stage);
     }
 
-    public void addAuthor(User author) {
+    public void addAuthor(User author){
         this.authorSet.add(author);
     }
 
@@ -144,9 +144,7 @@ public class Conference implements Serializable {
         return introduction;
     }
 
-    public String[] getTopics() {
-        return topics;
-    }
+    public String[] getTopics() { return topics; }
 
     public User getChairman() {
         return chairman;
@@ -204,9 +202,7 @@ public class Conference implements Serializable {
         this.introduction = introduction;
     }
 
-    public void setTopics(String[] topics) {
-        this.topics = topics;
-    }
+    public void setTopics(String[] topics) { this.topics = topics; }
 
     public void setContributeEndTime(LocalDate contributeEndTime) {
         this.contributeEndTime = contributeEndTime;
@@ -248,9 +244,9 @@ public class Conference implements Serializable {
         this.reviewerAndPapersMap = reviewerAndPapersMap;
     }
 
-    public Set<Paper> getPapersOfReviewer(User reviewer) {
+    public Set<Paper> getPapersOfReviewer(User reviewer){
         for (Review review : reviewerAndPapersMap) {
-            if (review.getReviewer().getId().equals(reviewer.getId())) {
+            if(review.getReviewer().getId().equals(reviewer.getId())){
                 return review.getPapers();
             }
         }
@@ -279,25 +275,25 @@ public class Conference implements Serializable {
                 '}';
     }
 
-    public boolean isNextStage(Stage tarStage) {
-        switch (stage) {
+    public boolean isNextStage(Stage tarStage){
+        switch (stage){
             case PREPARATION:
                 return tarStage == Stage.CONTRIBUTION;
             case CONTRIBUTION:
-                return tarStage == Stage.REVIEWING;
+                return  tarStage == Stage.REVIEWING;
             case REVIEWING:
-                return tarStage == Stage.GRADING;
+                return  tarStage == Stage.GRADING;
             case GRADING:
-                return tarStage == Stage.ENDING;
+                return  tarStage == Stage.ENDING;
             case ENDING:
                 return false;
         }
         return false;
     }
 
-    public boolean isAfterOrEqualsStage(Stage tarStage) {
-        while (tarStage != null) {
-            if (tarStage == stage) {
+    public boolean isAfterOrEqualsStage(Stage tarStage){
+        while(tarStage != null){
+            if(tarStage == stage){
                 return true;
             }
             tarStage = UtilityService.getNextStage(tarStage);
@@ -305,14 +301,15 @@ public class Conference implements Serializable {
         return false;
     }
 
-    public Topic findTopic(String topicName) {
-        for (Topic topicInSet : topicSet) {
-            if (topicInSet.getTopic().equals(topicName)) {
+    public Topic findTopic(String topicName){
+        for(Topic topicInSet: topicSet){
+            if(topicInSet.getTopic().equals(topicName)){
                 return topicInSet;
             }
         }
         return null;
     }
+
 
 
     public JSONObject toBriefJson() {
@@ -353,6 +350,15 @@ public class Conference implements Serializable {
             authorFullNames[i++] = author.getFullName();
         }
         String authors = UtilityService.getJsonStringFromArray(authorFullNames);
+
+        String topicsString = "[";
+        for (String topic: topics
+             ) {
+            topicsString += '\"' + topic + '\"' + ',';
+        }
+        topicsString = topicsString.substring(0, topicsString.length() - 1);
+        topicsString += "]";
+
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +
@@ -368,7 +374,7 @@ public class Conference implements Serializable {
                     ", \"submissionDate\":\"" + contributeStartTime.toString() + '\"' +
                     ", \"releaseDate\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"introduction\":\"" + introduction + '\"' +
-                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topics) + '\"' +
+                    ", \"topics\":" + topicsString +
                     '}';
             return UtilityService.String2Json(str);
         } catch (

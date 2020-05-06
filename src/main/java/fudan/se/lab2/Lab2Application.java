@@ -42,7 +42,6 @@ public class Lab2Application {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) {
-
                 // Create authorities if not exist.
                 // 管理员、投稿人、审稿人
 
