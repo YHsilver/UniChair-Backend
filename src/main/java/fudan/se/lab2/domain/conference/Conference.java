@@ -369,6 +369,7 @@ public class Conference implements Serializable {
                     ", \"submissionDate\":\"" + contributeStartTime.toString() + '\"' +
                     ", \"releaseDate\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"introduction\":\"" + introduction + '\"' +
+                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topics) + '\"' +
                     '}';
             return UtilityService.String2Json(str);
         } catch (
