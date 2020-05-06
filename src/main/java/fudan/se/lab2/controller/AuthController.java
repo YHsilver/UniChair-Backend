@@ -44,7 +44,7 @@ public class AuthController {
         return ResponseEntity.ok(getUserDetailsService.getUserDetails(request));
     }
 
-    @PostMapping("/getConferenceTopics")
+    @PostMapping("/system/getConferenceTopics")
     public ResponseEntity<?> getConferenceTopics(@RequestBody GetConferenceTopicsRequest request) {
         logger.debug(request.toString());
 //        System.out.println(request);
