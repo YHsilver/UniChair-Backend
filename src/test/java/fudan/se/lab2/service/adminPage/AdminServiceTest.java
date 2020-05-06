@@ -9,17 +9,15 @@ import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.TopicRepository;
 import fudan.se.lab2.repository.UserRepository;
-import fudan.se.lab2.service.UtilityService;
+
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
-import java.util.HashSet;
+
 import java.util.List;
-import java.util.Set;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 

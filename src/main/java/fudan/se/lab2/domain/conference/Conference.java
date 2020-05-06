@@ -249,7 +249,6 @@ public class Conference implements Serializable {
 
     public Set<Paper> getPapersOfReviewer(User reviewer){
         for (Review review : reviewerAndPapersMap) {
-            System.out.println("one more time in loop");
             if(review.getReviewer().getId().equals(reviewer.getId())){
                 return review.getPapers();
             }

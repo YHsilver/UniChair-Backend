@@ -93,9 +93,9 @@ public class MessageService {
             currConference.getReviewerAndPapersMap().add(review);
             currConference.getReviewerSet().add(user);
             this.conferenceRepository.save(currConference);
-            this.invitationRepository.save(invitation);
-        }
 
+        }
+        this.invitationRepository.save(invitation);
         return "Invitation " + invitation.getInvitationId() + "'s Status is " + invitation.getStatus().toString() + " now!";
     }
 }
