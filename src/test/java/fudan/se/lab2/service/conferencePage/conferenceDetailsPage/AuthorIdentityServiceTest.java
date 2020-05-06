@@ -1,5 +1,10 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
+import fudan.se.lab2.domain.User;
+import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.generator.ConferenceGenerator;
+import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -19,6 +24,7 @@ class AuthorIdentityServiceTest {
     private ConferenceRepository conferenceRepository;
     private PaperRepository paperRepository;
     private JwtTokenUtil tokenUtil;
+    private AuthorIdentityService authorIdentityService;
 
 
     @Autowired
@@ -28,10 +34,40 @@ class AuthorIdentityServiceTest {
         this.paperRepository = paperRepository;
         this.conferenceRepository = conferenceRepository;
         this.tokenUtil = tokenUtil;
+        authorIdentityService=new AuthorIdentityService(userRepository,conferenceRepository,paperRepository,tokenUtil);
     }
 
     @Test
     void getMyPapers() {
+        User chair= UserGenerator.getRandomUser();
+        User author=UserGenerator.getRandomUser();
+        userRepository.save(chair);
+        userRepository.save(author);
+
+        Conference conference= ConferenceGenerator.getRandomConference(chair);
+        conference.setStatus(Conference.Status.PASS);
+        conference.setStage(Conference.Stage.CONTRIBUTION);
+        conferenceRepository.save(conference);
+
+        Paper paper = new Paper(conference, author, "title", new String[][]{}, "summary", null);
+        paper.getTopics().add(conference.findTopic(conference.getTopics()[0]));
+        paperRepository.save(paper);
+
+        author.getPapers().add(paper);
+        conference.getPaperSet().add(paper);
+        conference.getAuthorSet().add(author);
+
+        conferenceRepository.save(conference);
+        userRepository.save(author);
+
+        System.out.println("paper"+conference.getPaperSet());
+        System.out.println("author"+conference.getAuthorSet());
+
+
+
+
+
+
     }
 
     @Test
