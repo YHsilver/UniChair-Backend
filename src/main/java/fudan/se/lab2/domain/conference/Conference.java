@@ -354,6 +354,14 @@ public class Conference implements Serializable {
         }
         String authors = UtilityService.getJsonStringFromArray(authorFullNames);
 
+        String topicsString = "[";
+        for (String topic: topics
+             ) {
+            topicsString += '\"' + topic + '\"' + ',';
+        }
+        topicsString = topicsString.substring(0, topicsString.length() - 1);
+        topicsString += "]";
+
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +
@@ -369,7 +377,7 @@ public class Conference implements Serializable {
                     ", \"submissionDate\":\"" + contributeStartTime.toString() + '\"' +
                     ", \"releaseDate\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"introduction\":\"" + introduction + '\"' +
-                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topics) + '\"' +
+                    ", \"topics\":" + topicsString +
                     '}';
             return UtilityService.String2Json(str);
         } catch (
