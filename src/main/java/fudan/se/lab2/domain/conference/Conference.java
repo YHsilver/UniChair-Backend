@@ -3,15 +3,12 @@ package fudan.se.lab2.domain.conference;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
