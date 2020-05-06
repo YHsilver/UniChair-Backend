@@ -12,7 +12,7 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long topicId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Conference conference;
     private String topic;
 
