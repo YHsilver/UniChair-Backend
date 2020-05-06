@@ -176,6 +176,7 @@ public class Paper implements Serializable {
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
                     ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topicArray) + '\"' +
                     ", \"title\":\"" + title + '\"' +
+                    ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
                     '}';
             return UtilityService.String2Json(str);

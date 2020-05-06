@@ -115,18 +115,25 @@ public class ChairIdentityService {
         }
         List<JSONObject> list = new ArrayList<>();
         Set<User> usersAll = userRepository.findAll();
+        Set<Long> reviewerIdSet = new HashSet<>();
+        for (User reviewer: conference.getReviewerSet()
+             ) {
+            reviewerIdSet.add(reviewer.getId());
+        }
         Set<User> users = new HashSet<>();
         String targetFullname = request.getTargetFullName();
         for (User user:usersAll
              ) {
             if(user.getFullName().contains(targetFullname)){
-                users.add(user);
+                if(!user.getUsername().equals("admin") && !user.getId().equals(chair.getId()) && !reviewerIdSet.contains(user.getId())){
+                    users.add(user);
+                }
             }
         }
         // avoid inviting chair himself
-        users.remove(chair);
+        //users.remove(chair);
         // avoid inviting reviewers have been invited and accepted
-        users.removeAll(conference.getReviewerSet());
+        //users.removeAll(conference.getReviewerSet());
         for (User user:users
              ) {
             list.add(user.toStandardJson());
@@ -153,7 +160,7 @@ public class ChairIdentityService {
         String message = request.getMessage();
 
         for (String targetName: targetNames) {
-            User reviewer = this.userRepository.findByUsername(targetName);
+            User reviewer = userRepository.findByUsername(targetName);
             // chair and PC member cannot be invited
             if(!reviewer.getId().equals(chair.getId()) && !conference.getReviewerSet().contains(reviewer)){
                 // invitation has sent before
@@ -163,7 +170,7 @@ public class ChairIdentityService {
                 validNum++;
                 Invitation newInvitation = new Invitation(conference.getConferenceId(), conference.getConferenceFullName(), chair,
                         reviewer, message);
-                this.invitationRepository.save(newInvitation);
+                invitationRepository.save(newInvitation);
                 chair.getSendInvitations().add(newInvitation);
                 reviewer.getMyInvitations().add(newInvitation);
             }
