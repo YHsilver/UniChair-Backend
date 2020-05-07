@@ -91,6 +91,7 @@ public class ReviewerIdentityService {
         paper.getGrades()[i] = request.getGrade();
         paper.getConfidences()[i] = request.getConfidence();
         paper.getIsReviewed()[i] = true;
+        paperRepository.save(paper);
         return "{\"message\":\"Review paper success!\"}";
     }
 

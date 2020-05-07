@@ -6,7 +6,6 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.exception.ConferencException.IllegalConferenceApplicationException;
 import fudan.se.lab2.repository.ConferenceRepository;
-import fudan.se.lab2.repository.TopicRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
@@ -88,7 +87,6 @@ public class ApplicationService {
                     request.getConferenceAbbreviation(), request.getConferenceFullName(), request.getConferenceLocation(),  conferenceTime,
                     contributeStartTime, contributeEndTime,
                     resultReleaseTime, request.getIntroduction(), topics.toArray(new String[0]));
-            chairman.addConference(newConference);
             conferenceRepository.save(newConference);
             return "{\"message\":\"conference application submit success!\"}";
         }

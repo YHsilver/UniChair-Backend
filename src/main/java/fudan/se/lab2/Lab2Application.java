@@ -101,22 +101,18 @@ public class Lab2Application {
                 testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
 
                 User tempUser = userRepository.findByUsername("AI");
-                tempUser.addConference(AIConference);
                 conferenceRepository.save(AIConference);
                 userRepository.save(tempUser);
 
                 tempUser = userRepository.findByUsername("testRobert");
-                tempUser.addConference(testRobertConference);
                 conferenceRepository.save(testRobertConference);
                 userRepository.save(tempUser);
 //                userRepository.findByUsername("testRobert").addConference(testRobertConference);
 
 
                 tempUser = userRepository.findByUsername("testRobert");
-                tempUser.addConference(testRobertConference2);
                 conferenceRepository.save(testRobertConference2);
                 userRepository.save(tempUser);
-                userRepository.findByUsername("testRobert").addConference(testRobertConference2);
 
                 Set<User> userSet = UserGenerator.getRandomUsers(20);
                 Set<Conference> conferenceSet = ConferenceGenerator.getRandomConferences(20, userSet);

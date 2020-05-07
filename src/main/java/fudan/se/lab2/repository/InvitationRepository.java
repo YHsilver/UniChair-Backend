@@ -1,5 +1,6 @@
 package fudan.se.lab2.repository;
 
+import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Invitation;
 import fudan.se.lab2.domain.User;
 import org.springframework.data.repository.CrudRepository;
@@ -14,7 +15,7 @@ import java.util.Set;
 @Repository
 public interface InvitationRepository extends CrudRepository<Invitation, Long> {
     Invitation findByInvitationId(Long id);
-    Set<Invitation> findByConferenceId(Long conferenceId);
+    Set<Invitation> findByConference(Conference conference);
     Set<Invitation> findByReviewer(User reviewer);
-    Set<Invitation> findByReviewerAndConferenceIdAndStatus(User reviewer, Long conferenceId, Invitation.Status status);
+    Set<Invitation> findByReviewerAndConferenceAndStatus(User reviewer, Conference conference, Invitation.Status status);
 }

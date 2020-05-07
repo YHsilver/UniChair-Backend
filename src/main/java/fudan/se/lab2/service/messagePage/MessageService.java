@@ -16,8 +16,6 @@ import org.assertj.core.util.Lists;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -47,7 +45,7 @@ public class MessageService {
      * @return return conferences' lists
      */
     public List<JSONObject> userCheckMyInvitations(UserCheckMyInvitationsRequest request) {
-        User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        User user = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         List<JSONObject> list = Lists.newArrayList();
         for (Invitation eachInvitation : invitationRepository.findByReviewer(user)) {
             if (eachInvitation.getStatus() == request.getStatus()) {
@@ -65,8 +63,8 @@ public class MessageService {
      * @return successful message
      */
     public String userDecideInvitations(UserDecideInvitationsRequest request) {
-        User user = this.userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        Invitation invitation = this.invitationRepository.findByInvitationId(request.getInvitationId());
+        User user = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Invitation invitation = invitationRepository.findByInvitationId(request.getInvitationId());
         // only PENDING to PASS or REJECT
         if(invitation.getReviewer().getId().equals(user.getId())
                 && request.getStatus() != Invitation.Status.PENDING
@@ -76,7 +74,7 @@ public class MessageService {
             //TODO: throw exception
             return "Invalid request";
         }
-        Conference currConference = conferenceRepository.findByConferenceId(invitation.getConferenceId());
+        Conference currConference = invitation.getConference();
         invitation.setStatus(request.getStatus());
         String[] selectedTopics = request.getTopics();
         if(request.getStatus() == Invitation.Status.PASS){
@@ -85,17 +83,13 @@ public class MessageService {
                     || !UtilityService.isTopicsValidInConference(currConference, selectedTopics)){
                 return "Invalid topics selected";
             }
-            for (String selectedTopic: selectedTopics) {
-                currConference.findTopic(selectedTopic).getReviewers().add(user);
-            }
-            Review review = new Review(currConference, user, new HashSet<>());
+            Review review = new Review(currConference, user, selectedTopics);
             reviewRepository.save(review);
-            currConference.getReviewerAndPapersMap().add(review);
             currConference.getReviewerSet().add(user);
-            this.conferenceRepository.save(currConference);
+            conferenceRepository.save(currConference);
 
         }
-        this.invitationRepository.save(invitation);
+        invitationRepository.save(invitation);
         return "Invitation " + invitation.getInvitationId() + "'s Status is " + invitation.getStatus().toString() + " now!";
     }
 }

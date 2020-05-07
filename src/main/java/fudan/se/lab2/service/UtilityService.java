@@ -4,7 +4,6 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
 import fudan.se.lab2.domain.conference.Review;
-import fudan.se.lab2.domain.conference.Topic;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -169,30 +168,7 @@ public class UtilityService {
         return true;
     }
 
-    public static boolean paperAssignment_TOPIC_RELATED(Conference conference) {
-        Set<Review> reviews = conference.getReviewerAndPapersMap();
-        for (Paper paper : conference.getPaperSet()) {
-            Set<User> allValidReviewers = new HashSet<>();
-            for (Topic topic : paper.getTopics()) {
-                allValidReviewers.addAll(topic.getReviewers());
-            }
-            if (allValidReviewers.size() < 3) {
-                allValidReviewers = conference.getReviewerSet();
-            }
-
-            Set<User> selectedReviewers = selectObjectsFromBaseSet(allValidReviewers, 3);
-            if (selectedReviewers == null) {
-                return false;
-            }
-            for (User reviewer : selectedReviewers) {
-                conference.getPapersOfReviewer(reviewer).add(paper);
-            }
-        }
-
-        return true;
-    }
-
-    private static <T> Set<T> selectObjectsFromBaseSet(Set<T> baseSet, int num) {
+    public static <T> Set<T> selectObjectsFromBaseSet(Set<T> baseSet, int num) {
         if (num < 0) {
             return null;
         }
@@ -204,11 +180,12 @@ public class UtilityService {
         }
         List<T> copyBaseSet = new ArrayList<>(baseSet);
         Set<T> resultSet = new HashSet<>();
-        Random random = null;
+        Random random;
         try {
             random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
             logger.trace("context", e);
+            return null;
         }
         for (int i = 0; i < num; i++) {
             T selectedObject = copyBaseSet.get(random.nextInt(copyBaseSet.size()));
@@ -216,33 +193,6 @@ public class UtilityService {
             copyBaseSet.remove(selectedObject);
         }
         return resultSet;
-    }
-
-    public static boolean paperAssignment_RANDOM(Conference conference) {
-        List<User> reviewersCopy = new ArrayList<>(conference.getReviewerSet());
-        List<Paper> papersCopy = new ArrayList<>(conference.getPaperSet());
-        int average = papersCopy.size() / reviewersCopy.size();
-        Random random = null;
-        try {
-            random = SecureRandom.getInstanceStrong();
-        } catch (NoSuchAlgorithmException e) {
-            logger.trace("context", e);
-        }
-        for (User reviewer : reviewersCopy) {
-            Set<Paper> paperSet = conference.getPapersOfReviewer(reviewer);
-            for (int i = 0; i < average; i++) {
-                Paper randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
-                paperSet.add(randomPaper);
-                papersCopy.remove(randomPaper);
-            }
-        }
-        for (Paper paper : papersCopy) {
-            User randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
-            conference.getPapersOfReviewer(randomReviewer).add(paper);
-            //conference.getReviewerAndPapersMap().get(randomReviewer).add(paper);
-            reviewersCopy.remove(randomReviewer);
-        }
-        return true;
     }
 
 }

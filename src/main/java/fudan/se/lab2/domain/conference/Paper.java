@@ -34,12 +34,6 @@ public class Paper implements Serializable {
     @ManyToOne
     private User author;
 
-//    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-//    private Set<User> reviewerSet = new HashSet<>();
-
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<Topic> topics = new HashSet<>();
-
     private String title;
     private String[][] paperAuthors;
     private String summary;
@@ -60,17 +54,18 @@ public class Paper implements Serializable {
     // three confidence from reviewers
     //public enum Confidence {VERY_LOW, LOW, HIGH, VERY_HIGH}
     private String[] confidences = new String[REVIEWER_NUM];
-
+    private String[] topics;
     // empty constructor
     public Paper() {}
 
-    public Paper(Conference conference, User author, String title, String[][] paperAuthors, String summary, File file) {
+    public Paper(Conference conference, User author, String title, String[][] paperAuthors, String summary, File file, String[] topics) {
         this.conference = conference;
         this.author = author;
         this.title = title;
         this.paperAuthors = paperAuthors;
         this.summary = summary;
         this.file = file;
+        this.topics = topics;
     }
 
     public Long getPaperId() {
@@ -91,16 +86,8 @@ public class Paper implements Serializable {
     public void setAuthor(User author) {
         this.author = author;
     }
-//    public Set<User> getReviewerSet() {
-//        return reviewerSet;
-//    }
-//    public void setReviewerSet(Set<User> reviewerSet) {
-//        this.reviewerSet = reviewerSet;
-//    }
-    public Set<Topic> getTopics() {
-        return topics;
-    }
-    public void setTopics(Set<Topic> topics) {
+    public String[] getTopics() { return topics; }
+    public void setTopics(String[] topics) {
         this.topics = topics;
     }
     public String getTitle() {
@@ -151,7 +138,7 @@ public class Paper implements Serializable {
                 ", conference=" + conference +
                 ", author=" + author +
                 //", reviewerSet=" + reviewerSet +
-                ", topics=" + topics +
+                ", topics=" + Arrays.toString(topics) +
                 ", title='" + title + '\'' +
                 ", paperAuthors=" + Arrays.toString(paperAuthors) +
                 ", summary='" + summary + '\'' +
@@ -162,19 +149,13 @@ public class Paper implements Serializable {
 
     public JSONObject toBriefJson(){
         try {
-            String[] topicArray = new String[topics.size()];
-            int i = 0;
-            for (Topic topic: topics
-            ) {
-                topicArray[i++] = topic.getTopic();
-            }
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
                     ", \"conferenceId\":\"" + conference.getConferenceId() + '\"' +
                     ", \"conferenceFullName\":\"" + conference.getConferenceFullName() + '\"' +
                     ", \"authorId\":\"" + author.getId() + '\"' +
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
-                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topicArray) + '\"' +
+                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topics) + '\"' +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
@@ -197,12 +178,7 @@ public class Paper implements Serializable {
                 reviewerFullNames[i] = reviewer.getFullName();
                 i++;
             }
-            String[] topicArray = new String[topics.size()];
-            i = 0;
-            for (Topic topic: topics
-                 ) {
-                topicArray[i++] = topic.getTopic();
-            }
+
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
                     ", \"conferenceId\":\"" + conference.getConferenceId() + '\"' +
@@ -213,7 +189,7 @@ public class Paper implements Serializable {
                     ", \"reviewerIds\":\"" + UtilityService.getJsonStringFromArray(reviewerIds) + '\"' +
                     ", \"reviewerFullNames\":\"" + UtilityService.getJsonStringFromArray(reviewerFullNames) + '\"' +
                     ", \"isReviewed\":\"" + UtilityService.getJsonStringFromArray(isReviewed) + '\"' +
-                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topicArray) + '\"' +
+                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topics) + '\"' +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +

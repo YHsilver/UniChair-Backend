@@ -1,8 +1,7 @@
 package fudan.se.lab2.domain.conference;
-
 import fudan.se.lab2.domain.User;
-
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,15 +18,23 @@ public class Review {
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private User reviewer;
 
+    private String[] topics;
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<Paper> papers;
+    private Set<Paper> papers = new HashSet<>();
 
-    public Review() {
-    }
+    public Review() {}
 
-    public Review(Conference conference, User reviewer, Set<Paper> papers) {
+    public Review(Conference conference, User reviewer, String[] topics) {
         this.conference = conference;
         this.reviewer = reviewer;
+        this.topics = topics;
+    }
+
+    public Review(Conference conference, User reviewer, String[] topics, Set<Paper> papers) {
+        this.conference = conference;
+        this.reviewer = reviewer;
+        this.topics = topics;
         this.papers = papers;
     }
 
@@ -61,5 +68,13 @@ public class Review {
 
     public void setPapers(Set<Paper> papers) {
         this.papers = papers;
+    }
+
+    public String[] getTopics() {
+        return topics;
+    }
+
+    public void setTopics(String[] topics) {
+        this.topics = topics;
     }
 }

@@ -44,14 +44,8 @@ public class Conference implements Serializable {
 
     // 会议申请状态类别:PENDING(待审核), PASS(通过), REJECT(驳回)
     public enum Status {PENDING, PASS, REJECT}
-
-    // 会议申请状态
     private Status status;
-
-    // 会议阶段：preparation(准备中), contribution(投稿中), reviewing(审稿中), grading(终评中) and ending(审稿结束)
     public enum Stage {PREPARATION, CONTRIBUTION, REVIEWING, GRADING, ENDING}
-
-    // 会议阶段
     private Stage stage;
 
     // users in the conference
@@ -63,16 +57,6 @@ public class Conference implements Serializable {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<User> reviewerSet = new HashSet<>();
-
-    // all the papers
-    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<Paper> paperSet = new HashSet<>();
-
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<Topic> topicSet = new HashSet<>();
-
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    private Set<Review> reviewerAndPapersMap = new HashSet<>();
 
     // empty constructor
     public Conference() {
@@ -94,10 +78,6 @@ public class Conference implements Serializable {
         this.topics = topics;
         this.status = Status.PENDING;// 初始化都是待审核状态
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
-
-        //this.conferenceAbstract = new ConferenceAbstract(this.conferenceId, conferenceAbbreviation, conferenceFullName,
-                //conferenceLocation, conferenceTime, contributeStartTime, contributeEndTime, resultReleaseTime,
-                //introduction, this.status, this.stage);
     }
 
     public void addAuthor(User author){
@@ -162,10 +142,6 @@ public class Conference implements Serializable {
         return reviewerSet;
     }
 
-    public Set<Paper> getPaperSet() {
-        return paperSet;
-    }
-
     public void setConferenceId(Long conferenceId) {
         this.conferenceId = conferenceId;
     }
@@ -212,10 +188,6 @@ public class Conference implements Serializable {
         this.contributeStartTime = contributeStartTime;
     }
 
-    public void setPaperSet(Set<Paper> paperSet) {
-        this.paperSet = paperSet;
-    }
-
     public void setResultReleaseTime(LocalDate resultReleaseTime) {
         this.resultReleaseTime = resultReleaseTime;
     }
@@ -226,32 +198,6 @@ public class Conference implements Serializable {
 
     public void setReviewerSet(Set<User> reviewerSet) {
         this.reviewerSet = reviewerSet;
-    }
-
-    public Set<Topic> getTopicSet() {
-        return topicSet;
-    }
-
-    public void setTopicSet(Set<Topic> topicSet) {
-        this.topicSet = topicSet;
-    }
-
-    public Set<Review> getReviewerAndPapersMap() {
-        return reviewerAndPapersMap;
-    }
-
-    public void setReviewerAndPapersMap(Set<Review> reviewerAndPapersMap) {
-        this.reviewerAndPapersMap = reviewerAndPapersMap;
-    }
-
-    public Set<Paper> getPapersOfReviewer(User reviewer){
-        for (Review review : reviewerAndPapersMap) {
-            if(review.getReviewer().getId().equals(reviewer.getId())){
-                return review.getPapers();
-            }
-        }
-        System.out.println("null returned");
-        return null;
     }
 
     // print all info, not safe!
@@ -271,7 +217,6 @@ public class Conference implements Serializable {
                 ", chairman=" + chairman +
                 ", authorSet=" + authorSet +
                 ", reviewerSet=" + reviewerSet +
-                ", paperSet=" + paperSet +
                 '}';
     }
 
@@ -301,30 +246,19 @@ public class Conference implements Serializable {
         return false;
     }
 
-    public Topic findTopic(String topicName){
-        for(Topic topicInSet: topicSet){
-            if(topicInSet.getTopic().equals(topicName)){
-                return topicInSet;
-            }
-        }
-        return null;
-    }
-
-
-
     public JSONObject toBriefJson() {
         try {
             String str = "{" +
                     "\"id\":\"" + conferenceId.toString() + '\"' +
-                    ", \"abbr\":\"" + conferenceAbbreviation.toString() + '\"' +
-                    ", \"name\":\"" + conferenceFullName.toString() + '\"' +
+                    ", \"abbr\":\"" + conferenceAbbreviation + '\"' +
+                    ", \"name\":\"" + conferenceFullName + '\"' +
                     ", \"time\":\"" + conferenceTime.toString() + '\"' +
-                    ", \"place\":\"" + conferenceLocation.toString() + '\"' +
+                    ", \"place\":\"" + conferenceLocation + '\"' +
                     ", \"contributeEndTime\":\"" + contributeEndTime.toString() + '\"' +
                     ", \"resultReleaseTime\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"status\":\"" + status.toString() + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
-                    ", \"chairman\":\"" + chairman.getUsername().toString() + '\"' +
+                    ", \"chairman\":\"" + chairman.getUsername() + '\"' +
                     '}';
             return UtilityService.String2Json(str);
         } catch (ParseException e) {

@@ -6,7 +6,6 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.aut
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
-import fudan.se.lab2.domain.conference.Topic;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -79,7 +78,16 @@ public class AuthorIdentityService {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        if (conference == null || paper == null || !conference.getPaperSet().contains(paper)) {
+        boolean paperContained = false;
+        Set<Paper> paperSet = paperRepository.findPapersByConference(conference);
+        for (Paper paperInSet: paperSet
+             ) {
+            if(paperInSet.getPaperId().equals(paper.getPaperId())){
+                paperContained = true;
+                break;
+            }
+        }
+        if (conference == null || paper == null || !paperContained) {
             return "{\"message\":\"bad request!\"}";
         }
         if (conference.getChairman().getId().equals(author.getId())) {
@@ -103,7 +111,7 @@ public class AuthorIdentityService {
         MultipartFile multipartFile = request.getFile();
         if (multipartFile != null) {
             // get file name
-            String fileName = multipartFile.getOriginalFilename();
+            String fileName = multipartFile.getName();
             // get file suffix
             String suffix = Objects.requireNonNull(fileName).substring(fileName.lastIndexOf('.'));
             if (!suffix.toLowerCase().equals("pdf")) {
@@ -125,21 +133,7 @@ public class AuthorIdentityService {
         paper.setTitle(request.getTitle());
         paper.setSummary(request.getSummary());
         paper.setPaperAuthors(request.getAuthors());
-        // remove old topics
-        Set<Topic> paperTopics = paper.getTopics();
-        for (Topic oldTopic : paperTopics
-        ) {
-            oldTopic.getAuthors().remove(author);
-            oldTopic.getPapers().remove(paper);
-        }
-        paperTopics.clear();
-        // add new topics
-        for (String topic : request.getTopics()) {
-            Topic currTopic = conference.findTopic(topic);
-            currTopic.getAuthors().add(author);
-            currTopic.getPapers().add(paper);
-            paperTopics.add(currTopic);
-        }
+        paper.setTopics(request.getTopics());
         // modify success
         return "{\"message\":\"your paper submit success!\"}";
     }

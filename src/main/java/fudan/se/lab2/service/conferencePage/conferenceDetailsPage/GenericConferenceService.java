@@ -1,16 +1,13 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorModifyPaperRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
-import fudan.se.lab2.domain.conference.Topic;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
-import fudan.se.lab2.repository.TopicRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
@@ -21,13 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class GenericConferenceService {
@@ -36,15 +28,13 @@ public class GenericConferenceService {
     private ConferenceRepository conferenceRepository;
     private PaperRepository paperRepository;
     private JwtTokenUtil tokenUtil;
-    private TopicRepository topicRepository;
 
     @Autowired
     public GenericConferenceService(UserRepository userRepository, ConferenceRepository conferenceRepository,
-                                    PaperRepository paperRepository, TopicRepository topicRepository, JwtTokenUtil tokenUtil) {
+                                    PaperRepository paperRepository, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.paperRepository = paperRepository;
         this.conferenceRepository = conferenceRepository;
-        this.topicRepository = topicRepository;
         this.tokenUtil = tokenUtil;
     }
 
@@ -84,7 +74,6 @@ public class GenericConferenceService {
         String fileName = multipartFile.getName();
         // get file suffix
 
-
         String suffix = fileName.substring(fileName.lastIndexOf('.') + 1);
         if (!suffix.toLowerCase().equals("pdf")) {
             return "{\"message\":\"paper submit wrong, not pdf file!\"}";
@@ -99,31 +88,20 @@ public class GenericConferenceService {
         File excelFile = File.createTempFile(String.valueOf(Math.random()), suffix);
         // MultipartFile to File
         multipartFile.transferTo(excelFile);
-        Paper newPaper = new Paper(conference, author, request.getTitle(),
-                request.getAuthors(), request.getSummary(), excelFile);
+
         // check the validation of all topics
         if (!UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
             return "{\"message\":\"paper submit wrong, topics selected error!\"}";
         }
-        // check over and modify databases
-        for (String topic : request.getTopics()) {
-            Topic currTopic = conference.findTopic(topic);
-            currTopic.getAuthors().add(author);
-            currTopic.getPapers().add(newPaper);
 
-            newPaper.getTopics().add(currTopic);
-
-        }
-        author.getPapers().add(newPaper);
+        Paper newPaper = new Paper(conference, author, request.getTitle(),
+                request.getAuthors(), request.getSummary(), excelFile, request.getTopics());
         paperRepository.save(newPaper);
-        userRepository.save(author);
-        System.out.println("size:" + userRepository.findByUsername(author.getUsername()).getPapers().size());
-
 
         deleteFile(excelFile);
         conference.addAuthor(author);
         conferenceRepository.save(conference);
-        // submit success
+
         return "{\"message\":\"your paper submit success!\"}";
     }
 

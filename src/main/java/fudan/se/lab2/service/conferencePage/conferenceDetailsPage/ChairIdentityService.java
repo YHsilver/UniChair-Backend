@@ -5,9 +5,8 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Invitation;
 import fudan.se.lab2.domain.conference.Paper;
-import fudan.se.lab2.repository.ConferenceRepository;
-import fudan.se.lab2.repository.InvitationRepository;
-import fudan.se.lab2.repository.UserRepository;
+import fudan.se.lab2.domain.conference.Review;
+import fudan.se.lab2.repository.*;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
 import org.assertj.core.util.Lists;
@@ -15,10 +14,9 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.*;
 
 @Service
 public class ChairIdentityService {
@@ -26,14 +24,19 @@ public class ChairIdentityService {
     private UserRepository userRepository;
     private ConferenceRepository conferenceRepository;
     private InvitationRepository invitationRepository;
+    private PaperRepository paperRepository;
+    private ReviewRepository reviewRepository;
     private JwtTokenUtil tokenUtil;
 
     @Autowired
     public ChairIdentityService(UserRepository userRepository, InvitationRepository invitationRepository,
-                        ConferenceRepository conferenceRepository, JwtTokenUtil tokenUtil) {
+                        ConferenceRepository conferenceRepository, PaperRepository paperRepository,
+                                ReviewRepository reviewRepository, JwtTokenUtil tokenUtil) {
         this.userRepository = userRepository;
         this.conferenceRepository = conferenceRepository;
         this.tokenUtil = tokenUtil;
+        this.paperRepository = paperRepository;
+        this.reviewRepository = reviewRepository;
         this.invitationRepository = invitationRepository;
     }
 
@@ -60,7 +63,6 @@ public class ChairIdentityService {
         if(UtilityService.isConferenceChangeStageValid(conference, request.getChangedStage())){
             conference.setStage(request.getChangedStage());
             conferenceRepository.save(conference);
-            chair.addConference(conference);
         }
         return conference.getConferenceFullName() + "'s Stage is " + conference.getStage().toString();
     }
@@ -78,27 +80,93 @@ public class ChairIdentityService {
             return "{\"message\":\" Invalid request!\"}";
         }
 
-        if(conference.getReviewerSet().size() < 3 || conference.getPaperSet().size() == 0){
+        if(conference.getReviewerSet().size() < 3 || paperRepository.findPapersByConference(conference).size() == 0){
             return "{\"message\":\" Too less PC Members or No paper to review!\"}";
         }
 
         if(strategy == ChairStartReviewingRequest.Strategy.TOPIC_RELATED){
-            if(UtilityService.paperAssignment_TOPIC_RELATED(conference)){
+            if(paperAssignment_TOPIC_RELATED(conference)){
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
                 return "{\"message\":\" No valid assignment!\"}";
             }
         }else if(strategy == ChairStartReviewingRequest.Strategy.RANDOM){
-            if(UtilityService.paperAssignment_RANDOM(conference)){
+            if(paperAssignment_RANDOM(conference)){
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
                 return "{\"message\":\" No valid assignment!\"}";
             }
         }
 
-
         return "{\"message\":\" Unknown assignment strategy!\"}";
     }
+
+    private boolean paperAssignment_TOPIC_RELATED(Conference conference) {
+        Set<Review> reviews = reviewRepository.findReviewsByConference(conference);
+        Set<Paper> papers = paperRepository.findPapersByConference(conference);
+        for (Paper paper : papers) {
+            Set<User> allValidReviewers = new HashSet<>();
+            // get all topics of a paper
+            Set<String> topicSet = new HashSet<>(Arrays.asList(paper.getTopics()));
+            for (Review review: reviews
+                 ) {
+                for (String reviewerTopic: review.getTopics()
+                     ) {
+                    if(topicSet.contains(reviewerTopic)){
+                        allValidReviewers.add(review.getReviewer());
+                    }
+                }
+            }
+
+            if (allValidReviewers.size() < 3) {
+                allValidReviewers = conference.getReviewerSet();
+            }
+
+            Set<User> selectedReviewers = UtilityService.selectObjectsFromBaseSet(allValidReviewers, 3);
+            if (selectedReviewers == null) {
+                return false;
+            }
+            for (User reviewer : selectedReviewers) {
+                Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
+                review.getPapers().add(paper);
+                reviewRepository.save(review);
+            }
+        }
+
+        return true;
+    }
+
+    private boolean paperAssignment_RANDOM(Conference conference) {
+        List<User> reviewersCopy = new ArrayList<>(conference.getReviewerSet());
+        List<Paper> papersCopy = new ArrayList<>(paperRepository.findPapersByConference(conference));
+        int average = papersCopy.size() / reviewersCopy.size();
+        Random random;
+        try {
+            random = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return false;
+        }
+        for (User reviewer : reviewersCopy) {
+            Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
+            for (int i = 0; i < average; i++) {
+                Paper randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
+                review.getPapers().add(randomPaper);
+                papersCopy.remove(randomPaper);
+                reviewRepository.save(review);
+            }
+        }
+
+        for (Paper paper : papersCopy) {
+            User randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
+            Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, randomReviewer);
+            review.getPapers().add(paper);
+            reviewersCopy.remove(randomReviewer);
+            reviewRepository.save(review);
+        }
+        return true;
+    }
+
 
     /**
      * chair search Reviewers to invite
@@ -160,17 +228,12 @@ public class ChairIdentityService {
             // chair and PC member cannot be invited
             if(!reviewer.getId().equals(chair.getId()) && !conference.getReviewerSet().contains(reviewer)){
                 // invitation has sent before
-                Set<Invitation> invitations = invitationRepository.findByReviewerAndConferenceIdAndStatus(reviewer, conference.getConferenceId(), Invitation.Status.PENDING);
+                Set<Invitation> invitations = invitationRepository.findByReviewerAndConferenceAndStatus(reviewer, conference, Invitation.Status.PENDING);
                 if(invitations.size() == 1){ continue; }
 
                 validNum++;
-                Invitation newInvitation = new Invitation(conference.getConferenceId(), conference.getConferenceFullName(), chair,
-                        reviewer, message);
+                Invitation newInvitation = new Invitation(conference, chair, reviewer, message);
                 this.invitationRepository.save(newInvitation);
-                chair.getSendInvitations().add(newInvitation);
-                reviewer.getMyInvitations().add(newInvitation);
-                userRepository.save(reviewer);
-                userRepository.save(chair);
             }
         }
         // return how many valid invitations has been send
@@ -191,7 +254,7 @@ public class ChairIdentityService {
             return null;
         }
 
-        Set<Invitation> invitationSet = invitationRepository.findByConferenceId(conference.getConferenceId());
+        Set<Invitation> invitationSet = invitationRepository.findByConference(conference);
         List<JSONObject> list = Lists.newArrayList();
         if(request.getStatus() == null){
             for (Invitation eachInvitation : invitationSet) {
