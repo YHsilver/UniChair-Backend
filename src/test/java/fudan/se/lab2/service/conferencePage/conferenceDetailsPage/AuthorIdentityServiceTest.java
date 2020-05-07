@@ -68,7 +68,7 @@ class AuthorIdentityServiceTest {
                 "test.pdf",    //filename
                 "Hallo World".getBytes()); //content
 
-        File file = File.createTempFile(String.valueOf(Math.random()), "pdf");
+        File file = File.createTempFile(mockMultipartFile.getName(), "pdf");
         mockMultipartFile.transferTo(file);
 
         Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},
@@ -121,7 +121,7 @@ class AuthorIdentityServiceTest {
                 "test.pdf",    //filename
                 "Hallo World".getBytes()); //content
 
-        File file = File.createTempFile(String.valueOf(Math.random()), "pdf");
+        File file = File.createTempFile("PA_", ".pdf");
         mockMultipartFile.transferTo(file);
 
         Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},
@@ -174,7 +174,7 @@ class AuthorIdentityServiceTest {
                 "test.pdf",    //filename
                 "Hallo World".getBytes()); //content
 
-        File file = File.createTempFile(String.valueOf(Math.random()), "pdf");
+        File file = File.createTempFile("PA_", ".pdf");
         mockMultipartFile.transferTo(file);
 
         Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},

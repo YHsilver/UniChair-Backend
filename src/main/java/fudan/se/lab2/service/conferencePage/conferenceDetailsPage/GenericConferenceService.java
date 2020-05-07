@@ -74,8 +74,8 @@ public class GenericConferenceService {
         String fileName = multipartFile.getName();
         // get file suffix
 
-        String suffix = fileName.substring(fileName.lastIndexOf('.') + 1);
-        if (!suffix.toLowerCase().equals("pdf")) {
+        String suffix = fileName.substring(fileName.lastIndexOf('.'));
+        if (!suffix.toLowerCase().equals(".pdf")) {
             return "{\"message\":\"paper submit wrong, not pdf file!\"}";
         }
 
@@ -85,7 +85,8 @@ public class GenericConferenceService {
             return "{\"message\":\"paper modify wrong, information format error!\"}";
         }
 
-        File excelFile = File.createTempFile(String.valueOf(Math.random()), suffix);
+        File excelFile = File.createTempFile("PA_", suffix);
+        System.out.println("excelFile in Submit: " + excelFile);
         // MultipartFile to File
         multipartFile.transferTo(excelFile);
 

@@ -137,13 +137,17 @@ public class Paper implements Serializable {
                 "paperId=" + paperId +
                 ", conference=" + conference +
                 ", author=" + author +
-                //", reviewerSet=" + reviewerSet +
-                ", topics=" + Arrays.toString(topics) +
                 ", title='" + title + '\'' +
                 ", paperAuthors=" + Arrays.toString(paperAuthors) +
                 ", summary='" + summary + '\'' +
                 ", status=" + status +
-                ", file=" + file +
+                ", fileSize=" + file.length() +
+                ", reviewers=" + Arrays.toString(reviewers) +
+                ", isReviewed=" + Arrays.toString(isReviewed) +
+                ", comments=" + Arrays.toString(comments) +
+                ", grades=" + Arrays.toString(grades) +
+                ", confidences=" + Arrays.toString(confidences) +
+                ", topics=" + Arrays.toString(topics) +
                 '}';
     }
 
@@ -174,9 +178,11 @@ public class Paper implements Serializable {
             int i = 0;
             for (User reviewer: reviewers
                  ) {
-                reviewerIds[i] = reviewer.getId();
-                reviewerFullNames[i] = reviewer.getFullName();
-                i++;
+                if(reviewer != null){
+                    reviewerIds[i] = reviewer.getId();
+                    reviewerFullNames[i] = reviewer.getFullName();
+                    i++;
+                }
             }
 
             String str = "{" +
@@ -193,11 +199,13 @@ public class Paper implements Serializable {
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
-                    ", \"fileName\":\"" + file.getName() + '\"';
+                    ", \"fileName\":\"" + file.getName() + '\"' +
+                    ", \"fileSize\":\"" + file.length() + '\"' ;
             if(status == Status.REVIEWED){
                 str += ", \"grades\":\"" + UtilityService.getJsonStringFromArray(grades) + '\"' +
                         ", \"comments\":\"" + UtilityService.getJsonStringFromArray(comments) + '\"' +
                         ", \"confidences\":\"" + UtilityService.getJsonStringFromArray(confidences) + '\"';
+
             }
             str += '}';
             return UtilityService.String2Json(str);

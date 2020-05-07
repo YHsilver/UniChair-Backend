@@ -52,7 +52,7 @@ public class AuthorIdentityService {
             papers = paperRepository.findPapersByAuthor(author);
         } else {
             Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-            if (conference == null || !conference.getAuthorSet().contains(author)) {
+            if (conference == null || author == null) {
                 return null;
             }
             papers = paperRepository.findPapersByAuthorAndConference(author, conference);
@@ -68,7 +68,7 @@ public class AuthorIdentityService {
     public JSONObject getMyPaperDetails(AuthorGetMyPaperDetailsRequest request) {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        if (author == null || paper == null || paper.getAuthor() != author) {
+        if (author == null || paper == null || !paper.getAuthor().getId().equals(author.getId())) {
             return null;
         }
         return paper.toStandardJson();
@@ -77,8 +77,11 @@ public class AuthorIdentityService {
     public String modifyPaper(AuthorModifyPaperRequest request) {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        if (paper == null) {
+        if (paper == null || author == null) {
             return "{\"message\":\"bad request!\"}";
+        }
+        if(!paper.getAuthor().getId().equals(author.getId())){
+            return "{\"message\":\"You are not the author of this paper!\"}";
         }
         Conference conference = paper.getConference();
         if (conference.getChairman().getId().equals(author.getId())) {
@@ -105,13 +108,13 @@ public class AuthorIdentityService {
             String fileName = multipartFile.getName();
             // get file suffix
             String suffix = Objects.requireNonNull(fileName).substring(fileName.lastIndexOf('.'));
-            if (!suffix.toLowerCase().equals("pdf")) {
+            if (!suffix.toLowerCase().equals(".pdf")) {
                 return "{\"message\":\"paper modify wrong, not pdf file!\"}";
             }
             // check over
             File excelFile;
             try {
-                excelFile = File.createTempFile(String.valueOf(Math.random()), suffix);
+                excelFile = File.createTempFile("PA_", suffix);
                 // MultipartFile to File
                 multipartFile.transferTo(excelFile);
             } catch (IOException ex) {

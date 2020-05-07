@@ -86,12 +86,16 @@ public class ChairIdentityService {
 
         if(strategy == ChairStartReviewingRequest.Strategy.TOPIC_RELATED){
             if(paperAssignment_TOPIC_RELATED(conference)){
+                conference.setStage(Conference.Stage.REVIEWING);
+                conferenceRepository.save(conference);
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
                 return "{\"message\":\" No valid assignment!\"}";
             }
         }else if(strategy == ChairStartReviewingRequest.Strategy.RANDOM){
             if(paperAssignment_RANDOM(conference)){
+                conference.setStage(Conference.Stage.REVIEWING);
+                conferenceRepository.save(conference);
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
                 return "{\"message\":\" No valid assignment!\"}";

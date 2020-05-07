@@ -153,7 +153,12 @@ public class UtilityService {
     public static String getJsonStringFromArray(Object[] array) {
         StringBuilder result = new StringBuilder();
         for (Object object : array) {
-            result.append(object.toString()).append(", ");
+            if(object != null){
+                result.append(object.toString()).append(", ");
+            }else{
+                result.append("null").append(", ");
+            }
+
         }
         if (array.length > 2) {
             result = new StringBuilder(result.substring(0, result.length() - 2));

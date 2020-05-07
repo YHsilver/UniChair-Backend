@@ -112,24 +112,16 @@ class ChairIdentityServiceTest {
         reviewRepository.save(review2);
         reviewRepository.save(review3);
 
-
         conference2.getReviewerSet().add(reviewer1);
         conference2.getReviewerSet().add(reviewer2);
         conference2.getReviewerSet().add(reviewer3);
-
-
         conferenceRepository.save(conference2);
 
-
         assertEquals("{\"message\":\" Reviewing start!\"}", chairIdentityService.startReviewing(chairStartReviewingRequestTopicRelated));
-
         assertEquals(Conference.Stage.REVIEWING, conferenceRepository.findByConferenceId(conference.getConferenceId()).getStage());
 
-
         assertEquals("{\"message\":\" Reviewing start!\"}", chairIdentityService.startReviewing(chairStartReviewingRequestRandom));
-
         assertEquals(Conference.Stage.REVIEWING, conferenceRepository.findByConferenceId(conference2.getConferenceId()).getStage());
-
     }
 
 
