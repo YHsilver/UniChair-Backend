@@ -7,7 +7,6 @@ import java.util.Arrays;
 public class AuthorModifyPaperRequest {
 
     private String token;
-    private Long conferenceId;
     private Long paperId;
     // all these things will be reset, also validation check is needed
     private String[] topics;
@@ -19,11 +18,10 @@ public class AuthorModifyPaperRequest {
 
     public AuthorModifyPaperRequest() {}
 
-    public AuthorModifyPaperRequest(String token, Long conferenceId, Long paperId,
+    public AuthorModifyPaperRequest(String token, Long paperId,
                                     String[] topics, String title, String[][] authors,
                                     String summary, MultipartFile file) {
         this.token = token;
-        this.conferenceId = conferenceId;
         this.paperId = paperId;
         this.topics = topics;
         this.title = title;
@@ -38,14 +36,6 @@ public class AuthorModifyPaperRequest {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public Long getConferenceId() {
-        return conferenceId;
-    }
-
-    public void setConferenceId(Long conferenceId) {
-        this.conferenceId = conferenceId;
     }
 
     public Long getPaperId() {
@@ -100,7 +90,6 @@ public class AuthorModifyPaperRequest {
     public String toString() {
         return "AuthorModifyPaperRequest{" +
                 "token='" + token + '\'' +
-                ", conferenceId=" + conferenceId +
                 ", paperId=" + paperId +
                 ", topics=" + Arrays.toString(topics) +
                 ", title='" + title + '\'' +

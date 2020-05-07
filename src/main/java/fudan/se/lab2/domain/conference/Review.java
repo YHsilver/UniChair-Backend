@@ -15,7 +15,7 @@ public class Review {
     @ManyToOne
     private Conference conference;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @ManyToOne
     private User reviewer;
 
     private String[] topics;

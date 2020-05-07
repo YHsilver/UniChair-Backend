@@ -14,13 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class RegisterServiceTest {
 
-    private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private RegisterService registerService;
 
     @Autowired
     public RegisterServiceTest(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         registerService = new RegisterService(userRepository, passwordEncoder);
     }
@@ -43,9 +41,9 @@ class RegisterServiceTest {
                 "emain1@fudan.edu.cn"
         );
 
-        User returnUser=registerService.register(registerRequest);
+        User returnUser = registerService.register(registerRequest);
         newUser.setId(returnUser.getId());
-        assertEquals(newUser.toString(),returnUser.toString());
+        assertEquals(newUser.toString(), returnUser.toString());
         RegisterRequest alreadyRegistedRequest = new RegisterRequest(
                 "user1",
                 "pass1",
@@ -61,7 +59,7 @@ class RegisterServiceTest {
         exception=e;
     }
     assertTrue(exception instanceof UsernameHasBeenRegisteredException);
-    assertEquals("Username 'user1' has been registered",exception.getMessage());
+    assertEquals("Username 'user1' has been registered", exception.getMessage());
 
     }
 }

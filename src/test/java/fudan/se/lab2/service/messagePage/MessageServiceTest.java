@@ -23,7 +23,6 @@ class MessageServiceTest {
     private UserRepository userRepository;
     private ConferenceRepository conferenceRepository;
     private InvitationRepository invitationRepository;
-    private ReviewRepository reviewRepository;
     private JwtTokenUtil tokenUtil;
     private MessageService messageService;
 
@@ -34,7 +33,6 @@ class MessageServiceTest {
         this.conferenceRepository = conferenceRepository;
         this.tokenUtil = tokenUtil;
         this.invitationRepository = invitationRepository;
-        this.reviewRepository = reviewRepository;
         messageService = new MessageService(userRepository, invitationRepository, conferenceRepository, reviewRepository, tokenUtil);
     }
 
@@ -50,14 +48,9 @@ class MessageServiceTest {
         conference.setStatus(Conference.Status.PASS);
         conferenceRepository.save(conference);
 
-
-
         Invitation newInvitation = new Invitation(conference, chair,
                 user1, "message");
         invitationRepository.save(newInvitation);
-
-        userRepository.save(user1);
-        userRepository.save(chair);
 
         UserCheckMyInvitationsRequest userCheckMyInvitationsRequest = new UserCheckMyInvitationsRequest(
                 tokenUtil.generateToken(user1), Invitation.Status.PENDING
@@ -82,12 +75,8 @@ class MessageServiceTest {
         Invitation newInvitation = new Invitation(conference, chair,
                 user1, "message");
         invitationRepository.save(newInvitation);
-
-        userRepository.save(user1);
-        userRepository.save(chair);
-
+        System.out.println(newInvitation);
         String[] topics = {conference.getTopics()[0]};
-
         UserDecideInvitationsRequest userDecideInvitationsRequest = new UserDecideInvitationsRequest(
                 tokenUtil.generateToken(user1),
                 newInvitation.getInvitationId(),
@@ -96,8 +85,8 @@ class MessageServiceTest {
         );
         messageService.userDecideInvitations(userDecideInvitationsRequest);
 
-        assertEquals(Invitation.Status.PASS, newInvitation.getStatus());
-        assertEquals(1, conference.getReviewerSet().size());
+        assertEquals(Invitation.Status.PASS, invitationRepository.findByInvitationId(newInvitation.getInvitationId()).getStatus());
+        assertEquals(1, conferenceRepository.findByConferenceId(conference.getConferenceId()).getReviewerSet().size());
 
 
     }

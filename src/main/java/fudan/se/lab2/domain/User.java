@@ -120,7 +120,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", unit='" + unit + '\'' +
                 ", area='" + area + '\'' +

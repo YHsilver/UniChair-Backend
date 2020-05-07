@@ -60,7 +60,7 @@ public class ChairIdentityService {
             return null;
         }
         // chair can only change stage step by step with limits, only admin can trace back or skip steps
-        if(UtilityService.isConferenceChangeStageValid(conference, request.getChangedStage())){
+        if(UtilityService.isConferenceChangeStageValid(conference, request.getChangedStage(), paperRepository)){
             conference.setStage(request.getChangedStage());
             conferenceRepository.save(conference);
         }

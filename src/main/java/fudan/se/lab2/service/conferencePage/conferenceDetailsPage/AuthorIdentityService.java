@@ -34,7 +34,7 @@ public class AuthorIdentityService {
     private JwtTokenUtil tokenUtil;
 
     // 日志
-    Logger logger = LoggerFactory.getLogger(AuthorIdentityService.class);
+    private Logger logger = LoggerFactory.getLogger(AuthorIdentityService.class);
 
     @Autowired
     public AuthorIdentityService(UserRepository userRepository, ConferenceRepository conferenceRepository,
@@ -76,20 +76,11 @@ public class AuthorIdentityService {
 
     public String modifyPaper(AuthorModifyPaperRequest request) {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        boolean paperContained = false;
-        Set<Paper> paperSet = paperRepository.findPapersByConference(conference);
-        for (Paper paperInSet: paperSet
-             ) {
-            if(paperInSet.getPaperId().equals(paper.getPaperId())){
-                paperContained = true;
-                break;
-            }
-        }
-        if (conference == null || paper == null || !paperContained) {
+        if (paper == null) {
             return "{\"message\":\"bad request!\"}";
         }
+        Conference conference = paper.getConference();
         if (conference.getChairman().getId().equals(author.getId())) {
             return "{\"message\":\"invalid submit or change from chair!\"}";
         }

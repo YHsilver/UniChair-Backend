@@ -4,6 +4,7 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
 import fudan.se.lab2.domain.conference.Review;
+import fudan.se.lab2.repository.PaperRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -103,19 +104,25 @@ public class UtilityService {
      * @param stage      target stage to changed
      * @return true if this change can be done with satisfied limits
      */
-    public static boolean isConferenceChangeStageValid(Conference conference, Conference.Stage stage) {
+    public static boolean isConferenceChangeStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
         if (conference.isNextStage(stage)) {
             if (stage == CONTRIBUTION) {
                 // default true
                 return true;
             }
             if (stage == Conference.Stage.REVIEWING) {
-                // TODO: find a valid paper allocation plan
-                return conference.getReviewerSet().size() >= 3;
+                return false;
             }
             if (stage == Conference.Stage.GRADING) {
-                // TODO: check if all papers are reviewed by reviewers
-                return false;
+                Set<Paper> papers = paperRepository.findPapersByConference(conference);
+                for(Paper paper: papers){
+                    for(boolean isReviewed: paper.getIsReviewed()){
+                        if(!isReviewed)
+                            return false;
+                    }
+
+                }
+                return true;
             }
             // default true
             return stage == Conference.Stage.ENDING;
@@ -193,6 +200,19 @@ public class UtilityService {
             copyBaseSet.remove(selectedObject);
         }
         return resultSet;
+    }
+
+    public static boolean isValidReviewer(Paper paper, User reviewer){
+        if(reviewer == null || paper == null){
+            return false;
+        }
+        for (User tarReviewer: paper.getReviewers()
+        ) {
+            if(tarReviewer.getId().equals(reviewer.getId())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

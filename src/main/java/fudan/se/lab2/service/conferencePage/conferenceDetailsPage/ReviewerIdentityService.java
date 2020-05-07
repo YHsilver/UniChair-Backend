@@ -57,7 +57,7 @@ public class ReviewerIdentityService {
     public JSONObject getPaperDetails(ReviewerGetPaperDetailsRequest request){
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        if(reviewer == null || paper == null || !Arrays.asList(paper.getReviewers()).contains(reviewer)){
+        if(!UtilityService.isValidReviewer(paper, reviewer)){
             return null;
         }
         return paper.toStandardJson();
@@ -66,12 +66,14 @@ public class ReviewerIdentityService {
     public String submitPaperReviewed(ReviewerSubmitPaperReviewedRequest request){
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        if(reviewer == null || paper == null || !Arrays.asList(paper.getReviewers()).contains(reviewer)){
-            return null;
+
+        if(!UtilityService.isValidReviewer(paper, reviewer)){
+            return "{\"message\":\"You are not the reviewer of this paper!\"}";
         }
+
         int i = 0;
         for(; i < Paper.REVIEWER_NUM; i++){
-            if(paper.getReviewers()[i] == reviewer){
+            if(paper.getReviewers()[i].getId().equals(reviewer.getId())){
                 break;
             }
         }

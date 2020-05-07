@@ -22,9 +22,9 @@ public class Invitation implements Serializable {
 
     @ManyToOne
     private Conference conference;
-    @OneToOne
+    @ManyToOne
     private User chair;
-    @OneToOne
+    @ManyToOne
     private User reviewer;
 
     private String message;
@@ -36,6 +36,7 @@ public class Invitation implements Serializable {
     public Invitation(Conference conference, User chair, User reviewer,
                       String message) {
         this.chair = chair;
+        this.conference = conference;
         this.reviewer = reviewer;
         this.message = message;
         this.status = Status.PENDING;
