@@ -12,10 +12,13 @@ import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,19 +29,20 @@ class ChairIdentityServiceTest {
     private InvitationRepository invitationRepository;
     private JwtTokenUtil tokenUtil;
     private ChairIdentityService chairIdentityService;
- private PaperRepository paperRepository;
+    private PaperRepository paperRepository;
     private ReviewRepository reviewRepository;
 
     @Autowired
     public ChairIdentityServiceTest(UserRepository userRepository, InvitationRepository invitationRepository,
                                     ConferenceRepository conferenceRepository, JwtTokenUtil tokenUtil,
-                                    ReviewRepository reviewRepository , PaperRepository paperRepository) {
+                                    ReviewRepository reviewRepository, PaperRepository paperRepository) {
         this.userRepository = userRepository;
         this.conferenceRepository = conferenceRepository;
         this.tokenUtil = tokenUtil;
         this.invitationRepository = invitationRepository;
         this.reviewRepository = reviewRepository;
-        chairIdentityService = new ChairIdentityService(userRepository,invitationRepository,conferenceRepository,paperRepository,reviewRepository,tokenUtil);
+        this.paperRepository = paperRepository;
+        chairIdentityService = new ChairIdentityService(userRepository, invitationRepository, conferenceRepository, paperRepository, reviewRepository, tokenUtil);
     }
 
     @Test
@@ -77,7 +81,6 @@ class ChairIdentityServiceTest {
         userRepository.save(reviewer3);
 
 
-
         ChairStartReviewingRequest chairStartReviewingRequestTopicRelated = new ChairStartReviewingRequest(
                 tokenUtil.generateToken(user), conference.getConferenceId(),
                 ChairStartReviewingRequest.Strategy.TOPIC_RELATED);
@@ -92,13 +95,22 @@ class ChairIdentityServiceTest {
         conference.getReviewerSet().add(reviewer1);
         conference.getReviewerSet().add(reviewer2);
         conference.getReviewerSet().add(reviewer3);
-
-//        Review review1 = new Review(conference, reviewer1, new HashSet<>());
-//        Review review2 = new Review(conference, reviewer2, new HashSet<>());
-//        Review review3 = new Review(conference, reviewer3, new HashSet<>());
-//
-//
         conferenceRepository.save(conference);
+
+
+        File file = new File("testFile.pdf");
+        Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "are", "unit", "email@email.com"}},
+                "summary", file, conference.getTopics());
+
+        paperRepository.save(paper);
+
+        Review review1 = new Review(conference, reviewer1, conference.getTopics());
+        Review review2 = new Review(conference, reviewer2, conference.getTopics());
+        Review review3 = new Review(conference, reviewer3, conference.getTopics());
+
+        reviewRepository.save(review1);
+        reviewRepository.save(review2);
+        reviewRepository.save(review3);
 
 
         conference2.getReviewerSet().add(reviewer1);
@@ -111,7 +123,12 @@ class ChairIdentityServiceTest {
 
         assertEquals("{\"message\":\" Reviewing start!\"}", chairIdentityService.startReviewing(chairStartReviewingRequestTopicRelated));
 
+        assertEquals(Conference.Stage.REVIEWING, conferenceRepository.findByConferenceId(conference.getConferenceId()).getStage());
+
+
         assertEquals("{\"message\":\" Reviewing start!\"}", chairIdentityService.startReviewing(chairStartReviewingRequestRandom));
+
+        assertEquals(Conference.Stage.REVIEWING, conferenceRepository.findByConferenceId(conference2.getConferenceId()).getStage());
 
     }
 
@@ -135,9 +152,10 @@ class ChairIdentityServiceTest {
 
         //add reviewer
 
-        Review review = new Review(conference, user2, new String[]{});
-        conference.getReviewerSet().add(user2);
+        Review review = new Review(conference, user2, conference.getTopics());
+        reviewRepository.save(review);
 
+        conference.getReviewerSet().add(user2);
         conferenceRepository.save(conference);
 
 
@@ -169,14 +187,15 @@ class ChairIdentityServiceTest {
                 "message"
 
         );
-//        Invitation newInvitation = new Invitation(conference.getConferenceId(), conference.getConferenceFullName(), chair,
-//                user1, "message");
-//
-//        chairIdentityService.sendInvitation(chairSendInvitationRequest);
-//        user1 = userRepository.findByUsername(user1.getUsername());
-//        List<Invitation> list ;
-//        newInvitation.setInvitationId(list.get(0).getInvitationId());
-//        assertEquals(newInvitation.toString(), list.get(0).toString());
+        Invitation invitation = new Invitation(conference, chair, user1, "message");
+
+
+        chairIdentityService.sendInvitation(chairSendInvitationRequest);
+        user1 = userRepository.findByUsername(user1.getUsername());
+        chairIdentityService.sendInvitation(chairSendInvitationRequest);
+        List<Invitation> list = new ArrayList<>(invitationRepository.findByReviewer(user1));
+        invitation.setInvitationId(list.get(0).getInvitationId());
+        assertEquals(invitation.toString(), list.get(0).toString());
 
     }
 
@@ -202,11 +221,14 @@ class ChairIdentityServiceTest {
         );
         chairIdentityService.sendInvitation(chairSendInvitationRequest);
 
-        Invitation newInvitation = new Invitation(conference,  chair,
+        Invitation invitation = new Invitation(conference, chair,
                 user1, "message");
 
         chairIdentityService.sendInvitation(chairSendInvitationRequest);
         user1 = userRepository.findByUsername(user1.getUsername());
+
+        List<Invitation> list = new ArrayList<>(invitationRepository.findByReviewer(user1));
+        invitation.setInvitationId(list.get(0).getInvitationId());
 
 
         ChairCheckInvitationsRequest chairCheckInvitationsRequest = new ChairCheckInvitationsRequest(
@@ -215,6 +237,6 @@ class ChairIdentityServiceTest {
         List<JSONObject> checkList = chairIdentityService.checkInvitations(chairCheckInvitationsRequest);
 
         assertEquals(1, checkList.size());
-        assertEquals(newInvitation.toStandardJson(), chairIdentityService.checkInvitations(chairCheckInvitationsRequest).get(0));
+        assertEquals(invitation.toStandardJson(), chairIdentityService.checkInvitations(chairCheckInvitationsRequest).get(0));
     }
 }

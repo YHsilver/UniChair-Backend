@@ -71,9 +71,6 @@ class GenericConferenceServiceTest {
         conferenceRepository.save(conference);
 
 
-
-        conferenceRepository.save(conference);
-
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "test.pdf",    //filename
                 "Hallo World".getBytes()); //content
@@ -92,6 +89,8 @@ class GenericConferenceServiceTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         assertEquals(new ArrayList<>(conferenceRepository.findByConferenceId(conference.getConferenceId()).getAuthorSet()).get(0).toString(), author.toString());
 
 
