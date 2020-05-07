@@ -1,11 +1,12 @@
 package fudan.se.lab2.domain.conference;
 import fudan.se.lab2.domain.User;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Review {
+public class Review implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

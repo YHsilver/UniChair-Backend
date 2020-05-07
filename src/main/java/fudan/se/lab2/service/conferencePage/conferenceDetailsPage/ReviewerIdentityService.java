@@ -73,7 +73,7 @@ public class ReviewerIdentityService {
 
         int i = 0;
         for(; i < Paper.REVIEWER_NUM; i++){
-            if(paper.getReviewers()[i].getId().equals(reviewer.getId())){
+            if(paper.getReviewers().get(i).getId().equals(reviewer.getId())){
                 break;
             }
         }

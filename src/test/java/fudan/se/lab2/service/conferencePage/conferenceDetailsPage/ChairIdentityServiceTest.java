@@ -101,16 +101,26 @@ class ChairIdentityServiceTest {
         File file = new File("testFile.pdf");
         Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "are", "unit", "email@email.com"}},
                 "summary", file, conference.getTopics());
-
+        File file2 = new File("testFile.pdf");
+        Paper paper2 = new Paper(conference2, author, "title", new String[][]{{"name2", "are2", "unit2", "email2@email.com"}},
+                "summary", file2, conference.getTopics());
         paperRepository.save(paper);
+        paperRepository.save(paper2);
 
-        Review review1 = new Review(conference, reviewer1, conference.getTopics());
-        Review review2 = new Review(conference, reviewer2, conference.getTopics());
-        Review review3 = new Review(conference, reviewer3, conference.getTopics());
+        Review review11 = new Review(conference, reviewer1, conference.getTopics());
+        Review review12 = new Review(conference, reviewer2, conference.getTopics());
+        Review review13 = new Review(conference, reviewer3, conference.getTopics());
 
-        reviewRepository.save(review1);
-        reviewRepository.save(review2);
-        reviewRepository.save(review3);
+        reviewRepository.save(review11);
+        reviewRepository.save(review12);
+        reviewRepository.save(review13);
+
+        Review review21 = new Review(conference2, reviewer1, conference.getTopics());
+        Review review22 = new Review(conference2, reviewer2, conference.getTopics());
+        Review review23 = new Review(conference2, reviewer3, conference.getTopics());
+        reviewRepository.save(review21);
+        reviewRepository.save(review22);
+        reviewRepository.save(review23);
 
         conference2.getReviewerSet().add(reviewer1);
         conference2.getReviewerSet().add(reviewer2);
@@ -119,6 +129,7 @@ class ChairIdentityServiceTest {
 
         assertEquals("{\"message\":\" Reviewing start!\"}", chairIdentityService.startReviewing(chairStartReviewingRequestTopicRelated));
         assertEquals(Conference.Stage.REVIEWING, conferenceRepository.findByConferenceId(conference.getConferenceId()).getStage());
+        //System.out.println(reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer1).getPapers().size());
 
         assertEquals("{\"message\":\" Reviewing start!\"}", chairIdentityService.startReviewing(chairStartReviewingRequestRandom));
         assertEquals(Conference.Stage.REVIEWING, conferenceRepository.findByConferenceId(conference2.getConferenceId()).getStage());
@@ -150,7 +161,6 @@ class ChairIdentityServiceTest {
         conference.getReviewerSet().add(user2);
         conferenceRepository.save(conference);
 
-
         ChairSearchReviewersRequest chairSearchReviewersRequest = new ChairSearchReviewersRequest(
                 tokenUtil.generateToken(chair), conference.getConferenceId(), "1234");
         List<JSONObject> list = new ArrayList<>();
@@ -164,7 +174,6 @@ class ChairIdentityServiceTest {
     void sendInvitation() {
         User chair = UserGenerator.getRandomUser();
         User user1 = UserGenerator.getRandomUser();
-
 
         userRepository.save(chair);
         userRepository.save(user1);
@@ -181,7 +190,6 @@ class ChairIdentityServiceTest {
         );
         Invitation invitation = new Invitation(conference, chair, user1, "message");
 
-
         chairIdentityService.sendInvitation(chairSendInvitationRequest);
         user1 = userRepository.findByUsername(user1.getUsername());
         chairIdentityService.sendInvitation(chairSendInvitationRequest);
@@ -194,9 +202,7 @@ class ChairIdentityServiceTest {
     @Test
     void checkInvitations() {
         User chair = UserGenerator.getRandomUser();
-
         User user1 = UserGenerator.getRandomUser();
-
 
         userRepository.save(chair);
         userRepository.save(user1);

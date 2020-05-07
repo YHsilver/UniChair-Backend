@@ -9,9 +9,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author hyf
@@ -45,7 +43,9 @@ public class Paper implements Serializable {
     private File file;
 
     // three allocated reviewers
-    private User[] reviewers = new User[REVIEWER_NUM];
+    @OrderColumn(name="id")
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<User> reviewers = new ArrayList<>();
     // three comments from reviewers
     private Boolean[] isReviewed = new Boolean[REVIEWER_NUM];
     private String[] comments = new String[REVIEWER_NUM];
@@ -120,8 +120,8 @@ public class Paper implements Serializable {
     public void setFile(File file) {
         this.file = file;
     }
-    public User[] getReviewers() { return reviewers; }
-    public void setReviewers(User[] reviewers) { this.reviewers = reviewers; }
+    public List<User> getReviewers() { return reviewers; }
+    public void setReviewers(ArrayList<User> reviewers) { this.reviewers = reviewers; }
     public String[] getComments() { return comments; }
     public void setComments(String[] comments) { this.comments = comments; }
     public Integer[] getGrades() { return grades; }
@@ -142,7 +142,7 @@ public class Paper implements Serializable {
                 ", summary='" + summary + '\'' +
                 ", status=" + status +
                 ", fileSize=" + file.length() +
-                ", reviewers=" + Arrays.toString(reviewers) +
+                ", reviewers=" + reviewers +
                 ", isReviewed=" + Arrays.toString(isReviewed) +
                 ", comments=" + Arrays.toString(comments) +
                 ", grades=" + Arrays.toString(grades) +

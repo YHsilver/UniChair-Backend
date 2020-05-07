@@ -130,13 +130,18 @@ public class ChairIdentityService {
             if (selectedReviewers == null) {
                 return false;
             }
+
+            int i = 0;
+            for (User reviewer : selectedReviewers) {
+                paper.getReviewers().add(reviewer);
+            }
+            paperRepository.save(paper);
             for (User reviewer : selectedReviewers) {
                 Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
-                review.getPapers().add(paper);
+                review.getPapers().add(paperRepository.findByPaperId(paper.getPaperId()));
                 reviewRepository.save(review);
             }
         }
-
         return true;
     }
 
@@ -155,16 +160,23 @@ public class ChairIdentityService {
             Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
             for (int i = 0; i < average; i++) {
                 Paper randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
+                randomPaper.getReviewers().add(reviewer);
+                paperRepository.save(randomPaper);
                 review.getPapers().add(randomPaper);
                 papersCopy.remove(randomPaper);
-                reviewRepository.save(review);
             }
+            reviewRepository.save(review);
         }
 
         for (Paper paper : papersCopy) {
             User randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
+            // add paper's reviewer
+            paper.getReviewers().add(randomReviewer);
+            paperRepository.save(paper);
+            // add reviewer's paper
             Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, randomReviewer);
-            review.getPapers().add(paper);
+            review.getPapers().add(paperRepository.findByPaperId(paper.getPaperId()));
+
             reviewersCopy.remove(randomReviewer);
             reviewRepository.save(review);
         }

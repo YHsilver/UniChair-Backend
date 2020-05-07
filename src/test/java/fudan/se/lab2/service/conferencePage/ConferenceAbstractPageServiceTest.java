@@ -101,8 +101,5 @@ class ConferenceAbstractPageServiceTest {
         );
 
 
-
-
-
     }
 }
