@@ -6,6 +6,7 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.gen
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.exception.ConferencException.PaperSubmitOrModifyFailException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -59,34 +60,41 @@ public class GenericConferenceService {
     public String submitPaper(UserSubmitPaperRequest request) throws IOException {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if (conference == null || conference.getChairman().getId().equals(author.getId())) {
-            return "{\"message\":\"chair cannot submit paper!\"}";
+        if (author == null || conference == null || conference.getChairman().getId().equals(author.getId())) {
+            throw new PaperSubmitOrModifyFailException("Invalid identity!");
         }
         if (conference.getStage() != Conference.Stage.CONTRIBUTION) {
-            return "{\"message\":\"Not Contribution Stage!\"}";
+            throw new PaperSubmitOrModifyFailException("Not Contribution Stage!");
         }
 
         MultipartFile multipartFile = request.getFile();
         if (multipartFile == null) {
-            return "{\"message\":\"pdf file missing!\"}";
+            throw new PaperSubmitOrModifyFailException("pdf file missing!");
         }
         // get file name
-        String fileName = multipartFile.getName();
-        // get file suffix
-        System.out.println("fileName: " + fileName);
+        String fileName = multipartFile.getOriginalFilename();
+        if(fileName == null){
+            throw new PaperSubmitOrModifyFailException("paper submit wrong, not pdf file!");
+        }
         int index = fileName.lastIndexOf('.');
         if(index == -1){
-            return "{\"message\":\"paper submit wrong, not pdf file!\"}";
+            throw new PaperSubmitOrModifyFailException("paper submit wrong, not pdf file!");
         }
         String suffix = fileName.substring(index);
         if (!suffix.toLowerCase().equals(".pdf")) {
-            return "{\"message\":\"paper submit wrong, not pdf file!\"}";
+            throw new PaperSubmitOrModifyFailException("paper submit wrong, not pdf file!");
         }
 
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
                 || !UtilityService.isAuthorsValid(request.getAuthors())) {
-            return "{\"message\":\"paper modify wrong, information format error!\"}";
+//            System.out.println("Title: " + request.getTitle());
+//            System.out.println("Summary: " + request.getSummary());
+//            for (String[] authorA: request.getAuthors()
+//                 ) {
+//                System.out.println("Authors: " + Arrays.toString(authorA));
+//            }
+            throw new PaperSubmitOrModifyFailException("paper submit wrong, information format error!!");
         }
 
         File excelFile = File.createTempFile("PA_", suffix);
@@ -96,7 +104,7 @@ public class GenericConferenceService {
 
         // check the validation of all topics
         if (!UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
-            return "{\"message\":\"paper submit wrong, topics selected error!\"}";
+            throw new PaperSubmitOrModifyFailException("paper submit wrong, topics selected error!");
         }
 
         Paper newPaper = new Paper(conference, author, request.getTitle(),

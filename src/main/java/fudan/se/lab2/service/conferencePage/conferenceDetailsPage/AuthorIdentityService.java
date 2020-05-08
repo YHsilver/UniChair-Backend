@@ -6,6 +6,7 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.aut
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.exception.ConferencException.PaperSubmitOrModifyFailException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -22,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -78,38 +78,45 @@ public class AuthorIdentityService {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
         if (paper == null || author == null) {
-            return "{\"message\":\"bad request!\"}";
+            throw new PaperSubmitOrModifyFailException("Invalid identity!");
         }
         if(!paper.getAuthor().getId().equals(author.getId())){
-            return "{\"message\":\"You are not the author of this paper!\"}";
+            throw new PaperSubmitOrModifyFailException("You are not the author of this paper!");
         }
         Conference conference = paper.getConference();
         if (conference.getChairman().getId().equals(author.getId())) {
-            return "{\"message\":\"invalid submit or change from chair!\"}";
+            throw new PaperSubmitOrModifyFailException("invalid submit or change from chair!");
         }
         if (conference.getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {
-            return "{\"message\":\"Not Contribution Stage! Modification forbidden!\"}";
+            throw new PaperSubmitOrModifyFailException("Not Contribution Stage! Modification forbidden!");
         }
 
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
                 || !UtilityService.isAuthorsValid(request.getAuthors())) {
-            return "{\"message\":\"paper modify wrong, information format error!\"}";
+            throw new PaperSubmitOrModifyFailException("paper modify wrong, information format error!");
         }
 
         // check the validation of all topics
         if (!UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
-            return "{\"message\":\"paper modify wrong, topics selected error!\"}";
+            throw new PaperSubmitOrModifyFailException("paper modify wrong, topics selected error!");
         }
 
         MultipartFile multipartFile = request.getFile();
         if (multipartFile != null) {
             // get file name
-            String fileName = multipartFile.getName();
+            String fileName = multipartFile.getOriginalFilename();
             // get file suffix
-            String suffix = Objects.requireNonNull(fileName).substring(fileName.lastIndexOf('.'));
+            if(fileName == null){
+                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
+            }
+            int index = fileName.lastIndexOf('.');
+            if(index == -1){
+                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
+            }
+            String suffix = fileName.substring(index);
             if (!suffix.toLowerCase().equals(".pdf")) {
-                return "{\"message\":\"paper modify wrong, not pdf file!\"}";
+                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
             }
             // check over
             File excelFile;
@@ -119,7 +126,7 @@ public class AuthorIdentityService {
                 multipartFile.transferTo(excelFile);
             } catch (IOException ex) {
                 logger.trace("context", ex);   // Compliant
-                return "{\"message\":\"paper modify wrong, unknown error occurs! Please try again later!\"}";
+                throw new PaperSubmitOrModifyFailException("paper modify wrong, unknown error occurs! Please try again later!");
             }
             paper.setFile(excelFile);
         }

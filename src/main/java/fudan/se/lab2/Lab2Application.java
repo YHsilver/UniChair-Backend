@@ -58,73 +58,73 @@ public class Lab2Application {
                     userRepository.save(admin);
                 }
 
-//                // Create testRobert if not exists.
-//                if (userRepository.findByUsername("testRobert") == null) {
-//                    User testRobert = new User(
-//                            "testRobert",
-//                            passwordEncoder.encode("testRobertPass"),
-//                            "testRobertRuleTheWorld",
-//                            "fudan",
-//                            "software",
-//                            "testRobert@fudan.edu.cn"
-//                    );
-//                    userRepository.save(testRobert);
-//                }
-//
-//                // Create testRobert if not exists.
-//                if (userRepository.findByUsername("AI") == null) {
-//                    User AI = new User(
-//                            "AI",
-//                            passwordEncoder.encode("AIPass"),
-//                            "AIRuleTheWorld",
-//                            "fudan",
-//                            "software",
-//                            "AI@fudan.edu.cn"
-//                    );
-//                    userRepository.save(AI);
-//                }
-//
-//                String[] topicSet = new String[]{"AI", "Robert"};
-//                // add inner conferences
-//                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", "AI location", LocalDate.of(2020, 4, 12),
-//                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction", topicSet);
-//                AIConference.setStatus(Conference.Status.PASS);
-//
-//                Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", "testRobert location", LocalDate.of(2020, 4, 12),
-//                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction", topicSet);
-//                testRobertConference.setStatus(Conference.Status.PASS);
-//                testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
-//
-//                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", "testRobert2 location", LocalDate.of(2020, 4, 12),
-//                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction", topicSet);
-//                testRobertConference2.setStatus(Conference.Status.PASS);
-//                testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
-//
-//                User tempUser = userRepository.findByUsername("AI");
-//                conferenceRepository.save(AIConference);
-//                userRepository.save(tempUser);
-//
-//                tempUser = userRepository.findByUsername("testRobert");
-//                conferenceRepository.save(testRobertConference);
-//                userRepository.save(tempUser);
-////                userRepository.findByUsername("testRobert").addConference(testRobertConference);
-//
-//
-//                tempUser = userRepository.findByUsername("testRobert");
-//                conferenceRepository.save(testRobertConference2);
-//                userRepository.save(tempUser);
-//
-//                Set<User> userSet = UserGenerator.getRandomUsers(20);
-//                Set<Conference> conferenceSet = ConferenceGenerator.getRandomConferences(20, userSet);
-//                for (User user : userSet
-//                ) {
-//                    userRepository.save(user);
-//                }
-//                for (Conference conference : conferenceSet
-//                ) {
-//                    conference.setStatus(Conference.Status.PASS);
-//                    conferenceRepository.save(conference);
-//                }
+                // Create testRobert if not exists.
+                if (userRepository.findByUsername("testRobert") == null) {
+                    User testRobert = new User(
+                            "testRobert",
+                            passwordEncoder.encode("testRobertPass"),
+                            "testRobertRuleTheWorld",
+                            "fudan",
+                            "software",
+                            "testRobert@fudan.edu.cn"
+                    );
+                    userRepository.save(testRobert);
+                }
+
+                // Create testRobert if not exists.
+                if (userRepository.findByUsername("AI") == null) {
+                    User AI = new User(
+                            "AI",
+                            passwordEncoder.encode("AIPass"),
+                            "AIRuleTheWorld",
+                            "fudan",
+                            "software",
+                            "AI@fudan.edu.cn"
+                    );
+                    userRepository.save(AI);
+                }
+
+                String[] topicSet = new String[]{"AI", "Robert"};
+                // add inner conferences
+                Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", "AI location", LocalDate.of(2020, 4, 12),
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction", topicSet);
+                AIConference.setStatus(Conference.Status.PASS);
+
+                Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", "testRobert location", LocalDate.of(2020, 4, 12),
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction", topicSet);
+                testRobertConference.setStatus(Conference.Status.PASS);
+                testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
+
+                Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", "testRobert2 location", LocalDate.of(2020, 4, 12),
+                        LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction", topicSet);
+                testRobertConference2.setStatus(Conference.Status.PASS);
+                testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
+
+                User tempUser = userRepository.findByUsername("AI");
+                conferenceRepository.save(AIConference);
+                userRepository.save(tempUser);
+
+                tempUser = userRepository.findByUsername("testRobert");
+                conferenceRepository.save(testRobertConference);
+                userRepository.save(tempUser);
+//                userRepository.findByUsername("testRobert").addConference(testRobertConference);
+
+
+                tempUser = userRepository.findByUsername("testRobert");
+                conferenceRepository.save(testRobertConference2);
+                userRepository.save(tempUser);
+
+                Set<User> userSet = UserGenerator.getRandomUsers(20);
+                Set<Conference> conferenceSet = ConferenceGenerator.getRandomConferences(20, userSet);
+                for (User user : userSet
+                ) {
+                    userRepository.save(user);
+                }
+                for (Conference conference : conferenceSet
+                ) {
+                    conference.setStatus(Conference.Status.PASS);
+                    conferenceRepository.save(conference);
+                }
 
 
             }
