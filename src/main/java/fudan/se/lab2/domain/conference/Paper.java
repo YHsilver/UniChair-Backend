@@ -153,13 +153,20 @@ public class Paper implements Serializable {
 
     public JSONObject toBriefJson(){
         try {
+            String topicsString = "[";
+            for (String topic: topics
+            ) {
+                topicsString += '\"' + topic + '\"' + ',';
+            }
+            topicsString = topicsString.substring(0, topicsString.length() - 1);
+            topicsString += "]";
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
                     ", \"conferenceId\":\"" + conference.getConferenceId() + '\"' +
                     ", \"conferenceFullName\":\"" + conference.getConferenceFullName() + '\"' +
                     ", \"authorId\":\"" + author.getId() + '\"' +
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
-                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topics) + '\"' +
+                    ", \"topics\":" + topicsString +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
@@ -185,6 +192,14 @@ public class Paper implements Serializable {
                 }
             }
 
+            String topicsString = "[";
+            for (String topic: topics
+            ) {
+                topicsString += '\"' + topic + '\"' + ',';
+            }
+            topicsString = topicsString.substring(0, topicsString.length() - 1);
+            topicsString += "]";
+
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
                     ", \"conferenceId\":\"" + conference.getConferenceId() + '\"' +
@@ -195,7 +210,7 @@ public class Paper implements Serializable {
                     ", \"reviewerIds\":\"" + UtilityService.getJsonStringFromArray(reviewerIds) + '\"' +
                     ", \"reviewerFullNames\":\"" + UtilityService.getJsonStringFromArray(reviewerFullNames) + '\"' +
                     ", \"isReviewed\":\"" + UtilityService.getJsonStringFromArray(isReviewed) + '\"' +
-                    ", \"topics\":\"" + UtilityService.getJsonStringFromArray(topics) + '\"' +
+                    ", \"topics\":" + topicsString +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
