@@ -16,13 +16,13 @@ public class UserSubmitPaperRequest {
     private Long conferenceId;
     private String[] topics;
     private String title;
-    private String[][] authors;
+    private String[] authors;
     private String summary;
     private MultipartFile file;
 
     public UserSubmitPaperRequest(){}
 
-    public UserSubmitPaperRequest(String token, Long conferenceId, String[] topics, String title, String[][] authors, String summary, MultipartFile file
+    public UserSubmitPaperRequest(String token, Long conferenceId, String[] topics, String title, String[] authors, String summary, MultipartFile file
                                   ) {
         this.token = token;
         this.conferenceId = conferenceId;
@@ -63,8 +63,8 @@ public class UserSubmitPaperRequest {
     public void setFile(MultipartFile file) {
         this.file = file;
     }
-    public String[][] getAuthors() { return authors; }
-    public void setAuthors(String[][] authors) { this.authors = authors; }
+    public String[] getAuthors() { return authors; }
+    public void setAuthors(String[] authors) { this.authors = authors; }
 
     @Override
     public String toString() {

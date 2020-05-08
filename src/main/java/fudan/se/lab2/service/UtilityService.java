@@ -182,14 +182,27 @@ public class UtilityService {
      * 检查authors数组是否合法
      *
      * */
-    public static boolean isAuthorsValid(String[][] authors) {
-        for (String[] author : authors) {
-            if (author.length != 4 || !(UtilityService.checkStringLength(author[0], 1) && UtilityService.checkStringLength(author[1], 1)
-                    && UtilityService.checkStringLength(author[2], 1) && UtilityService.checkEmail(author[3]))) {
-                return false;
-            }
+    public static String[][] isAuthorsValid(String[] authors) {
+        String[][] authorArrays;
+
+        if(authors == null || authors.length == 0 || authors.length % 4 != 0){
+            return null;
         }
-        return true;
+
+        authorArrays = new String[authors.length / 4][4];
+        for(int i = 0; i < authors.length / 4; i++){
+            String[] author = new String[4];
+            author[0] = authors[4 * i];
+            author[1] = authors[4 * i + 1];
+            author[2] = authors[4 * i + 2];
+            author[3] = authors[4 * i + 3];
+            if (!(UtilityService.checkStringLength(author[0], 1) && UtilityService.checkStringLength(author[1], 1)
+                    && UtilityService.checkStringLength(author[2], 1) && UtilityService.checkEmail(author[3]))) {
+                return null;
+            }
+            authorArrays[i] = author;
+        }
+        return authorArrays;
     }
 
     public static <T> Set<T> selectObjectsFromBaseSet(Set<T> baseSet, int num) {

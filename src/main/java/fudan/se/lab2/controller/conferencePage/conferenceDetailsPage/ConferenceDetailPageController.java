@@ -148,7 +148,7 @@ public class ConferenceDetailPageController {
                                                @RequestParam("conferenceId") Long conferenceId,
                                                @RequestParam("topics") String[] topics,
                                                @RequestParam("title") String title,
-                                               @RequestParam("authors") String[][] authors,
+                                               @RequestParam("authors") String[] authors,
                                                @RequestParam("summary") String summary,
                                                @RequestParam("token") String token,
                                                HttpServletRequest submitRequest) {

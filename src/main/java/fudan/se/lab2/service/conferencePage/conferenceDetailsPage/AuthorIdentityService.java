@@ -91,9 +91,10 @@ public class AuthorIdentityService {
             throw new PaperSubmitOrModifyFailException("Not Contribution Stage! Modification forbidden!");
         }
 
+        String[][] authors = UtilityService.isAuthorsValid(request.getAuthors());
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
-                || !UtilityService.isAuthorsValid(request.getAuthors())) {
+                || authors == null) {
             throw new PaperSubmitOrModifyFailException("paper modify wrong, information format error!");
         }
 
@@ -135,7 +136,7 @@ public class AuthorIdentityService {
 
         paper.setTitle(request.getTitle());
         paper.setSummary(request.getSummary());
-        paper.setPaperAuthors(request.getAuthors());
+        paper.setPaperAuthors(authors);
         paper.setTopics(request.getTopics());
         paperRepository.save(paper);
         // modify success

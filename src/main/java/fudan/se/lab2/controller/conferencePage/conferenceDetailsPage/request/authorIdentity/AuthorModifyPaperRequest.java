@@ -11,7 +11,7 @@ public class AuthorModifyPaperRequest {
     // all these things will be reset, also validation check is needed
     private String[] topics;
     private String title;
-    private String[][] authors;
+    private String[] authors;
     private String summary;
     // for pdf file, null indicates no modification
     private MultipartFile file;
@@ -19,7 +19,7 @@ public class AuthorModifyPaperRequest {
     public AuthorModifyPaperRequest() {}
 
     public AuthorModifyPaperRequest(String token, Long paperId,
-                                    String[] topics, String title, String[][] authors,
+                                    String[] topics, String title, String[] authors,
                                     String summary, MultipartFile file) {
         this.token = token;
         this.paperId = paperId;
@@ -62,11 +62,11 @@ public class AuthorModifyPaperRequest {
         this.title = title;
     }
 
-    public String[][] getAuthors() {
+    public String[] getAuthors() {
         return authors;
     }
 
-    public void setAuthors(String[][] authors) {
+    public void setAuthors(String[] authors) {
         this.authors = authors;
     }
 

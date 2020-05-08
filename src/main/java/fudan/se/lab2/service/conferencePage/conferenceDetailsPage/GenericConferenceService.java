@@ -88,15 +88,10 @@ public class GenericConferenceService {
             throw new PaperSubmitOrModifyFailException("paper submit wrong, not pdf file!");
         }
 
+        String[][] authors = UtilityService.isAuthorsValid(request.getAuthors());
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
-                || !UtilityService.isAuthorsValid(request.getAuthors())) {
-//            System.out.println("Title: " + request.getTitle());
-//            System.out.println("Summary: " + request.getSummary());
-//            for (String[] authorA: request.getAuthors()
-//                 ) {
-//                System.out.println("Authors: " + Arrays.toString(authorA));
-//            }
+                || authors == null) {
             throw new PaperSubmitOrModifyFailException("paper submit wrong, information format error!!");
         }
 
@@ -111,7 +106,7 @@ public class GenericConferenceService {
         }
 
         Paper newPaper = new Paper(conference, author, request.getTitle(),
-                request.getAuthors(), request.getSummary(), excelFile, request.getTopics());
+                authors, request.getSummary(), excelFile, request.getTopics());
         paperRepository.save(newPaper);
 
 //        deleteFile(excelFile);
