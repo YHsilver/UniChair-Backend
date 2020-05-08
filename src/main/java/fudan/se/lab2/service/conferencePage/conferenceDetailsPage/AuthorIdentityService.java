@@ -48,11 +48,14 @@ public class AuthorIdentityService {
     public List<JSONObject> getMyPapers(AuthorGetMyPapersRequest request) {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Set<Paper> papers;
+        if(author == null || request.getConferenceId() == null){
+            return null;
+        }
         if (request.getConferenceId().equals(-1L)) {
             papers = paperRepository.findPapersByAuthor(author);
         } else {
             Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-            if (conference == null || author == null) {
+            if (conference == null) {
                 return null;
             }
             papers = paperRepository.findPapersByAuthorAndConference(author, conference);

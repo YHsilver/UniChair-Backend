@@ -170,9 +170,8 @@ public class UtilityService {
             }else{
                 result.append("null").append(", ");
             }
-
         }
-        if (array.length > 2) {
+        if (result.length() > 2) {
             result = new StringBuilder(result.substring(0, result.length() - 2));
         }
         return result.toString();
