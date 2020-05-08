@@ -77,7 +77,7 @@ public class ChairIdentityService {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         ChairStartReviewingRequest.Strategy strategy = request.getStrategy();
-        if(chair == null || conference == null || strategy == null || conference.getChairman().getId().equals(chair.getId())){
+        if(chair == null || conference == null || strategy == null || !conference.getChairman().getId().equals(chair.getId())){
             throw new ChairChangeConferenceStageFailException("Invalid request");
         }
 
