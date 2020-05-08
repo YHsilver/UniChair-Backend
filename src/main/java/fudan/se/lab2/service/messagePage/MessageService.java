@@ -88,6 +88,6 @@ public class MessageService {
 
         }
         invitationRepository.save(invitation);
-        return "Invitation " + invitation.getInvitationId() + "'s Status is " + invitation.getStatus().toString() + " now!";
+        return "Invitation " + invitation.getStatus().toString();
     }
 }
