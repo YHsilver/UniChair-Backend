@@ -48,11 +48,11 @@ public class ConferenceAbstractPageService {
                     userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())), Conference.Status.PASS),
                     true);
         }else if(request.getIdentity().equals("Author")){
-            User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken((request.getToken())));
-            System.out.println(author);
-            Paper paper = new ArrayList<>(paperRepository.findPapersByAuthor(author)).get(0);
-            System.out.println(paper);
-            System.out.println(paper.getConference());
+//            User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken((request.getToken())));
+//            System.out.println(author);
+//            Paper paper = new ArrayList<>(paperRepository.findPapersByAuthor(author)).get(0);
+//            System.out.println(paper);
+//            System.out.println(paper.getConference());
             return UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.findConferencesByAuthorSetContainsAndStatus(
                     userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())), Conference.Status.PASS),
                     true);

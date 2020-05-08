@@ -6,6 +6,7 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.rev
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.exception.ConferencException.ReviewerReviewPaperFailException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.ReviewRepository;
@@ -68,7 +69,7 @@ public class ReviewerIdentityService {
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
 
         if(!UtilityService.isValidReviewer(paper, reviewer)){
-            return "{\"message\":\"You are not the reviewer of this paper!\"}";
+            throw new ReviewerReviewPaperFailException("You are not the reviewer of this paper!");
         }
 
         int i = 0;
@@ -78,16 +79,16 @@ public class ReviewerIdentityService {
             }
         }
         if(paper.getIsReviewed()[i]){
-            return "{\"message\":\"You have reviewed this paper!\"}";
+            throw new ReviewerReviewPaperFailException("You have reviewed this paper!");
         }
         if(!UtilityService.checkStringLength(request.getComment(), 1)){
-            return "{\"message\":\"Comments format error!\"}";
+            throw new ReviewerReviewPaperFailException("Comments format error!");
         }
         if(request.getGrade() > 2 || request.getGrade() < -2 || request.getGrade() == 0){
-            return "{\"message\":\"Invalid grade!\"}";
+            throw new ReviewerReviewPaperFailException("Invalid grade!");
         }
         if(request.getConfidence() == null){
-            return "{\"message\":\"Conference error!\"}";
+            throw new ReviewerReviewPaperFailException("Confidence error!!");
         }
         paper.getComments()[i] = request.getComment();
         paper.getGrades()[i] = request.getGrade();

@@ -6,6 +6,7 @@ import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Invitation;
 import fudan.se.lab2.domain.conference.Paper;
 import fudan.se.lab2.domain.conference.Review;
+import fudan.se.lab2.exception.ConferencException.ChairChangeConferenceStageFailException;
 import fudan.se.lab2.repository.*;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
@@ -50,14 +51,15 @@ public class ChairIdentityService {
     public String changeConferenceStage(ChairChangeConferenceStageRequest request) {
         // TODO: Better implementation should be found
         if(request.getChangedStage() == Conference.Stage.REVIEWING){
-            return "{\"message\":\" You should not start reviewing by this request\"}";
+            throw new ChairChangeConferenceStageFailException("You should not start reviewing by this request");
+            //return "{\"message\":\" You should not start reviewing by this request\"}";
         }
 
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(!conference.getChairman().getId().equals(chair.getId())){
+        if(chair == null || conference == null || !conference.getChairman().getId().equals(chair.getId())){
             // invalid check, not chair
-            return null;
+            throw new ChairChangeConferenceStageFailException("Invalid identity");
         }
         // chair can only change stage step by step with limits, only admin can trace back or skip steps
         if(UtilityService.isConferenceChangeStageValid(conference, request.getChangedStage(), paperRepository)){
@@ -77,11 +79,12 @@ public class ChairIdentityService {
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         ChairStartReviewingRequest.Strategy strategy = request.getStrategy();
         if(chair == null || conference == null || strategy == null || conference.getChairman().equals(chair)){
-            return "{\"message\":\" Invalid request!\"}";
+            throw new ChairChangeConferenceStageFailException("Invalid request");
         }
 
         if(conference.getReviewerSet().size() < 3 || paperRepository.findPapersByConference(conference).size() == 0){
-            return "{\"message\":\" Too less PC Members or No paper to review!\"}";
+            throw new ChairChangeConferenceStageFailException("Too less PC Members or No paper to review!");
+            //return "{\"message\":\"Too less PC Members or No paper to review!\"}";
         }
 
         if(strategy == ChairStartReviewingRequest.Strategy.TOPIC_RELATED){
@@ -90,7 +93,8 @@ public class ChairIdentityService {
                 conferenceRepository.save(conference);
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
-                return "{\"message\":\" No valid assignment!\"}";
+                throw new ChairChangeConferenceStageFailException("No valid assignment!");
+                //return "{\"message\":\" No valid assignment!\"}";
             }
         }else if(strategy == ChairStartReviewingRequest.Strategy.RANDOM){
             if(paperAssignment_RANDOM(conference)){
@@ -98,11 +102,12 @@ public class ChairIdentityService {
                 conferenceRepository.save(conference);
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
-                return "{\"message\":\" No valid assignment!\"}";
+                throw new ChairChangeConferenceStageFailException("No valid assignment!");
+                //return "{\"message\":\" No valid assignment!\"}";
             }
         }
-
-        return "{\"message\":\" Unknown assignment strategy!\"}";
+        throw new ChairChangeConferenceStageFailException("Unknown assignment strategy!");
+        //return "{\"message\":\" Unknown assignment strategy!\"}";
     }
 
     private boolean paperAssignment_TOPIC_RELATED(Conference conference) {

@@ -6,6 +6,7 @@ import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Invitation;
 import fudan.se.lab2.domain.conference.Review;
+import fudan.se.lab2.exception.ConferencException.UserDecideInvitationsFailException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.InvitationRepository;
 import fudan.se.lab2.repository.ReviewRepository;
@@ -66,13 +67,10 @@ public class MessageService {
         User user = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Invitation invitation = invitationRepository.findByInvitationId(request.getInvitationId());
         // only PENDING to PASS or REJECT
-        if(invitation.getReviewer().getId().equals(user.getId())
-                && request.getStatus() != Invitation.Status.PENDING
-                && invitation.getStatus() == Invitation.Status.PENDING){
-
-        }else{
-            //TODO: throw exception
-            return "Invalid request";
+        if(user == null || invitation == null || invitation.getReviewer() == null || !invitation.getReviewer().getId().equals(user.getId())
+                || request.getStatus() == Invitation.Status.PENDING
+                || invitation.getStatus() != Invitation.Status.PENDING){
+            throw new UserDecideInvitationsFailException("Invalid request");
         }
         Conference currConference = invitation.getConference();
         invitation.setStatus(request.getStatus());
@@ -81,8 +79,8 @@ public class MessageService {
             // if accept the invitation, the user should select topics.
             if(selectedTopics == null || selectedTopics.length == 0
                     || !UtilityService.isTopicsValidInConference(currConference, selectedTopics)){
-                return "Invalid topics selected";
-            }
+                throw new UserDecideInvitationsFailException("Invalid topics selected");
+        }
             Review review = new Review(currConference, user, selectedTopics);
             reviewRepository.save(review);
             currConference.getReviewerSet().add(user);

@@ -5,8 +5,8 @@ package fudan.se.lab2.exception.ConferencException;
  * 会议仓库找会议，会议未找到
  */
 
-public class ConferenceNotFound extends RuntimeException {
-    public ConferenceNotFound() {
+public class ConferenceNotFoundException extends RuntimeException {
+    public ConferenceNotFoundException() {
         super("Conference not found!");
     }
 }
