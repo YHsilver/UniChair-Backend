@@ -80,7 +80,7 @@ class GenericConferenceServiceTest {
                 conference.getConferenceId(),
                 conference.getTopics(),
                 "title",
-                new String[][]{{"name", "a", "a", "a@eamil.com"}},
+                new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary",
                 mockMultipartFile
         );

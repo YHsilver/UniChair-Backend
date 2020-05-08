@@ -99,7 +99,7 @@ class ReviewerIdentityServiceTest {
                 conference.getConferenceId(),
                 conference.getTopics(),
                 "title",
-                new String[][]{{"name", "a", "a", "a@eamil.com"}},
+                new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary",
                 mockMultipartFile
         );
@@ -125,7 +125,7 @@ class ReviewerIdentityServiceTest {
         File file = File.createTempFile("PA_", ".pdf");
         mockMultipartFile.transferTo(file);
 
-        Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},
+        Paper paper = new Paper(conference, author, "title", new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary", file, conference.getTopics());
         List<Paper> list = new ArrayList<>(paperRepository.findPapersByAuthor(author));
         System.out.println("list:" + list);

@@ -71,7 +71,7 @@ class AuthorIdentityServiceTest {
         File file = File.createTempFile(mockMultipartFile.getName(), "pdf");
         mockMultipartFile.transferTo(file);
 
-        Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},
+        Paper paper = new Paper(conference, author, "title", new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary", file, conference.getTopics());
 
 
@@ -80,7 +80,7 @@ class AuthorIdentityServiceTest {
                 conference.getConferenceId(),
                 conference.getTopics(),
                 "title",
-                new String[][]{{"name", "a", "a", "a@eamil.com"}},
+                new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary",
                 mockMultipartFile
         );
@@ -124,7 +124,7 @@ class AuthorIdentityServiceTest {
         File file = File.createTempFile("PA_", ".pdf");
         mockMultipartFile.transferTo(file);
 
-        Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},
+        Paper paper = new Paper(conference, author, "title", new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary", file, conference.getTopics());
 
 
@@ -133,7 +133,7 @@ class AuthorIdentityServiceTest {
                 conference.getConferenceId(),
                 conference.getTopics(),
                 "title",
-                new String[][]{{"name", "a", "a", "a@eamil.com"}},
+                new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary",
                 mockMultipartFile
         );
@@ -184,7 +184,7 @@ class AuthorIdentityServiceTest {
         File file = File.createTempFile("PA_", ".pdf");
         mockMultipartFile.transferTo(file);
 
-        Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},
+        Paper paper = new Paper(conference, author, "title", new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary", file, conference.getTopics());
 
 
@@ -193,7 +193,7 @@ class AuthorIdentityServiceTest {
                 conference.getConferenceId(),
                 conference.getTopics(),
                 "title",
-                new String[][]{{"name", "a", "a", "a@eamil.com"}},
+                new String[]{"name", "a", "a", "a@eamil.com"},
                 "summary",
                 mockMultipartFile
         );
