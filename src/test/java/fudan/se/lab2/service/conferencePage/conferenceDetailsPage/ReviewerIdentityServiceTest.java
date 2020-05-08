@@ -2,7 +2,9 @@ package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairStartReviewingRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPaperDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPapersRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerSubmitPaperReviewedRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
@@ -11,6 +13,7 @@ import fudan.se.lab2.generator.ConferenceGenerator;
 import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.*;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +22,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,7 +122,7 @@ class ReviewerIdentityServiceTest {
         );
 
 
-        File file = File.createTempFile(mockMultipartFile.getName(), "pdf");
+        File file = File.createTempFile("PA_", ".pdf");
         mockMultipartFile.transferTo(file);
 
         Paper paper = new Paper(conference, author, "title", new String[][]{{"name", "a", "a", "a@eamil.com"}},
@@ -134,23 +138,52 @@ class ReviewerIdentityServiceTest {
 
 
 
+        //getPaperDetails test
+        ReviewerGetPaperDetailsRequest reviewerGetPaperDetailsRequest=new ReviewerGetPaperDetailsRequest(
+                tokenUtil.generateToken(reviewer1),paper.getPaperId());
+        JSONObject jsonObject =  reviewerIdentityService.getPaperDetails(reviewerGetPaperDetailsRequest);
+        JSONObject paperJson = paper.toStandardJson();
+
+        System.out.println(jsonObject);
+        System.out.println(paperJson);
+        for (Object str : jsonObject.keySet()) {
+            if (!str.equals("fileName")&&!((String)str).contains("review")) {
+                assertEquals(paperJson.get(str), jsonObject.get(str));
+            }
+        }
 
 
+        //submitPaperReviewed test
+        paper=paperRepository.findByPaperId(paper.getPaperId());
+        ReviewerSubmitPaperReviewedRequest reviewerSubmitPaperReviewedRequest=new ReviewerSubmitPaperReviewedRequest(
+                tokenUtil.generateToken(paper.getReviewers().get(0)),
+                paper.getPaperId(),
+                1,
+                "common",
+                "HIGH"
+                );
 
+        reviewerIdentityService.submitPaperReviewed(reviewerSubmitPaperReviewedRequest);
+        paper=paperRepository.findByPaperId(paper.getPaperId());
+
+        assertEquals(Arrays.toString(new Integer[]{1,null,null}),Arrays.toString(paper.getGrades()));
+        assertEquals(Arrays.toString(new String[]{"common",null,null}),Arrays.toString(paper.getComments()));
+        assertEquals(Arrays.toString(new String[]{"HIGH",null,null}),Arrays.toString(paper.getConfidences()));
 
     }
 
     @Test
     void getPaperDetails() {
-//
-//           public ReviewerGetPaperDetailsRequest(String token, Long paperId) {
-//            this.token = token;
-//            this.paperId = paperId;
-//        }
+
+
+
+
 
     }
 
     @Test
     void submitPaperReviewed() {
+
+
     }
 }

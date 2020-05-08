@@ -10,6 +10,7 @@ import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.ReviewRepository;
 import fudan.se.lab2.repository.UserRepository;
 
+import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,14 +60,17 @@ class AdminServiceTest {
         AdminGetConferenceApplicationsRequest reject_request = new AdminGetConferenceApplicationsRequest(Conference.Status.REJECT);
         List<JSONObject> list;
 
+
         list = adminService.getConferenceApplications(null_request);
         assertEquals(0, list.size());
         list = adminService.getConferenceApplications(pending_request);
-        assertEquals(conference1.toBriefJson(), list.get(0));
+        assertEquals(UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.findConferencesByStatus(Conference.Status.PENDING),true), list);
+
         list = adminService.getConferenceApplications(pass_request);
-        assertEquals(conference2.toBriefJson(), list.get(0));
+        assertEquals(UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.findConferencesByStatus(Conference.Status.PASS),true), list);
         list = adminService.getConferenceApplications(reject_request);
-        assertEquals(conference3.toBriefJson(), list.get(0));
+        assertEquals(UtilityService.getJSONObjectListFromConferenceSet(conferenceRepository.findConferencesByStatus(Conference.Status.REJECT),true), list);
+
     }
 
     @Test

@@ -23,4 +23,6 @@ public class GetConferenceTopicsService {
         return conference.getTopics();
     }
 
+
+
 }

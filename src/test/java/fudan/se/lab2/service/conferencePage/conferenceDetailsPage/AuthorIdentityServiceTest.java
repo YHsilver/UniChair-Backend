@@ -153,7 +153,14 @@ class AuthorIdentityServiceTest {
                 paper.getPaperId()
         );
 
-        assertEquals(paper.toStandardJson(), authorIdentityService.getMyPaperDetails(authorGetMyPaperDetailsRequest));
+
+        JSONObject jsonObject = authorIdentityService.getMyPaperDetails(authorGetMyPaperDetailsRequest);
+        JSONObject paperJson = paper.toStandardJson();
+        for (Object str : jsonObject.keySet()) {
+            if (!str.equals("fileName"))
+                assertEquals(paperJson.get(str), jsonObject.get(str));
+        }
+
 
     }
 
@@ -215,7 +222,15 @@ class AuthorIdentityServiceTest {
         paper.setTitle("new title");
         paper.setSummary("new summary");
 
-        assertEquals(paper.toStandardJson(), list.get(0).toStandardJson());
+
+        JSONObject jsonObject = list.get(0).toStandardJson();
+        JSONObject paperJson = paper.toStandardJson();
+        for (Object str : jsonObject.keySet()) {
+            if (!str.equals("fileName"))
+                assertEquals(paperJson.get(str), jsonObject.get(str));
+        }
+
+
 
 
     }

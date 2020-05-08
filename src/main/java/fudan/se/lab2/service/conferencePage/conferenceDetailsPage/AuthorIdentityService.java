@@ -137,6 +137,7 @@ public class AuthorIdentityService {
         paper.setSummary(request.getSummary());
         paper.setPaperAuthors(request.getAuthors());
         paper.setTopics(request.getTopics());
+        paperRepository.save(paper);
         // modify success
         return "{\"message\":\"your paper submit success!\"}";
     }

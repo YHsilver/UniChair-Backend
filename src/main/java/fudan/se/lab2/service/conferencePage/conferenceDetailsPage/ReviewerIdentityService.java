@@ -77,7 +77,7 @@ public class ReviewerIdentityService {
                 break;
             }
         }
-        if(paper.getIsReviewed()[i]){
+        if(paper.getIsReviewed()[i]!=null){
             throw new ReviewerReviewPaperFailException("You have reviewed this paper!");
         }
         if(!UtilityService.checkStringLength(request.getComment(), 1)){

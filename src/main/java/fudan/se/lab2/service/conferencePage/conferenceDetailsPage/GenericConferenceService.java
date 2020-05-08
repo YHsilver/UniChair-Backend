@@ -104,7 +104,7 @@ public class GenericConferenceService {
         System.out.println("excelFile in Submit: " + excelFile);
         // MultipartFile to File
         multipartFile.transferTo(excelFile);
-
+        System.out.println(excelFile.length());
         // check the validation of all topics
         if (!UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
             throw new PaperSubmitOrModifyFailException("paper submit wrong, topics selected error!");
@@ -114,25 +114,14 @@ public class GenericConferenceService {
                 request.getAuthors(), request.getSummary(), excelFile, request.getTopics());
         paperRepository.save(newPaper);
 
-        deleteFile(excelFile);
+//        deleteFile(excelFile);
         conference.getAuthorSet().add(author);
         conferenceRepository.save(conference);
 
         return "{\"message\":\"your paper submit success!\"}";
     }
 
-    /**
-     * 删除 File，配合 submitPaper
-     *
-     * @param files multiFile
-     */
-    private void deleteFile(File... files) throws IOException {
-        for (File file : files) {
-            if (file.exists()) {
-                Files.delete(Paths.get(file.getPath()));
-            }
-        }
-    }
+
 
 
     /**
