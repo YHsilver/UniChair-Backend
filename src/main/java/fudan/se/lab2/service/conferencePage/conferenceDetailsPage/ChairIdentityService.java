@@ -41,7 +41,6 @@ public class ChairIdentityService {
         this.invitationRepository = invitationRepository;
     }
 
-
     /**
      * changeConferenceStatus(chair 改变会议阶段)
      *
@@ -66,7 +65,7 @@ public class ChairIdentityService {
             conference.setStage(request.getChangedStage());
             conferenceRepository.save(conference);
         }
-        return conference.getConferenceFullName() + "'s Stage is " + conference.getStage().toString();
+        return "{\"message\":\"" + conference.getConferenceFullName() + "'s Stage is " + conference.getStage().toString() + "\"}";
     }
 
     /**
@@ -214,7 +213,7 @@ public class ChairIdentityService {
         for (User user:usersAll
         ) {
             if(user.getFullName().contains(targetFullname)){
-                if(!user.getId().equals(chair.getId()) && !reviewerIdSet.contains(user.getId())){
+                if(!user.getUsername().equals("admin") && !user.getId().equals(chair.getId()) && !reviewerIdSet.contains(user.getId())){
                     users.add(user);
                 }
             }
