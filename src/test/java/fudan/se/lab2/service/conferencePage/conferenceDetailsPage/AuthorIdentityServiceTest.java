@@ -119,7 +119,7 @@ class AuthorIdentityServiceTest {
 
         MockMultipartFile mockMultipartFile = new MockMultipartFile(
                 "test.pdf",    //filename
-                "Hallo World".getBytes()); //content
+                "Hello World".getBytes()); //content
 
         File file = File.createTempFile("PA_", ".pdf");
         mockMultipartFile.transferTo(file);

@@ -110,6 +110,8 @@ public class AuthorIdentityService {
             if(fileName == null){
                 throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
             }
+            if (fileName.equals("")) fileName=multipartFile.getName();
+
             int index = fileName.lastIndexOf('.');
             if(index == -1){
                 throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");

@@ -41,15 +41,14 @@ public class ReviewerIdentityService {
     public List<JSONObject> getPapers(ReviewerGetPapersRequest request){
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
-        if(reviewer == null || conference == null || !conference.getReviewerSet().contains(reviewer)
-                || conference.isAfterOrEqualsStage(Conference.Stage.REVIEWING)){
+        if(!UtilityService.isValidReviewer(conference, reviewer) || !conference.isAfterOrEqualsStage(Conference.Stage.REVIEWING)){
             return null;
         }
         //Set<Long> paperIdSet = conference.getReviewerAndPapersMap().get(reviewer);
         Set<Paper> paperSet = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer).getPapers();
         List<JSONObject> paperList = new ArrayList<>();
         for (Paper paper: paperSet
-             ) {
+        ) {
             paperList.add(paper.toBriefJson());
         }
         return paperList;

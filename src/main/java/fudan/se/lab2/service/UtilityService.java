@@ -35,6 +35,18 @@ public class UtilityService {
         return validTopics.size() == topics.length;
     }
 
+    public static boolean isValidReviewer(Conference conference, User reviewer){
+        if(reviewer == null || conference == null){
+            return false;
+        }
+        for(User tarReviewer: conference.getReviewerSet()){
+            if(tarReviewer.getId().equals(reviewer.getId())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * change a JSON String 2 JSONObject
      * public static!!!
