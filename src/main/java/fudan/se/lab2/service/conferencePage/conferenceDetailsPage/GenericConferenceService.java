@@ -73,8 +73,12 @@ public class GenericConferenceService {
         // get file name
         String fileName = multipartFile.getName();
         // get file suffix
-
-        String suffix = fileName.substring(fileName.lastIndexOf('.'));
+        System.out.println("fileName: " + fileName);
+        int index = fileName.lastIndexOf('.');
+        if(index == -1){
+            return "{\"message\":\"paper submit wrong, not pdf file!\"}";
+        }
+        String suffix = fileName.substring(index);
         if (!suffix.toLowerCase().equals(".pdf")) {
             return "{\"message\":\"paper submit wrong, not pdf file!\"}";
         }
@@ -100,7 +104,7 @@ public class GenericConferenceService {
         paperRepository.save(newPaper);
 
         deleteFile(excelFile);
-        conference.addAuthor(author);
+        conference.getAuthorSet().add(author);
         conferenceRepository.save(conference);
 
         return "{\"message\":\"your paper submit success!\"}";

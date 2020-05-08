@@ -80,10 +80,6 @@ public class Conference implements Serializable {
         this.stage = Stage.PREPARATION;// 初始化都是准备状态
     }
 
-    public void addAuthor(User author){
-        this.authorSet.add(author);
-    }
-
     public Long getConferenceId() {
         return conferenceId;
     }
