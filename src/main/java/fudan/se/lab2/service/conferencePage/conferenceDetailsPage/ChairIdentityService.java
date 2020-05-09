@@ -109,33 +109,35 @@ public class ChairIdentityService {
         //return "{\"message\":\" Unknown assignment strategy!\"}";
     }
 
-    private boolean paperAssignment_TOPIC_RELATED(Conference conference) {
-        Set<Review> reviews = reviewRepository.findReviewsByConference(conference);
-        Set<Paper> papers = paperRepository.findPapersByConference(conference);
-        for (Paper paper : papers) {
-            Set<User> allValidReviewers = new HashSet<>();
-            // get all topics of a paper
-            Set<String> topicSet = new HashSet<>(Arrays.asList(paper.getTopics()));
-            for (Review review: reviews
-                 ) {
-                for (String reviewerTopic: review.getTopics()
-                     ) {
-                    if(topicSet.contains(reviewerTopic)){
-                        allValidReviewers.add(review.getReviewer());
-                    }
+    private Set<User> getValidReviewersOfPaperByTopic(Paper paper){
+        Set<Review> reviews = reviewRepository.findReviewsByConference(paper.getConference());
+        Set<User> allValidReviewers = new HashSet<>();
+        // get all topics of a paper
+        Set<String> topicSet = new HashSet<>(Arrays.asList(paper.getTopics()));
+        for (Review review: reviews
+        ) {
+            for (String reviewerTopic: review.getTopics()
+            ) {
+                if(topicSet.contains(reviewerTopic)){
+                    allValidReviewers.add(review.getReviewer());
                 }
             }
+        }
+        return allValidReviewers;
+    }
 
+    private boolean paperAssignment_TOPIC_RELATED(Conference conference) {
+        //Set<Review> reviews = reviewRepository.findReviewsByConference(conference);
+        Set<Paper> papers = paperRepository.findPapersByConference(conference);
+        for (Paper paper : papers) {
+            Set<User> allValidReviewers = getValidReviewersOfPaperByTopic(paper);
             if (allValidReviewers.size() < 3) {
                 allValidReviewers = conference.getReviewerSet();
             }
-
             Set<User> selectedReviewers = UtilityService.selectObjectsFromBaseSet(allValidReviewers, 3);
             if (selectedReviewers == null) {
                 return false;
             }
-
-            int i = 0;
             for (User reviewer : selectedReviewers) {
                 paper.getReviewers().add(reviewer);
             }
@@ -159,13 +161,7 @@ public class ChairIdentityService {
             papersCopy.add(paper);
         }
         int average = papersCopy.size() / reviewersCopy.size();
-        Random random;
-        try {
-            random = SecureRandom.getInstanceStrong();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return false;
-        }
+        Random random = UtilityService.getSecureRandom();
         for (User reviewer : reviewersCopy) {
             Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
             Set<Long> assignedPaperIds = new HashSet<>();

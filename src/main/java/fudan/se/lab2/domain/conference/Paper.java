@@ -159,14 +159,14 @@ public class Paper implements Serializable {
         return true;
     }
 
-    public boolean isCurrPCMemberReviewed(Long reviewerId){
+    public int isCurrPCMemberReviewed(Long reviewerId){
         for (int i = 0; i < REVIEWER_NUM; i++) {
             User reviewer = reviewers.get(i);
             if(reviewer != null && reviewer.getId().equals(reviewerId) && isReviewed[i] != null && isReviewed[i]){
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     public JSONObject toBriefJson(){
@@ -197,7 +197,7 @@ public class Paper implements Serializable {
                     ", \"isAllReviewed\":" + isAllReviewed() +
                     '}';
             if(reviewerId != null){
-                str += ", \"isCurrPCMemberReviewed\":" + isCurrPCMemberReviewed(reviewerId);
+                str += ", \"isCurrPCMemberReviewed\":" + (isCurrPCMemberReviewed(reviewerId) != -1);
             }
             return UtilityService.String2Json(str);
         } catch (ParseException e) {
@@ -249,7 +249,13 @@ public class Paper implements Serializable {
                     ", \"fileName\":\"" + file.getName() + '\"' +
                     ", \"fileSize\":\"" + file.length() + '\"' ;
             if(reviewerId != null){
-                str += ", \"isCurrPCMemberReviewed\":" + isCurrPCMemberReviewed(reviewerId);
+                int reId = isCurrPCMemberReviewed(reviewerId);
+                str += ", \"isCurrPCMemberReviewed\":" + (reId != -1);
+                if(reId != -1){
+                    str += ", \"myGrade\":" + grades[reId] +
+                            ", \"myComment\":\"" + comments[reId] + '\"' +
+                            ", \"myConfidence\":\"" + confidences[reId] + '\"';
+                }
             }
             if(status == Status.REVIEWED){
                 str += ", \"grades\":\"" + UtilityService.getJsonStringFromArray(grades) + '\"' +

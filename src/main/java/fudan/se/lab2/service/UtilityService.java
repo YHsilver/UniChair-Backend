@@ -244,4 +244,14 @@ public class UtilityService {
         return false;
     }
 
+    public static Random getSecureRandom(){
+        Random random;
+        try {
+            random = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            random = new Random();
+        }
+        return random;
+    }
+
 }
