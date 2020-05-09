@@ -194,11 +194,11 @@ public class Paper implements Serializable {
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
-                    ", \"isAllReviewed\":" + isAllReviewed() +
-                    '}';
+                    ", \"isAllReviewed\":" + isAllReviewed();
             if(reviewerId != null){
                 str += ", \"isCurrPCMemberReviewed\":" + (isCurrPCMemberReviewed(reviewerId) != -1);
             }
+            str += '}';
             return UtilityService.String2Json(str);
         } catch (ParseException e) {
             e.printStackTrace();
