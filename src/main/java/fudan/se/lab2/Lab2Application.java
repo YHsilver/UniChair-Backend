@@ -9,7 +9,6 @@ import fudan.se.lab2.generator.ConferenceGenerator;
 import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.*;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
-import fudan.se.lab2.service.UtilityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ChairIdentityService;
 import fudan.se.lab2.service.messagePage.MessageService;
 import org.springframework.boot.CommandLineRunner;
@@ -18,12 +17,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.rmi.CORBA.Util;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -49,8 +44,9 @@ public class Lab2Application {
      */
 
     @Bean
-    public CommandLineRunner dataLoader(UserRepository userRepository, ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder,
-                                        PaperRepository paperRepository, InvitationRepository invitationRepository, ReviewRepository reviewRepository,
+    public CommandLineRunner dataLoader(UserRepository userRepository, ConferenceRepository conferenceRepository,
+                                        PasswordEncoder passwordEncoder, PaperRepository paperRepository,
+                                        InvitationRepository invitationRepository, ReviewRepository reviewRepository,
                                         JwtTokenUtil tokenUtil) {
         return new CommandLineRunner() {
             @Override

@@ -48,7 +48,7 @@ public class AuthorIdentityService {
     public List<JSONObject> getMyPapers(AuthorGetMyPapersRequest request) {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Set<Paper> papers;
-        if(author == null || request.getConferenceId() == null){
+        if (author == null || request.getConferenceId() == null) {
             return null;
         }
         if (request.getConferenceId().equals(-1L)) {
@@ -81,7 +81,7 @@ public class AuthorIdentityService {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
         if (paper == null || author == null || !paper.getAuthor().getId().equals(author.getId())
-         || paper.getConference().getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {
+                || paper.getConference().getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {
             throw new PaperSubmitOrModifyFailException("Invalid Request!");
         }
 
@@ -99,7 +99,10 @@ public class AuthorIdentityService {
             // get file suffix
             if (fileName == null || fileName.equals("")) fileName = multipartFile.getName();
             int index = fileName.lastIndexOf('.');
-            if(fileName == null || index == -1 || !fileName.substring(index).toLowerCase().equals(".pdf")){
+            if (index == -1) {
+                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
+            }
+            if (!fileName.substring(index).toLowerCase().equals(".pdf")) {
                 throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
             }
             // check over
