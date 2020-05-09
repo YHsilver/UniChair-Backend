@@ -167,17 +167,18 @@ public class UtilityService {
      * @return a string with json array format
      */
     public static String getJsonStringFromArray(Object[] array) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder("[");
         for (Object object : array) {
             if(object != null){
-                result.append(object.toString()).append(", ");
+                result.append('\"').append(object.toString()).append("\",");
             }else{
-                result.append("null").append(", ");
+                result.append('\"').append("null").append("\",");
             }
         }
         if (result.length() > 2) {
-            result = new StringBuilder(result.substring(0, result.length() - 2));
+            result = new StringBuilder(result.substring(0, result.length() - 1));
         }
+        result.append(']');
         return result.toString();
     }
 
@@ -247,5 +248,5 @@ public class UtilityService {
         }
         return false;
     }
-
+    
 }

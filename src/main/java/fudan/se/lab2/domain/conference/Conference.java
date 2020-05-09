@@ -264,30 +264,18 @@ public class Conference implements Serializable {
     }
 
     public JSONObject toFullJson() {
-        //["Dr. Chen", "Dr. Zhang", "Hu YuFeng", "Pan XingYu", "Yan Hua"]
-
         // get json array as string for all reviewers' full name
         int i = 0;
         String[] reviewerFullNames = new String[reviewerSet.size()];
         for (User reviewer : reviewerSet) {
             reviewerFullNames[i++] = reviewer.getFullName();
         }
-        String reviewers = UtilityService.getJsonStringFromArray(reviewerFullNames);
         // get json array as string for all authors' full name
         i = 0;
         String[] authorFullNames = new String[authorSet.size()];
         for (User author : authorSet) {
             authorFullNames[i++] = author.getFullName();
         }
-        String authors = UtilityService.getJsonStringFromArray(authorFullNames);
-
-        String topicsString = "[";
-        for (String topic: topics
-             ) {
-            topicsString += '\"' + topic + '\"' + ',';
-        }
-        topicsString = topicsString.substring(0, topicsString.length() - 1);
-        topicsString += "]";
 
         try {
             String str = "{" +
@@ -296,15 +284,15 @@ public class Conference implements Serializable {
                     ", \"fullName\":\"" + conferenceFullName + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
                     ", \"chair\":\"" + chairman.getFullName() + '\"' +
-                    ", \"PCMember\":\"" + reviewers + '\"' +
-                    ", \"Author\":\"" + authors + '\"' +
+                    ", \"PCMember\":" + UtilityService.getJsonStringFromArray(reviewerFullNames) +
+                    ", \"Author\":" + UtilityService.getJsonStringFromArray(authorFullNames) +
                     ", \"heldDate\":\"" + conferenceTime.toString() + '\"' +
                     ", \"heldPlace\":\"" + conferenceLocation + '\"' +
                     ", \"submissionDeadline\":\"" + contributeEndTime.toString() + '\"' +
                     ", \"submissionDate\":\"" + contributeStartTime.toString() + '\"' +
                     ", \"releaseDate\":\"" + resultReleaseTime.toString() + '\"' +
                     ", \"introduction\":\"" + introduction + '\"' +
-                    ", \"topics\":" + topicsString +
+                    ", \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
                     '}';
             return UtilityService.String2Json(str);
         } catch (

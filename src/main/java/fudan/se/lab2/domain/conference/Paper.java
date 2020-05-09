@@ -175,22 +175,13 @@ public class Paper implements Serializable {
 
     public JSONObject toBriefJson(Long reviewerId){
         try {
-            String topicsString = "[";
-            for (String topic: topics
-            ) {
-                topicsString += '\"' + topic + '\"' + ',';
-            }
-            topicsString = topicsString.substring(0, topicsString.length() - 1);
-            topicsString += "]";
-
-
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
                     ", \"conferenceId\":\"" + conference.getConferenceId() + '\"' +
                     ", \"conferenceFullName\":\"" + conference.getConferenceFullName() + '\"' +
                     ", \"authorId\":\"" + author.getId() + '\"' +
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
-                    ", \"topics\":" + topicsString +
+                    ", \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"';
@@ -223,14 +214,6 @@ public class Paper implements Serializable {
                 }
             }
 
-            String topicsString = "[";
-            for (String topic: topics
-            ) {
-                topicsString += '\"' + topic + '\"' + ',';
-            }
-            topicsString = topicsString.substring(0, topicsString.length() - 1);
-            topicsString += "]";
-
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
                     ", \"conferenceId\":\"" + conference.getConferenceId() + '\"' +
@@ -238,9 +221,9 @@ public class Paper implements Serializable {
                     ", \"conferenceFullName\":\"" + conference.getConferenceFullName() + '\"' +
                     ", \"authorId\":\"" + author.getId() + '\"' +
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
-                    ", \"reviewerIds\":\"" + UtilityService.getJsonStringFromArray(reviewerIds) + '\"' +
-                    ", \"reviewerFullNames\":\"" + UtilityService.getJsonStringFromArray(reviewerFullNames) + '\"' +
-                    ", \"topics\":" + topicsString +
+                    ", \"reviewerIds\":" + UtilityService.getJsonStringFromArray(reviewerIds) +
+                    ", \"reviewerFullNames\":" + UtilityService.getJsonStringFromArray(reviewerFullNames) +
+                    ", \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
@@ -256,9 +239,9 @@ public class Paper implements Serializable {
                 }
             }
             if(status == Status.REVIEWED){
-                str += ", \"grades\":\"" + UtilityService.getJsonStringFromArray(grades) + '\"' +
-                        ", \"comments\":\"" + UtilityService.getJsonStringFromArray(comments) + '\"' +
-                        ", \"confidences\":\"" + UtilityService.getJsonStringFromArray(confidences) + '\"';
+                str += ", \"grades\":" + UtilityService.getJsonStringFromArray(grades) +
+                        ", \"comments\":" + UtilityService.getJsonStringFromArray(comments) +
+                        ", \"confidences\":" + UtilityService.getJsonStringFromArray(confidences);
 
             }
             str += '}';
