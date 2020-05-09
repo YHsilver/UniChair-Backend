@@ -39,14 +39,6 @@ public class Lab2Application {
 //                                        JwtTokenUtil tokenUtil) {
     public CommandLineRunner dataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            // Create authorities if not exist.
-            // 管理员、投稿人、审稿人
-//
-//                try {
-//                    UtilityService.random = SecureRandom.getInstanceStrong();
-//                } catch (NoSuchAlgorithmException e) {
-//                    UtilityService.random = new Random();
-//                }
 
             // Create an adminPage if not exists.
             if (userRepository.findByUsername("admin") == null) {
@@ -61,31 +53,31 @@ public class Lab2Application {
                 userRepository.save(admin);
             }
 
-            // Create testRobert if not exists.
-            if (userRepository.findByUsername("testRobert") == null) {
-                User testRobert = new User(
-                        "testRobert",
-                        passwordEncoder.encode("testRobertPass"),
-                        "testRobertRuleTheWorld",
-                        "fudan",
-                        "software",
-                        "testRobert@fudan.edu.cn"
-                );
-                userRepository.save(testRobert);
-            }
-
-            // Create testRobert if not exists.
-            if (userRepository.findByUsername("AI") == null) {
-                User AI = new User(
-                        "AI",
-                        passwordEncoder.encode("AIPass"),
-                        "AIRuleTheWorld",
-                        "fudan",
-                        "software",
-                        "AI@fudan.edu.cn"
-                );
-                userRepository.save(AI);
-            }
+//            // Create testRobert if not exists.
+//            if (userRepository.findByUsername("testRobert") == null) {
+//                User testRobert = new User(
+//                        "testRobert",
+//                        passwordEncoder.encode("testRobertPass"),
+//                        "testRobertRuleTheWorld",
+//                        "fudan",
+//                        "software",
+//                        "testRobert@fudan.edu.cn"
+//                );
+//                userRepository.save(testRobert);
+//            }
+//
+//            // Create testRobert if not exists.
+//            if (userRepository.findByUsername("AI") == null) {
+//                User AI = new User(
+//                        "AI",
+//                        passwordEncoder.encode("AIPass"),
+//                        "AIRuleTheWorld",
+//                        "fudan",
+//                        "software",
+//                        "AI@fudan.edu.cn"
+//                );
+//                userRepository.save(AI);
+//            }
 
 //            if (userRepository.findByUsername("robert1") == null) {
 //                User AI = new User(
