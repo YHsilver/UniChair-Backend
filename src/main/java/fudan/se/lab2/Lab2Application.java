@@ -84,20 +84,59 @@ public class Lab2Application {
                     userRepository.save(AI);
                 }
 
+                if (userRepository.findByUsername("robert1") == null) {
+                    User AI = new User(
+                            "robert1",
+                            passwordEncoder.encode("pass"),
+                            "robert1",
+                            "fudan",
+                            "software",
+                            "AI@fudan.edu.cn"
+                    );
+                    userRepository.save(AI);
+                }
+                if (userRepository.findByUsername("robert2") == null) {
+                    User AI = new User(
+                            "robert2",
+                            passwordEncoder.encode("pass"),
+                            "robert2",
+                            "fudan",
+                            "software",
+                            "AI@fudan.edu.cn"
+                    );
+                    userRepository.save(AI);
+                }
+
+                if (userRepository.findByUsername("robert3") == null) {
+                    User AI = new User(
+                            "robert3",
+                            passwordEncoder.encode("pass"),
+                            "robert3",
+                            "fudan",
+                            "software",
+                            "AI@fudan.edu.cn"
+                    );
+                    userRepository.save(AI);
+                }
+
                 String[] topicSet = new String[]{"AI", "Robert"};
                 // add inner conferences
                 Conference AIConference = new Conference(userRepository.findByUsername("AI"), "AI abbr", "AI full name", "AI location", LocalDate.of(2020, 4, 12),
                         LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "AI introduction", topicSet);
+                AIConference.setTopics(new String[]{"AI TOPIC1", "AI TOPIC2"});
                 AIConference.setStatus(Conference.Status.PASS);
+                AIConference.setStage(Conference.Stage.CONTRIBUTION);
 
                 Conference testRobertConference = new Conference(userRepository.findByUsername("testRobert"), "testRobert abbr", "testRobert full name", "testRobert location", LocalDate.of(2020, 4, 12),
                         LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert introduction", topicSet);
                 testRobertConference.setStatus(Conference.Status.PASS);
+                testRobertConference.setTopics(new String[]{"RO TOPIC1", "RO TOPIC2"});
                 testRobertConference.setStage(Conference.Stage.CONTRIBUTION);
 
                 Conference testRobertConference2 = new Conference(userRepository.findByUsername("testRobert"), "testRobert2 abbr", "testRobert2 full name", "testRobert2 location", LocalDate.of(2020, 4, 12),
                         LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), LocalDate.of(2020, 4, 12), "testRobert2 introduction", topicSet);
                 testRobertConference2.setStatus(Conference.Status.PASS);
+                testRobertConference2.setTopics(new String[]{"RO TOPIC1", "RO TOPIC2"});
                 testRobertConference2.setStage(Conference.Stage.CONTRIBUTION);
 
                 User tempUser = userRepository.findByUsername("AI");

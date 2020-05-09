@@ -128,8 +128,8 @@ public class UtilityService {
             if (stage == Conference.Stage.GRADING) {
                 Set<Paper> papers = paperRepository.findPapersByConference(conference);
                 for(Paper paper: papers){
-                    for(boolean isReviewed: paper.getIsReviewed()){
-                        if(!isReviewed)
+                    for(Boolean isReviewed: paper.getIsReviewed()){
+                        if(isReviewed == null || !isReviewed)
                             return false;
                     }
 

@@ -151,7 +151,13 @@ public class ChairIdentityService {
 
     private boolean paperAssignment_RANDOM(Conference conference) {
         List<User> reviewersCopy = new ArrayList<>(conference.getReviewerSet());
-        List<Paper> papersCopy = new ArrayList<>(paperRepository.findPapersByConference(conference));
+        List<Paper> papersCopy1 = new ArrayList<>(paperRepository.findPapersByConference(conference));
+        List<Paper> papersCopy = new ArrayList<>(papersCopy1);
+        for (Paper paper: papersCopy1
+             ) {
+            papersCopy.add(paper);
+            papersCopy.add(paper);
+        }
         int average = papersCopy.size() / reviewersCopy.size();
         Random random;
         try {
@@ -162,8 +168,15 @@ public class ChairIdentityService {
         }
         for (User reviewer : reviewersCopy) {
             Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
+            Set<Long> assignedPaperIds = new HashSet<>();
+            for(Paper assignedPaper : review.getPapers()){
+                assignedPaperIds.add(assignedPaper.getPaperId());
+            }
             for (int i = 0; i < average; i++) {
                 Paper randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
+                while(assignedPaperIds.contains(randomPaper.getPaperId())){
+                    randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
+                }
                 randomPaper.getReviewers().add(reviewer);
                 paperRepository.save(randomPaper);
                 review.getPapers().add(randomPaper);
@@ -174,11 +187,23 @@ public class ChairIdentityService {
 
         for (Paper paper : papersCopy) {
             User randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
+            Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, randomReviewer);
+            Set<Long> assignedPaperIds = new HashSet<>();
+            for(Paper assignedPaper : review.getPapers()){
+                assignedPaperIds.add(assignedPaper.getPaperId());
+            }
+            while(assignedPaperIds.contains(paper.getPaperId())){
+                randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
+                review = reviewRepository.findReviewByConferenceAndReviewer(conference, randomReviewer);
+                assignedPaperIds = new HashSet<>();
+                for(Paper assignedPaper : review.getPapers()){
+                    assignedPaperIds.add(assignedPaper.getPaperId());
+                }
+            }
             // add paper's reviewer
             paper.getReviewers().add(randomReviewer);
             paperRepository.save(paper);
             // add reviewer's paper
-            Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, randomReviewer);
             review.getPapers().add(paperRepository.findByPaperId(paper.getPaperId()));
 
             reviewersCopy.remove(randomReviewer);
