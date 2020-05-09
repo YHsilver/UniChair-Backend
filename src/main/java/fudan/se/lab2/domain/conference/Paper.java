@@ -193,8 +193,7 @@ public class Paper implements Serializable {
                     ", \"topics\":" + topicsString +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
-                    ", \"status\":\"" + status + '\"' +
-                    ", \"isAllReviewed\":" + isAllReviewed();
+                    ", \"status\":\"" + status + '\"';
             if(reviewerId != null){
                 str += ", \"isCurrPCMemberReviewed\":" + (isCurrPCMemberReviewed(reviewerId) != -1);
             }
@@ -241,7 +240,6 @@ public class Paper implements Serializable {
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
                     ", \"reviewerIds\":\"" + UtilityService.getJsonStringFromArray(reviewerIds) + '\"' +
                     ", \"reviewerFullNames\":\"" + UtilityService.getJsonStringFromArray(reviewerFullNames) + '\"' +
-                    ", \"isAllReviewed\":" + isAllReviewed() +
                     ", \"topics\":" + topicsString +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
