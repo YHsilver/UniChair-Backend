@@ -80,22 +80,15 @@ public class AuthorIdentityService {
     public String modifyPaper(AuthorModifyPaperRequest request) {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        if (paper == null || author == null) {
-            throw new PaperSubmitOrModifyFailException("Invalid identity!");
-        }
-        Conference conference = paper.getConference();
-        if(!paper.getAuthor().getId().equals(author.getId())){
-            throw new PaperSubmitOrModifyFailException("You are not the author of this paper!");
-        }
-
-        if (conference.getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {
-            throw new PaperSubmitOrModifyFailException("Not Contribution Stage! Modification forbidden!");
+        if (paper == null || author == null || !paper.getAuthor().getId().equals(author.getId())
+         || paper.getConference().getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {
+            throw new PaperSubmitOrModifyFailException("Invalid Request!");
         }
 
         String[][] authors = UtilityService.isAuthorsValid(request.getAuthors());
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
-                || authors == null || !UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
+                || authors == null || !UtilityService.isTopicsValidInConference(paper.getConference(), request.getTopics())) {
             throw new PaperSubmitOrModifyFailException("paper modify wrong, information format error or topics selected error!");
         }
 
@@ -104,23 +97,15 @@ public class AuthorIdentityService {
             // get file name
             String fileName = multipartFile.getOriginalFilename();
             // get file suffix
-            if(fileName == null){
-                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
-            }
-            if (fileName.equals("")) fileName=multipartFile.getName();
-
+            if (fileName == null || fileName.equals("")) fileName = multipartFile.getName();
             int index = fileName.lastIndexOf('.');
-            if(index == -1){
-                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
-            }
-            String suffix = fileName.substring(index);
-            if (!suffix.toLowerCase().equals(".pdf")) {
+            if(fileName == null || index == -1 || !fileName.substring(index).toLowerCase().equals(".pdf")){
                 throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
             }
             // check over
             File excelFile;
             try {
-                excelFile = File.createTempFile("PA_", suffix);
+                excelFile = File.createTempFile("PA_", ".pdf");
                 // MultipartFile to File
                 multipartFile.transferTo(excelFile);
             } catch (IOException ex) {
