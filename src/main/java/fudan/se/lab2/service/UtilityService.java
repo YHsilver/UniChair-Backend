@@ -3,7 +3,6 @@ package fudan.se.lab2.service;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
-import fudan.se.lab2.domain.conference.Review;
 import fudan.se.lab2.repository.PaperRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,7 +18,18 @@ import static fudan.se.lab2.domain.conference.Conference.Stage.*;
 
 public class UtilityService {
     // 日志
-    public static final Random random = new Random();
+    public static final Random random = getSecureRandom();
+
+    private static Random getSecureRandom(){
+        Random random;
+        try {
+            random = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            random = new Random();
+        }
+        return random;
+    }
+
     private static Logger logger = LoggerFactory.getLogger(UtilityService.class);
 
     /**
