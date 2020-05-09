@@ -25,7 +25,8 @@ public class UtilityService {
         try {
             random = SecureRandom.getInstanceStrong();
         } catch (NoSuchAlgorithmException e) {
-            random = new Random();
+            System.out.println("Random initialize fail");
+            return null;
         }
         return random;
     }
@@ -127,24 +128,21 @@ public class UtilityService {
      * @return true if this change can be done with satisfied limits
      */
     public static boolean isConferenceChangeStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
-        if (conference.isNextStage(stage)) {
-            if (stage == Conference.Stage.REVIEWING) {
-                return false;
-            }
-            if (stage == Conference.Stage.GRADING) {
-                Set<Paper> papers = paperRepository.findPapersByConference(conference);
-                for(Paper paper: papers){
-                    for(Boolean isReviewed: paper.getIsReviewed()){
-                        if(isReviewed == null || !isReviewed)
-                            return false;
-                    }
-
-                }
-                return true;
-            }
-            return true;
+        if (!conference.isNextStage(stage) || stage == Conference.Stage.REVIEWING) {
+            return false;
         }
-        return false;
+
+        if (stage == Conference.Stage.GRADING) {
+            Set<Paper> papers = paperRepository.findPapersByConference(conference);
+            for(Paper paper: papers){
+                for(Boolean isReviewed: paper.getIsReviewed()){
+                    if(isReviewed == null || !isReviewed)
+                        return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static Conference.Stage getNextStage(Conference.Stage stage) {
