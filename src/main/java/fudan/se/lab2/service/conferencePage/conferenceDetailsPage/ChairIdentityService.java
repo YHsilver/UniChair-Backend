@@ -85,8 +85,7 @@ public class ChairIdentityService {
 
         if(strategy == ChairStartReviewingRequest.Strategy.TOPIC_RELATED){
             if(paperAssignment_TOPIC_RELATED(conference)){
-                conference.setStage(Conference.Stage.REVIEWING);
-                conferenceRepository.save(conference);
+                conferenceStartReviewing(conference);
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
                 throw new ChairChangeConferenceStageFailException("No valid assignment!");
@@ -94,8 +93,7 @@ public class ChairIdentityService {
             }
         }else if(strategy == ChairStartReviewingRequest.Strategy.RANDOM){
             if(paperAssignment_RANDOM(conference)){
-                conference.setStage(Conference.Stage.REVIEWING);
-                conferenceRepository.save(conference);
+                conferenceStartReviewing(conference);
                 return "{\"message\":\" Reviewing start!\"}";
             }else{
                 throw new ChairChangeConferenceStageFailException("No valid assignment!");
@@ -104,6 +102,17 @@ public class ChairIdentityService {
         }
         throw new ChairChangeConferenceStageFailException("Unknown assignment strategy!");
         //return "{\"message\":\" Unknown assignment strategy!\"}";
+    }
+
+    private void conferenceStartReviewing(Conference conference){
+        Set<Paper> papers = paperRepository.findPapersByConference(conference);
+        for (Paper paper: papers
+        ) {
+            paper.setStatus(Paper.Status.REVIEWING);
+        }
+        paperRepository.saveAll(papers);
+        conference.setStage(Conference.Stage.REVIEWING);
+        conferenceRepository.save(conference);
     }
 
     private Set<User> getValidReviewersOfPaperByTopic(Paper paper){
