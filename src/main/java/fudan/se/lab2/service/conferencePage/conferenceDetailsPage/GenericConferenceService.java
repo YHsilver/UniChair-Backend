@@ -169,7 +169,6 @@ public class GenericConferenceService {
         try{
             contents = Files.readAllBytes(tarFile.toPath());
         }catch (IOException ioe){
-            ioe.printStackTrace();
             contents = "Get File Error.".getBytes();
             headers.setContentType(MediaType.parseMediaType("text/plain"));
             return new ResponseEntity<>(contents, headers, HttpStatus.BAD_REQUEST);

@@ -128,10 +128,6 @@ public class UtilityService {
      */
     public static boolean isConferenceChangeStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
         if (conference.isNextStage(stage)) {
-            if (stage == CONTRIBUTION) {
-                // default true
-                return true;
-            }
             if (stage == Conference.Stage.REVIEWING) {
                 return false;
             }
@@ -146,8 +142,7 @@ public class UtilityService {
                 }
                 return true;
             }
-            // default true
-            return stage == Conference.Stage.ENDING;
+            return true;
         }
         return false;
     }
