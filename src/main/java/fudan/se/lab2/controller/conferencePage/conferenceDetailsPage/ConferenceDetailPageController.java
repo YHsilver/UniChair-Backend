@@ -6,6 +6,7 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.aut
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.*;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetPaperPdfFileRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPaperDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPapersRequest;
@@ -176,6 +177,14 @@ public class ConferenceDetailPageController {
         logger.debug(request.toString());
         System.out.println(request.toString());
         return ResponseEntity.ok(genericConferenceService.getIdentity(request));
+    }
+
+    // user获取一个PAPER 的 PDF file
+    @PostMapping("/system/userGetPaperPdfFile")
+    public ResponseEntity<byte[]> handleUserRequest(@RequestBody UserGetPaperPdfFileRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return genericConferenceService.getPaperPdfFile(request);
     }
 
 }

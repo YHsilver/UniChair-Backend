@@ -2,6 +2,7 @@ package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetPaperPdfFileRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
@@ -14,6 +15,10 @@ import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -147,5 +152,35 @@ public class GenericConferenceService {
         }
         return resp + "]";
     }
+
+    public ResponseEntity<byte[]> getPaperPdfFile(UserGetPaperPdfFileRequest request){
+        // 读取pdf文件到字节里
+        Paper paper = paperRepository.findByPaperId(request.getPaperId());
+        byte[] contents;
+        HttpHeaders headers = new HttpHeaders();
+        if(paper == null){
+            contents = "No Such Paper".getBytes();
+            headers.setContentType(MediaType.parseMediaType("text/plain"));
+            return new ResponseEntity<>(contents, headers, HttpStatus.BAD_REQUEST);
+        }
+
+        File tarFile = paper.getFile();
+
+        try{
+            contents = Files.readAllBytes(tarFile.toPath());
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+            contents = "Get File Error.".getBytes();
+            headers.setContentType(MediaType.parseMediaType("text/plain"));
+            return new ResponseEntity<>(contents, headers, HttpStatus.BAD_REQUEST);
+        }
+
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        String filename = tarFile.getName();
+        headers.setContentDispositionFormData("attachment", filename);
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        return new ResponseEntity<>(contents, headers, HttpStatus.OK);
+    }
+
 
 }
