@@ -3,6 +3,7 @@ package fudan.se.lab2.service;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.exception.ConferencException.ChairChangeConferenceStageFailException;
 import fudan.se.lab2.repository.PaperRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -137,7 +138,7 @@ public class UtilityService {
             for(Paper paper: papers){
                 for(Boolean isReviewed: paper.getIsReviewed()){
                     if(isReviewed == null || !isReviewed)
-                        return false;
+                        throw new ChairChangeConferenceStageFailException("Not All Papers Reviewed!");
                 }
             }
         }
