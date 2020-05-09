@@ -151,7 +151,29 @@ public class Paper implements Serializable {
                 '}';
     }
 
+    public boolean isAllReviewed(){
+        for(Boolean isReviewed: isReviewed){
+            if(isReviewed == null || !isReviewed)
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isCurrPCMemberReviewed(Long reviewerId){
+        for (int i = 0; i < REVIEWER_NUM; i++) {
+            User reviewer = reviewers.get(i);
+            if(reviewer != null && reviewer.getId().equals(reviewerId) && isReviewed[i] != null && isReviewed[i]){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public JSONObject toBriefJson(){
+        return toBriefJson(null);
+    }
+
+    public JSONObject toBriefJson(Long reviewerId){
         try {
             String topicsString = "[";
             for (String topic: topics
@@ -160,6 +182,8 @@ public class Paper implements Serializable {
             }
             topicsString = topicsString.substring(0, topicsString.length() - 1);
             topicsString += "]";
+
+
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
                     ", \"conferenceId\":\"" + conference.getConferenceId() + '\"' +
@@ -170,7 +194,11 @@ public class Paper implements Serializable {
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
+                    ", \"isAllReviewed\":" + isAllReviewed() +
                     '}';
+            if(reviewerId != null){
+                str += ", \"isCurrPCMemberReviewed\":" + isCurrPCMemberReviewed(reviewerId);
+            }
             return UtilityService.String2Json(str);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -179,6 +207,10 @@ public class Paper implements Serializable {
     }
 
     public JSONObject toStandardJson(){
+        return toStandardJson(null);
+    }
+
+    public JSONObject toStandardJson(Long reviewerId){
         try {
             Long[] reviewerIds = new Long[REVIEWER_NUM];
             String[] reviewerFullNames = new String[REVIEWER_NUM];
@@ -209,13 +241,16 @@ public class Paper implements Serializable {
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
                     ", \"reviewerIds\":\"" + UtilityService.getJsonStringFromArray(reviewerIds) + '\"' +
                     ", \"reviewerFullNames\":\"" + UtilityService.getJsonStringFromArray(reviewerFullNames) + '\"' +
-                    ", \"isReviewed\":\"" + UtilityService.getJsonStringFromArray(isReviewed) + '\"' +
+                    ", \"isAllReviewed\":" + isAllReviewed() +
                     ", \"topics\":" + topicsString +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
                     ", \"fileName\":\"" + file.getName() + '\"' +
                     ", \"fileSize\":\"" + file.length() + '\"' ;
+            if(reviewerId != null){
+                str += ", \"isCurrPCMemberReviewed\":" + isCurrPCMemberReviewed(reviewerId);
+            }
             if(status == Status.REVIEWED){
                 str += ", \"grades\":\"" + UtilityService.getJsonStringFromArray(grades) + '\"' +
                         ", \"comments\":\"" + UtilityService.getJsonStringFromArray(comments) + '\"' +

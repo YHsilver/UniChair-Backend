@@ -49,7 +49,7 @@ public class ReviewerIdentityService {
         List<JSONObject> paperList = new ArrayList<>();
         for (Paper paper: paperSet
         ) {
-            paperList.add(paper.toBriefJson());
+            paperList.add(paper.toBriefJson(reviewer.getId()));
         }
         return paperList;
     }
@@ -60,7 +60,7 @@ public class ReviewerIdentityService {
         if(!UtilityService.isValidReviewer(paper, reviewer)){
             return null;
         }
-        return paper.toStandardJson();
+        return paper.toStandardJson(reviewer.getId());
     }
 
     public String submitPaperReviewed(ReviewerSubmitPaperReviewedRequest request){
