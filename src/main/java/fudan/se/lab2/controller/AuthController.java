@@ -51,7 +51,7 @@ public class AuthController {
         return ResponseEntity.ok(getConferenceTopicsService.getConferenceTopics(request));
     }
 
-    @PostMapping("/system/checkUsername")
+    @PostMapping("/checkUsername")
     public ResponseEntity<?> checkUserName(@RequestBody CheckUsernameRegisteredOrNotRequest request) {
         logger.debug(request.toString());
         System.out.println(request);

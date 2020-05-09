@@ -3,6 +3,7 @@ package fudan.se.lab2.service.GeneralService;
 import fudan.se.lab2.controller.CheckUsernameRegisteredOrNotRequest;
 import fudan.se.lab2.controller.GetUserDetailsRequest;
 import fudan.se.lab2.domain.User;
+import fudan.se.lab2.exception.LoginAndRegisterException.UsernameHasBeenRegisteredException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
@@ -42,7 +43,10 @@ public class GetUserDetailsService {
 
     public String checkUsernameRegisteredOrNot(CheckUsernameRegisteredOrNotRequest request){
         User user = this.userRepository.findByUsername(request.getUsername());
-        return "\"isRegistered\":" + (user != null);
+        if(user != null){
+            throw new UsernameHasBeenRegisteredException(request.getUsername());
+        }
+        return "OK";
     }
 
 }

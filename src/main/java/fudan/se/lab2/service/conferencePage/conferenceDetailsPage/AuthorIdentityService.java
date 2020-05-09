@@ -83,13 +83,11 @@ public class AuthorIdentityService {
         if (paper == null || author == null) {
             throw new PaperSubmitOrModifyFailException("Invalid identity!");
         }
+        Conference conference = paper.getConference();
         if(!paper.getAuthor().getId().equals(author.getId())){
             throw new PaperSubmitOrModifyFailException("You are not the author of this paper!");
         }
-        Conference conference = paper.getConference();
-        if (conference.getChairman().getId().equals(author.getId())) {
-            throw new PaperSubmitOrModifyFailException("invalid submit or change from chair!");
-        }
+
         if (conference.getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {
             throw new PaperSubmitOrModifyFailException("Not Contribution Stage! Modification forbidden!");
         }
@@ -97,13 +95,8 @@ public class AuthorIdentityService {
         String[][] authors = UtilityService.isAuthorsValid(request.getAuthors());
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
-                || authors == null) {
-            throw new PaperSubmitOrModifyFailException("paper modify wrong, information format error!");
-        }
-
-        // check the validation of all topics
-        if (!UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
-            throw new PaperSubmitOrModifyFailException("paper modify wrong, topics selected error!");
+                || authors == null || !UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
+            throw new PaperSubmitOrModifyFailException("paper modify wrong, information format error or topics selected error!");
         }
 
         MultipartFile multipartFile = request.getFile();
