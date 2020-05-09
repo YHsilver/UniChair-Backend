@@ -44,7 +44,8 @@ public class Lab2Application {
      */
 
     @Bean
-    public CommandLineRunner dataLoader(UserRepository userRepository, ConferenceRepository conferenceRepository,
+    public CommandLineRunner dataLoader(UserRepository userRepository,
+                                        ConferenceRepository conferenceRepository,
                                         PasswordEncoder passwordEncoder, PaperRepository paperRepository,
                                         InvitationRepository invitationRepository, ReviewRepository reviewRepository,
                                         JwtTokenUtil tokenUtil) {
