@@ -16,4 +16,11 @@ public class UserGetPaperPdfFileRequest {
     public void setPaperId(Long paperId) {
         this.paperId = paperId;
     }
+
+    @Override
+    public String toString() {
+        return "UserGetPaperPdfFileRequest{" +
+                "paperId=" + paperId +
+                '}';
+    }
 }

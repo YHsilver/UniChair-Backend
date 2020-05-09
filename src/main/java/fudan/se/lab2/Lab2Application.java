@@ -1,11 +1,16 @@
 package fudan.se.lab2;
 
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairSendInvitationRequest;
+import fudan.se.lab2.controller.messagePage.request.UserDecideInvitationsRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.domain.conference.Invitation;
 import fudan.se.lab2.generator.ConferenceGenerator;
 import fudan.se.lab2.generator.UserGenerator;
-import fudan.se.lab2.repository.ConferenceRepository;
-import fudan.se.lab2.repository.UserRepository;
+import fudan.se.lab2.repository.*;
+import fudan.se.lab2.security.jwt.JwtTokenUtil;
+import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ChairIdentityService;
+import fudan.se.lab2.service.messagePage.MessageService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -38,7 +44,9 @@ public class Lab2Application {
      */
 
     @Bean
-    public CommandLineRunner dataLoader(UserRepository userRepository, ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner dataLoader(UserRepository userRepository, ConferenceRepository conferenceRepository, PasswordEncoder passwordEncoder,
+                                        PaperRepository paperRepository, InvitationRepository invitationRepository, ReviewRepository reviewRepository,
+                                        JwtTokenUtil tokenUtil) {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) {
@@ -164,7 +172,42 @@ public class Lab2Application {
                     conference.setStatus(Conference.Status.PASS);
                     conferenceRepository.save(conference);
                 }
+                // send invitations
+                ChairIdentityService chairIdentityService = chairIdentityService = new ChairIdentityService(userRepository,
+                        invitationRepository, conferenceRepository, paperRepository, reviewRepository, tokenUtil);
 
+                ChairSendInvitationRequest chairSendInvitationRequest = new ChairSendInvitationRequest(
+                        tokenUtil.generateToken(userRepository.findByUsername("AI")),
+                        AIConference.getConferenceId(),
+                        new String[]{"robert1", "robert2", "robert3"},
+                        "message"
+
+                );
+                chairIdentityService.sendInvitation(chairSendInvitationRequest);
+
+                // become PC Member
+                MessageService messageService = new MessageService(userRepository, invitationRepository, conferenceRepository, reviewRepository, tokenUtil);
+                UserDecideInvitationsRequest userDecideInvitationsRequest1 = new UserDecideInvitationsRequest(
+                        tokenUtil.generateToken(userRepository.findByUsername("robert1")),
+                        new ArrayList<>(invitationRepository.findByReviewer(userRepository.findByUsername("robert1"))).get(0).getInvitationId(),
+                        Invitation.Status.PASS,
+                        AIConference.getTopics()
+                );
+                messageService.userDecideInvitations(userDecideInvitationsRequest1);
+                UserDecideInvitationsRequest userDecideInvitationsRequest2 = new UserDecideInvitationsRequest(
+                        tokenUtil.generateToken(userRepository.findByUsername("robert2")),
+                        new ArrayList<>(invitationRepository.findByReviewer(userRepository.findByUsername("robert2"))).get(0).getInvitationId(),
+                        Invitation.Status.PASS,
+                        AIConference.getTopics()
+                );
+                messageService.userDecideInvitations(userDecideInvitationsRequest2);
+                UserDecideInvitationsRequest userDecideInvitationsRequest3 = new UserDecideInvitationsRequest(
+                        tokenUtil.generateToken(userRepository.findByUsername("robert3")),
+                        new ArrayList<>(invitationRepository.findByReviewer(userRepository.findByUsername("robert3"))).get(0).getInvitationId(),
+                        Invitation.Status.PASS,
+                        AIConference.getTopics()
+                );
+                messageService.userDecideInvitations(userDecideInvitationsRequest3);
 
             }
         };

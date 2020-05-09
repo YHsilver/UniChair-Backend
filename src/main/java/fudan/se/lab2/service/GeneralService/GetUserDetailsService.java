@@ -1,5 +1,6 @@
 package fudan.se.lab2.service.GeneralService;
 
+import fudan.se.lab2.controller.CheckUsernameRegisteredOrNotRequest;
 import fudan.se.lab2.controller.GetUserDetailsRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.repository.ConferenceRepository;
@@ -37,6 +38,11 @@ public class GetUserDetailsService {
     public JSONObject getUserDetails(GetUserDetailsRequest request) {
         User user = this.userRepository.findByUsername(this.tokenUtil.getUsernameFromToken(request.getToken()));
         return user.toStandardJson();
+    }
+
+    public String checkUsernameRegisteredOrNot(CheckUsernameRegisteredOrNotRequest request){
+        User user = this.userRepository.findByUsername(request.getUsername());
+        return "\"isRegistered\":" + (user != null);
     }
 
 }

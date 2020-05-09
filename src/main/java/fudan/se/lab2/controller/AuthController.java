@@ -40,16 +40,24 @@ public class AuthController {
     @PostMapping("/token")
     public ResponseEntity<?> login(@RequestBody GetUserDetailsRequest request) {
         logger.debug(request.toString());
-//        System.out.println(request);
+        System.out.println(request);
         return ResponseEntity.ok(getUserDetailsService.getUserDetails(request));
     }
 
     @PostMapping("/system/getConferenceTopics")
     public ResponseEntity<?> getConferenceTopics(@RequestBody GetConferenceTopicsRequest request) {
         logger.debug(request.toString());
-//        System.out.println(request);
+        System.out.println(request);
         return ResponseEntity.ok(getConferenceTopicsService.getConferenceTopics(request));
     }
+
+    @PostMapping("/system/checkUsername")
+    public ResponseEntity<?> checkUserName(@RequestBody CheckUsernameRegisteredOrNotRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request);
+        return ResponseEntity.ok(getUserDetailsService.checkUsernameRegisteredOrNot(request));
+    }
+
 
     /**
      * This is a function to test your connectivity. (健康测试时，可能会用到它）.
