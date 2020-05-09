@@ -18,9 +18,8 @@ import java.util.*;
 import static fudan.se.lab2.domain.conference.Conference.Stage.*;
 
 public class UtilityService {
-
     // 日志
-    public static Random random;
+    public static final Random random = new Random();
     private static Logger logger = LoggerFactory.getLogger(UtilityService.class);
 
     /**

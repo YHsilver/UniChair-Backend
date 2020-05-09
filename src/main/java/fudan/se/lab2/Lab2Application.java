@@ -57,12 +57,12 @@ public class Lab2Application {
             public void run(String... args) {
                 // Create authorities if not exist.
                 // 管理员、投稿人、审稿人
-
-                try {
-                    UtilityService.random = SecureRandom.getInstanceStrong();
-                } catch (NoSuchAlgorithmException e) {
-                    UtilityService.random = new Random();
-                }
+//
+//                try {
+//                    UtilityService.random = SecureRandom.getInstanceStrong();
+//                } catch (NoSuchAlgorithmException e) {
+//                    UtilityService.random = new Random();
+//                }
 
                 // Create an adminPage if not exists.
                 if (userRepository.findByUsername("admin") == null) {
