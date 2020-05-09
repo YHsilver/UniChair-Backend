@@ -20,6 +20,7 @@ import static fudan.se.lab2.domain.conference.Conference.Stage.*;
 public class UtilityService {
 
     // 日志
+    public static Random random;
     private static Logger logger = LoggerFactory.getLogger(UtilityService.class);
 
     /**
@@ -242,16 +243,6 @@ public class UtilityService {
             }
         }
         return false;
-    }
-
-    public static Random getSecureRandom(){
-        Random random;
-        try {
-            random = SecureRandom.getInstanceStrong();
-        } catch (NoSuchAlgorithmException e) {
-            random = new Random();
-        }
-        return random;
     }
 
 }

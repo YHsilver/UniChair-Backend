@@ -14,9 +14,6 @@ import org.assertj.core.util.Lists;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.*;
 
 @Service
@@ -161,7 +158,7 @@ public class ChairIdentityService {
             papersCopy.add(paper);
         }
         int average = papersCopy.size() / reviewersCopy.size();
-        Random random = UtilityService.getSecureRandom();
+        Random random = UtilityService.random;
         for (User reviewer : reviewersCopy) {
             Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
             Set<Long> assignedPaperIds = new HashSet<>();
@@ -181,7 +178,12 @@ public class ChairIdentityService {
             reviewRepository.save(review);
         }
 
-        for (Paper paper : papersCopy) {
+        return assignPapersToReviewer(papersCopy, reviewersCopy, conference);
+    }
+
+    private boolean assignPapersToReviewer(List<Paper> leftPapers, List<User> reviewersCopy, Conference conference){
+        Random random = UtilityService.random;
+        for (Paper paper : leftPapers) {
             User randomReviewer = reviewersCopy.get(random.nextInt(reviewersCopy.size()));
             Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, randomReviewer);
             Set<Long> assignedPaperIds = new HashSet<>();
@@ -207,7 +209,6 @@ public class ChairIdentityService {
         }
         return true;
     }
-
 
     /**
      * chair search Reviewers to invite
