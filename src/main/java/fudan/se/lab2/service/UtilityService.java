@@ -168,9 +168,18 @@ public class UtilityService {
      */
     public static String getJsonStringFromArray(Object[] array) {
         StringBuilder result = new StringBuilder("[");
+        boolean isBasicData = false;
+        if(array[0] instanceof Integer || array[0] instanceof Long){
+            isBasicData = true;
+        }
+
         for (Object object : array) {
             if(object != null){
-                result.append('\"').append(object.toString()).append("\",");
+                if(isBasicData){
+                    result.append(object.toString()).append(',');
+                }else{
+                    result.append('\"').append(object.toString()).append("\",");
+                }
             }else{
                 result.append('\"').append("null").append("\",");
             }
