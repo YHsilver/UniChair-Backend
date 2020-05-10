@@ -5,6 +5,7 @@ import fudan.se.lab2.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
@@ -37,9 +38,9 @@ public class Lab2Application {
 //                                        InvitationRepository invitationRepository,
 //                                        ReviewRepository reviewRepository,
 //                                        JwtTokenUtil tokenUtil) {
+    @Bean
     public CommandLineRunner dataLoader(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-
             // Create an adminPage if not exists.
             if (userRepository.findByUsername("admin") == null) {
                 User admin = new User(
@@ -52,6 +53,10 @@ public class Lab2Application {
                 );
                 userRepository.save(admin);
             }
+        };
+    }
+}
+
 
 //            // Create testRobert if not exists.
 //            if (userRepository.findByUsername("testRobert") == null) {
@@ -195,8 +200,3 @@ public class Lab2Application {
 //                    AIConference.getTopics()
 //            );
 //            messageService.userDecideInvitations(userDecideInvitationsRequest3);
-
-        };
-    }
-}
-
