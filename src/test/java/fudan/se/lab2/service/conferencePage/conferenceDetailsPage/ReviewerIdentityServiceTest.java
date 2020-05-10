@@ -103,12 +103,7 @@ class ReviewerIdentityServiceTest {
                 "summary",
                 mockMultipartFile
         );
-        try {
-            System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
         //start reviewing
         ChairStartReviewingRequest chairStartReviewingRequestTopicRelated = new ChairStartReviewingRequest(
                 tokenUtil.generateToken(user), conference.getConferenceId(),

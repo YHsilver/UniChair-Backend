@@ -84,13 +84,7 @@ class GenericConferenceServiceTest {
                 "summary",
                 mockMultipartFile
         );
-        try {
-            System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
         assertEquals(new ArrayList<>(conferenceRepository.findByConferenceId(conference.getConferenceId()).getAuthorSet()).get(0).toString(), author.toString());
 
 

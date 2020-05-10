@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 @RestController
 public class ConferenceDetailPageController {
@@ -69,10 +67,18 @@ public class ConferenceDetailPageController {
 
     // author modify a submitted paper
     @PostMapping("/system/authorModifyPaper")
-    public ResponseEntity<?> handleUserRequest(@RequestBody AuthorModifyPaperRequest request) {
-        logger.debug(request.toString());
-        System.out.println(request.toString());
-        return ResponseEntity.ok(authorIdentityService.modifyPaper(request));
+    public ResponseEntity<?> handleAuthorModifyPaperRequest(@RequestParam("file") MultipartFile file,
+                                               @RequestParam("paperId") Long paperId,
+                                               @RequestParam("topics") String[] topics,
+                                               @RequestParam("title") String title,
+                                               @RequestParam("authors") String[] authors,
+                                               @RequestParam("summary") String summary,
+                                               @RequestParam("token") String token,
+                                               HttpServletRequest modifyRequest) {
+
+        AuthorModifyPaperRequest authorModifyPaperRequest = new AuthorModifyPaperRequest(token, paperId,
+                topics, title, authors, summary, file);
+        return ResponseEntity.ok(authorIdentityService.modifyPaper(authorModifyPaperRequest));
     }
 
     /* CHAIR IDENTITY */
@@ -155,12 +161,7 @@ public class ConferenceDetailPageController {
                                                HttpServletRequest submitRequest) {
         UserSubmitPaperRequest request = new UserSubmitPaperRequest(token, conferenceId, topics, title,
                 authors, summary, file);
-        try {
-            return ResponseEntity.ok(genericConferenceService.submitPaper(request));
-        } catch (IOException e) {
-            logger.trace("context", e);
-            return ResponseEntity.ok("something wrong with your paper qwq");
-        }
+        return ResponseEntity.ok(genericConferenceService.submitPaper(request));
     }
 
     // user获取会议详细信息

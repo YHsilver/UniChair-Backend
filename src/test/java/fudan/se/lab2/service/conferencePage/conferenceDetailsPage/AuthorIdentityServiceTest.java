@@ -85,11 +85,8 @@ class AuthorIdentityServiceTest {
                 "summary",
                 mockMultipartFile
         );
-        try {
-            System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
+
 
         AuthorGetMyPapersRequest authorGetMyPapersRequest = new AuthorGetMyPapersRequest(
                 tokenUtil.generateToken(author), conference.getConferenceId()
@@ -138,11 +135,7 @@ class AuthorIdentityServiceTest {
                 "summary",
                 mockMultipartFile
         );
-        try {
-            System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
 
         List<Paper> list = new ArrayList<>(paperRepository.findPapersByAuthor(author));
         System.out.println("list:" + list);
@@ -198,11 +191,7 @@ class AuthorIdentityServiceTest {
                 "summary",
                 mockMultipartFile
         );
-        try {
-            System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println(genericConferenceService.submitPaper(userSubmitPaperRequest));
 
         List<Paper> list = new ArrayList<>(paperRepository.findPapersByAuthor(author));
         System.out.println("list:" + list);

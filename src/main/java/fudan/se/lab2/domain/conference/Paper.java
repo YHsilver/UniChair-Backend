@@ -230,6 +230,7 @@ public class Paper implements Serializable {
                     ", \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
+                    ", \"authors\":" + getAuthorsObjectArray() +
                     ", \"status\":\"" + status + '\"' +
                     ", \"fileName\":\"" + fileName + '\"' +
                     ", \"fileSize\":\"" + file.length() + '\"' ;
@@ -254,5 +255,19 @@ public class Paper implements Serializable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private String getAuthorsObjectArray(){
+        StringBuilder result = new StringBuilder("[");
+
+        for (String[] author : paperAuthors) {
+            result.append('{').append("\"name\":\"").append(author[0]).append("\",\"unit\":\"").append(author[1])
+                    .append("\",\"area\":\"").append(author[2]).append("\",\"email\":\"").append(author[3]).append("\"},");
+        }
+        if (result.length() > 2) {
+            result = new StringBuilder(result.substring(0, result.length() - 1));
+        }
+        result.append(']');
+        return result.toString();
     }
 }

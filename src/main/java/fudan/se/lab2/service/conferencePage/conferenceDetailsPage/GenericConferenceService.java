@@ -14,6 +14,8 @@ import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,9 @@ public class GenericConferenceService {
     private ConferenceRepository conferenceRepository;
     private PaperRepository paperRepository;
     private JwtTokenUtil tokenUtil;
+
+    // 日志
+    private Logger logger = LoggerFactory.getLogger(GenericConferenceService.class);
 
     @Autowired
     public GenericConferenceService(UserRepository userRepository, ConferenceRepository conferenceRepository,
@@ -62,7 +67,7 @@ public class GenericConferenceService {
      * @param request the UserRequest request
      * @return return message
      */
-    public String submitPaper(UserSubmitPaperRequest request) throws IOException {
+    public String submitPaper(UserSubmitPaperRequest request) {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         if (author == null || conference == null || conference.getChairman().getId().equals(author.getId())) {
@@ -100,11 +105,16 @@ public class GenericConferenceService {
             throw new PaperSubmitOrModifyFailException("paper submit wrong, information format error!!");
         }
 
-        File excelFile = File.createTempFile("PA_", suffix);
-        System.out.println("excelFile in Submit: " + excelFile);
-        // MultipartFile to File
-        multipartFile.transferTo(excelFile);
-        System.out.println(excelFile.length());
+        File excelFile;
+        try {
+            excelFile = File.createTempFile("PA_", suffix);
+            // MultipartFile to File
+            multipartFile.transferTo(excelFile);
+        } catch (IOException ex) {
+            logger.trace("context", ex);   // Compliant
+            throw new PaperSubmitOrModifyFailException("paper submit wrong, unknown error occurs! Please try again later!");
+        }
+
         // check the validation of all topics
         if (!UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
             throw new PaperSubmitOrModifyFailException("paper submit wrong, topics selected error!");
