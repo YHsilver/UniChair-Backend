@@ -115,6 +115,7 @@ public class AuthorIdentityService {
                 logger.trace("context", ex);   // Compliant
                 throw new PaperSubmitOrModifyFailException("paper modify wrong, unknown error occurs! Please try again later!");
             }
+            paper.setFileName(fileName);
             paper.setFile(excelFile);
         }
 

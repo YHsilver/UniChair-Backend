@@ -112,6 +112,7 @@ public class GenericConferenceService {
 
         Paper newPaper = new Paper(conference, author, request.getTitle(),
                 authors, request.getSummary(), excelFile, request.getTopics());
+        newPaper.setFileName(fileName);
         paperRepository.save(newPaper);
 
 //        deleteFile(excelFile);

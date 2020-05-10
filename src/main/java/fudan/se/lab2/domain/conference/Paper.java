@@ -41,6 +41,7 @@ public class Paper implements Serializable {
     private Status status = Status.CONTRIBUTION;
     // pdf file
     private File file;
+    private String fileName;
 
     // three allocated reviewers
     @OrderColumn(name="id")
@@ -130,6 +131,8 @@ public class Paper implements Serializable {
     public void setIsReviewed(Boolean[] isReviewed) { this.isReviewed = isReviewed; }
     public String[] getConfidences() { return confidences; }
     public void setConfidences(String[] confidences) { this.confidences = confidences; }
+    public String getFileName() { return fileName; }
+    public void setFileName(String fileName) { this.fileName = fileName; }
 
     @Override
     public String toString() {
@@ -184,6 +187,7 @@ public class Paper implements Serializable {
                     ", \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
+                    ", \"fileName\":\"" + fileName + '\"' +
                     ", \"status\":\"" + status + '\"';
             if(reviewerId != null){
                 str += ", \"isCurrPCMemberReviewed\":" + (isCurrPCMemberReviewed(reviewerId) != -1);
@@ -227,7 +231,7 @@ public class Paper implements Serializable {
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"status\":\"" + status + '\"' +
-                    ", \"fileName\":\"" + file.getName() + '\"' +
+                    ", \"fileName\":\"" + fileName + '\"' +
                     ", \"fileSize\":\"" + file.length() + '\"' ;
             if(reviewerId != null){
                 int reId = isCurrPCMemberReviewed(reviewerId);
