@@ -167,6 +167,9 @@ public class UtilityService {
      * @return a string with json array format
      */
     public static String getJsonStringFromArray(Object[] array) {
+        if(array == null ||array.length == 0){
+            return "[]";
+        }
         StringBuilder result = new StringBuilder("[");
         boolean isBasicData = false;
         if(array[0] instanceof Integer || array[0] instanceof Long){
