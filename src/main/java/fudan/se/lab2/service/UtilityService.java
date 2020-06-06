@@ -157,6 +157,8 @@ public class UtilityService {
             case GRADING:
                 return ENDING;
             case ENDING:
+                return FINISHED;
+            case FINISHED:
                 return null;
         }
         return null;

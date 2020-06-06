@@ -120,15 +120,22 @@ public class ChairIdentityService {
         Set<User> allValidReviewers = new HashSet<>();
         // get all topics of a paper
         Set<String> topicSet = new HashSet<>(Arrays.asList(paper.getTopics()));
-        for (Review review: reviews
-        ) {
-            for (String reviewerTopic: review.getTopics()
-            ) {
+        for (Review review: reviews) {
+            for (String reviewerTopic: review.getTopics()) {
                 if(topicSet.contains(reviewerTopic)){
                     allValidReviewers.add(review.getReviewer());
                 }
             }
         }
+        //check whether benefit conflict
+        String[][] paperAuthors=paper.getPaperAuthors();
+        for(User user : allValidReviewers){
+            for (String[] author : paperAuthors){
+             if (author[0].equals(user.getFullName())&&author[3].equals(user.getEmail()))
+                 allValidReviewers.remove(user);
+            }
+        }
+
         return allValidReviewers;
     }
 
@@ -157,12 +164,12 @@ public class ChairIdentityService {
         return true;
     }
 
+    //todo deal with benefit conflict
     private boolean paperAssignment_RANDOM(Conference conference) {
         List<User> reviewersCopy = new ArrayList<>(conference.getReviewerSet());
         List<Paper> papersCopy1 = new ArrayList<>(paperRepository.findPapersByConference(conference));
         List<Paper> papersCopy = new ArrayList<>(papersCopy1);
-        for (Paper paper: papersCopy1
-             ) {
+        for (Paper paper: papersCopy1) {
             papersCopy.add(paper);
             papersCopy.add(paper);
         }
