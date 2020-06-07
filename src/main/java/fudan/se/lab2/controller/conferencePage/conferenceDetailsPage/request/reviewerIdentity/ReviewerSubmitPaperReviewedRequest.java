@@ -1,6 +1,5 @@
 package fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity;
 
-import fudan.se.lab2.domain.conference.Paper;
 
 public class ReviewerSubmitPaperReviewedRequest {
     private String token;

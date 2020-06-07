@@ -2,6 +2,7 @@ package fudan.se.lab2.domain.conference;
 
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.service.UtilityService;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -36,7 +37,7 @@ public class Paper implements Serializable {
     private String[][] paperAuthors;
     private String summary;
     // review status(CONTRIBUTION->Conference.Stage.CONTRIBUTION)
-    public enum Status {CONTRIBUTION, REVIEWING, REVIEWED}
+    public enum Status {CONTRIBUTION, REVIEWING, REVIEWED, CHECKED}
     // default status CONTRIBUTION
     private Status status = Status.CONTRIBUTION;
     // pdf file
@@ -49,6 +50,8 @@ public class Paper implements Serializable {
     private List<User> reviewers = new ArrayList<>();
     // three comments from reviewers
     private Boolean[] isReviewed = new Boolean[REVIEWER_NUM];
+    private Boolean[] isCheckedReview=new Boolean[REVIEWER_NUM];
+
     private String[] comments = new String[REVIEWER_NUM];
     // three grades from reviewers
     private Integer[] grades = new Integer[REVIEWER_NUM];
@@ -58,6 +61,14 @@ public class Paper implements Serializable {
     private String[] topics;
     // empty constructor
     public Paper() {}
+
+    //the first discuss post after reviewed
+    private List<JSONObject> post1=new LinkedList<>();
+    //the second discuss post after rebuttal
+    private List<JSONObject> post2=new LinkedList<>();
+    //author's rebuttal message
+    private String rebuttal;
+
 
     public Paper(Conference conference, User author, String title, String[][] paperAuthors, String summary, File file, String[] topics) {
         this.conference = conference;
@@ -134,6 +145,38 @@ public class Paper implements Serializable {
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
 
+    public List<JSONObject> getPost1() {
+        return post1;
+    }
+
+    public void setPost1(List<JSONObject> post1) {
+        this.post1 = post1;
+    }
+
+    public List<JSONObject> getPost2() {
+        return post2;
+    }
+
+    public void setPost2(List<JSONObject> post2) {
+        this.post2 = post2;
+    }
+
+    public String getRebuttal() {
+        return rebuttal;
+    }
+
+    public void setRebuttal(String rebuttal) {
+        this.rebuttal = rebuttal;
+    }
+
+    public Boolean[] getIsCheckedReview() {
+        return isCheckedReview;
+    }
+
+    public void setIsCheckedReview(Boolean[] isCheckedReview) {
+        this.isCheckedReview = isCheckedReview;
+    }
+
     @Override
     public String toString() {
         return "Paper{" +
@@ -161,16 +204,32 @@ public class Paper implements Serializable {
         }
         return true;
     }
+    public boolean isAllChecked(){
+        for(Boolean isChecked: isCheckedReview){
+            if(isChecked == null || !isChecked)
+                return false;
+        }
+        return true;
+    }
 
     public int isCurrPCMemberReviewed(Long reviewerId){
+        return isCurrPCOperated(reviewerId, isReviewed);
+    }
+    public int isCurrPCMemberChecked(Long reviewerId){
+        return isCurrPCOperated(reviewerId, isCheckedReview);
+    }
+
+    private int isCurrPCOperated(Long reviewerId, Boolean[] isOperated) {
         for (int i = 0; i < REVIEWER_NUM; i++) {
             User reviewer = reviewers.get(i);
-            if(reviewer != null && reviewer.getId().equals(reviewerId) && isReviewed[i] != null && isReviewed[i]){
+            if(reviewer != null && reviewer.getId().equals(reviewerId) && isOperated[i] != null && isOperated[i]){
                 return i;
             }
         }
         return -1;
     }
+
+    
 
     public JSONObject toBriefJson(){
         return toBriefJson(null);

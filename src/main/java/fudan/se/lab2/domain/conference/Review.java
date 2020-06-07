@@ -10,7 +10,6 @@ public class Review implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // 会议ID
     private Long reviewId;
 
     @ManyToOne
@@ -23,6 +22,8 @@ public class Review implements Serializable {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Paper> papers = new HashSet<>();
+
+
 
     public Review() {}
 

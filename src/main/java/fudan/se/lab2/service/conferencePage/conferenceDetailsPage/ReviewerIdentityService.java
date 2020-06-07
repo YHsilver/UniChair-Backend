@@ -1,5 +1,6 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerCheckPaperReviewedRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPaperDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPapersRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerSubmitPaperReviewedRequest;
@@ -64,6 +65,87 @@ public class ReviewerIdentityService {
     }
 
     public String submitPaperReviewed(ReviewerSubmitPaperReviewedRequest request){
+        checkSubmitReviewValid(request);
+        Paper paper = paperRepository.findByPaperId(request.getPaperId());
+
+        int i = findReviewerIndex(request);
+
+        if(paper.getIsReviewed()[i]!=null){
+            throw new ReviewerReviewPaperFailException("You have reviewed this paper!");
+        }
+
+        writeValidReview(request,i);
+        paper = paperRepository.findByPaperId(request.getPaperId());
+        paper.getIsReviewed()[i] = true;
+        if(paper.isAllReviewed()){
+            paper.setStatus(Paper.Status.REVIEWED);
+        }
+        paperRepository.save(paper);
+        return "{\"message\":\"Review paper success!\"}";
+    }
+
+    public String modifyPaperReviewed(ReviewerSubmitPaperReviewedRequest request){
+        checkSubmitReviewValid(request);
+        Paper paper = paperRepository.findByPaperId(request.getPaperId());
+        int i = findReviewerIndex(request);
+
+        if(paper.getIsCheckedReview()[i]!=null){
+            throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
+        }
+
+        writeValidReview(request,i);
+        paper = paperRepository.findByPaperId(request.getPaperId());
+        paper.getIsCheckedReview()[i] = true;
+        if(paper.isAllChecked()){
+            paper.setStatus(Paper.Status.CHECKED);
+        }
+        paperRepository.save(paper);
+        return "{\"message\":\"Modify reviewed paper success!\"}";
+    }
+
+    private void checkSubmitReviewValid(ReviewerSubmitPaperReviewedRequest request){
+        User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Paper paper = paperRepository.findByPaperId(request.getPaperId());
+
+        if(!UtilityService.isValidReviewer(paper, reviewer)){
+            throw new ReviewerReviewPaperFailException("You are not the reviewer of this paper!");
+        }
+
+        if(!UtilityService.checkStringLength(request.getComment(), 1)){
+            throw new ReviewerReviewPaperFailException("Comments format error!");
+        }
+        if(request.getGrade() > 2 || request.getGrade() < -2 || request.getGrade() == 0){
+            throw new ReviewerReviewPaperFailException("Invalid grade!");
+        }
+        if(request.getConfidence() == null){
+            throw new ReviewerReviewPaperFailException("Confidence error!!");
+        }
+    }
+
+    private int findReviewerIndex(ReviewerSubmitPaperReviewedRequest request){
+        User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        Paper paper = paperRepository.findByPaperId(request.getPaperId());
+
+        int i = 0;
+        for(; i < Paper.REVIEWER_NUM; i++){
+            if(paper.getReviewers().get(i).getId().equals(reviewer.getId())){
+                break;
+            }
+        }
+        return i;
+    }
+
+    private void writeValidReview(ReviewerSubmitPaperReviewedRequest request, int i){
+        Paper paper = paperRepository.findByPaperId(request.getPaperId());
+        paper.getComments()[i] = request.getComment();
+        paper.getGrades()[i] = request.getGrade();
+        paper.getConfidences()[i] = request.getConfidence();
+        paperRepository.save(paper);
+    }
+
+
+    //todo: deal with duplicated with "modify func"
+    public String checkPaperReviewed(ReviewerCheckPaperReviewedRequest request){
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
 
@@ -77,27 +159,16 @@ public class ReviewerIdentityService {
                 break;
             }
         }
-        if(paper.getIsReviewed()[i]!=null){
-            throw new ReviewerReviewPaperFailException("You have reviewed this paper!");
+
+        if(paper.getIsCheckedReview()[i]!=null){
+            throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
         }
-        if(!UtilityService.checkStringLength(request.getComment(), 1)){
-            throw new ReviewerReviewPaperFailException("Comments format error!");
-        }
-        if(request.getGrade() > 2 || request.getGrade() < -2 || request.getGrade() == 0){
-            throw new ReviewerReviewPaperFailException("Invalid grade!");
-        }
-        if(request.getConfidence() == null){
-            throw new ReviewerReviewPaperFailException("Confidence error!!");
-        }
-        paper.getComments()[i] = request.getComment();
-        paper.getGrades()[i] = request.getGrade();
-        paper.getConfidences()[i] = request.getConfidence();
-        paper.getIsReviewed()[i] = true;
-        if(paper.isAllReviewed()){
-            paper.setStatus(Paper.Status.REVIEWED);
+
+        paper.getIsCheckedReview()[i] = true;
+        if(paper.isAllChecked()){
+            paper.setStatus(Paper.Status.CHECKED);
         }
         paperRepository.save(paper);
-        return "{\"message\":\"Review paper success!\"}";
+        return "{\"message\":\"Check reviewed paper success!\"}";
     }
-
 }

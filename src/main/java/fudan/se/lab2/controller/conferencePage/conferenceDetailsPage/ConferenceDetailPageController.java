@@ -8,6 +8,7 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.gen
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetPaperPdfFileRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerCheckPaperReviewedRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPaperDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPapersRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerSubmitPaperReviewedRequest;
@@ -145,6 +146,20 @@ public class ConferenceDetailPageController {
         logger.debug(request.toString());
         System.out.println(request.toString());
         return ResponseEntity.ok(reviewerIdentityService.submitPaperReviewed(request));
+    }
+
+    @PostMapping("/system/reviewerModifyRate")
+    public ResponseEntity<?> handleModifyReviewRequest(@RequestBody ReviewerSubmitPaperReviewedRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.modifyPaperReviewed(request));
+    }
+
+    @PostMapping("/system/reviewerCheckRate")
+    public ResponseEntity<?> handleCheckReviewRequest(@RequestBody ReviewerCheckPaperReviewedRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.checkPaperReviewed(request));
     }
 
     /* GENERAL IDENTITY */
