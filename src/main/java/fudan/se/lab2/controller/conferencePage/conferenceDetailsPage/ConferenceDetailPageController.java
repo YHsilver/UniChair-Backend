@@ -9,10 +9,7 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.gen
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetPaperPdfFileRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerCheckPaperReviewedRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPaperDetailsRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPapersRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerSubmitPaperReviewedRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.*;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.AuthorIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ChairIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.GenericConferenceService;
@@ -163,14 +160,19 @@ public class ConferenceDetailPageController {
         return ResponseEntity.ok(reviewerIdentityService.checkPaperReviewed(request));
     }
 
+    @PostMapping("/system/reviewerGetRebuttal")
+    public ResponseEntity<?> handleGetRebuttalRequest(@RequestBody ReviewerGetRebuttalRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.getPaperRebuttal(request));
+    }
+
     @PostMapping("/system/authorSendRebuttal")
     public ResponseEntity<?> handleSendRebuttalRequest(@RequestBody AuthorRebuttalResultRequset request) {
         logger.debug(request.toString());
         System.out.println(request.toString());
         return ResponseEntity.ok(authorIdentityService.sendRebuttal(request));
     }
-
-
 
     /* GENERAL IDENTITY */
 

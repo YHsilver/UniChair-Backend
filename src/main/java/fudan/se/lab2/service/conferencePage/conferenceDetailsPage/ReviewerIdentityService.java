@@ -1,12 +1,10 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerCheckPaperReviewedRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPaperDetailsRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerGetPapersRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.ReviewerSubmitPaperReviewedRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.*;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.exception.ConferencException.ReviewerNotFoundException;
 import fudan.se.lab2.exception.ConferencException.ReviewerReviewPaperFailException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
@@ -15,6 +13,7 @@ import fudan.se.lab2.repository.UserRepository;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +67,7 @@ public class ReviewerIdentityService {
         checkSubmitReviewValid(request);
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
 
-        int i = findReviewerIndex(request);
+        int i = findReviewerIndex(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),paper);
 
         if(paper.getIsReviewed()[i]!=null){
             throw new ReviewerReviewPaperFailException("You have reviewed this paper!");
@@ -87,7 +86,7 @@ public class ReviewerIdentityService {
     public String modifyPaperReviewed(ReviewerSubmitPaperReviewedRequest request){
         checkSubmitReviewValid(request);
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        int i = findReviewerIndex(request);
+        int i = findReviewerIndex(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),paper);
 
         if((paper.getIsCheckedReview()[i]!=null&&paper.getStatus()==Paper.Status.REVIEWED)||
                 (paper.getIsRebuttalChecked()[i]!=null&&paper.getStatus()==Paper.Status.CHECKED)
@@ -131,16 +130,15 @@ public class ReviewerIdentityService {
         }
     }
 
-    private int findReviewerIndex(ReviewerSubmitPaperReviewedRequest request){
-        User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        Paper paper = paperRepository.findByPaperId(request.getPaperId());
-
+    private int findReviewerIndex(User reviewer ,Paper paper){
         int i = 0;
         for(; i < Paper.REVIEWER_NUM; i++){
             if(paper.getReviewers().get(i).getId().equals(reviewer.getId())){
                 break;
             }
         }
+        if (i==3)
+            throw new ReviewerNotFoundException("Your are not the paper's reviewer/chair");
         return i;
     }
 
@@ -151,7 +149,6 @@ public class ReviewerIdentityService {
         paper.getConfidences()[i] = request.getConfidence();
         paperRepository.save(paper);
     }
-
 
     //todo: deal with duplicated with "modify func"
     public String checkPaperReviewed(ReviewerCheckPaperReviewedRequest request){
@@ -179,5 +176,17 @@ public class ReviewerIdentityService {
         }
         paperRepository.save(paper);
         return "{\"message\":\"Check reviewed paper success!\"}";
+    }
+
+    public JSONObject getPaperRebuttal(ReviewerGetRebuttalRequest request){
+        Paper paper=paperRepository.findByPaperId(request.getPaperId());
+        findReviewerIndex(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),paper);
+
+        try {
+            return UtilityService.String2Json( "{\"rebuttal\":\""+paper.getRebuttal()+"\"}");
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
