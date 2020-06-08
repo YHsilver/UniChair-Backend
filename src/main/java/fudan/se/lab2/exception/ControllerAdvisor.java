@@ -1,6 +1,5 @@
 package fudan.se.lab2.exception;
 
-import fudan.se.lab2.controller.messagePage.request.UserDecideInvitationsRequest;
 import fudan.se.lab2.exception.ConferencException.*;
 import fudan.se.lab2.exception.GenericException.JsonObjectCreatedException;
 import fudan.se.lab2.exception.LoginAndRegisterException.IllegalRegisterRequestException;
@@ -75,8 +74,8 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PaperSubmitOrModifyFailException.class)
-    ResponseEntity<?> handlePaperSubmitOrModifyFailException(PaperSubmitOrModifyFailException ex) {
+    @ExceptionHandler(AuthorPaperOperateFailException.class)
+    ResponseEntity<?> handlePaperSubmitOrModifyFailException(AuthorPaperOperateFailException ex) {
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

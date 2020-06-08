@@ -36,8 +36,10 @@ public class Paper implements Serializable {
     private String title;
     private String[][] paperAuthors;
     private String summary;
+
     // review status(CONTRIBUTION->Conference.Stage.CONTRIBUTION)
     public enum Status {CONTRIBUTION, REVIEWING, REVIEWED, CHECKED}
+
     // default status CONTRIBUTION
     private Status status = Status.CONTRIBUTION;
     // pdf file
@@ -45,12 +47,13 @@ public class Paper implements Serializable {
     private String fileName;
 
     // three allocated reviewers
-    @OrderColumn(name="id")
+    @OrderColumn(name = "id")
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<User> reviewers = new ArrayList<>();
     // three comments from reviewers
     private Boolean[] isReviewed = new Boolean[REVIEWER_NUM];
-    private Boolean[] isCheckedReview=new Boolean[REVIEWER_NUM];
+    private Boolean[] isCheckedReview = new Boolean[REVIEWER_NUM];
+    private Boolean[] isRebuttalChecked = new Boolean[REVIEWER_NUM];
 
     private String[] comments = new String[REVIEWER_NUM];
     // three grades from reviewers
@@ -59,13 +62,15 @@ public class Paper implements Serializable {
     //public enum Confidence {VERY_LOW, LOW, HIGH, VERY_HIGH}
     private String[] confidences = new String[REVIEWER_NUM];
     private String[] topics;
+
     // empty constructor
-    public Paper() {}
+    public Paper() {
+    }
 
     //the first discuss post after reviewed
-    private List<JSONObject> post1=new LinkedList<>();
+    private List<JSONObject> post1 = new LinkedList<>();
     //the second discuss post after rebuttal
-    private List<JSONObject> post2=new LinkedList<>();
+    private List<JSONObject> post2 = new LinkedList<>();
     //author's rebuttal message
     private String rebuttal;
 
@@ -83,67 +88,122 @@ public class Paper implements Serializable {
     public Long getPaperId() {
         return paperId;
     }
+
     public void setPaperId(Long paperId) {
         this.paperId = paperId;
     }
+
     public Conference getConference() {
         return conference;
     }
+
     public void setConference(Conference conference) {
         this.conference = conference;
     }
+
     public User getAuthor() {
         return author;
     }
+
     public void setAuthor(User author) {
         this.author = author;
     }
-    public String[] getTopics() { return topics; }
+
+    public String[] getTopics() {
+        return topics;
+    }
+
     public void setTopics(String[] topics) {
         this.topics = topics;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
+
     public String[][] getPaperAuthors() {
         return paperAuthors;
     }
+
     public void setPaperAuthors(String[][] paperAuthors) {
         this.paperAuthors = paperAuthors;
     }
+
     public String getSummary() {
         return summary;
     }
+
     public void setSummary(String summary) {
         this.summary = summary;
     }
+
     public Status getStatus() {
         return status;
     }
+
     public void setStatus(Status status) {
         this.status = status;
     }
+
     public File getFile() {
         return file;
     }
+
     public void setFile(File file) {
         this.file = file;
     }
-    public List<User> getReviewers() { return reviewers; }
-    public void setReviewers(ArrayList<User> reviewers) { this.reviewers = reviewers; }
-    public String[] getComments() { return comments; }
-    public void setComments(String[] comments) { this.comments = comments; }
-    public Integer[] getGrades() { return grades; }
-    public void setGrades(Integer[] grades) { this.grades = grades; }
-    public Boolean[] getIsReviewed() { return isReviewed; }
-    public void setIsReviewed(Boolean[] isReviewed) { this.isReviewed = isReviewed; }
-    public String[] getConfidences() { return confidences; }
-    public void setConfidences(String[] confidences) { this.confidences = confidences; }
-    public String getFileName() { return fileName; }
-    public void setFileName(String fileName) { this.fileName = fileName; }
+
+    public List<User> getReviewers() {
+        return reviewers;
+    }
+
+    public void setReviewers(ArrayList<User> reviewers) {
+        this.reviewers = reviewers;
+    }
+
+    public String[] getComments() {
+        return comments;
+    }
+
+    public void setComments(String[] comments) {
+        this.comments = comments;
+    }
+
+    public Integer[] getGrades() {
+        return grades;
+    }
+
+    public void setGrades(Integer[] grades) {
+        this.grades = grades;
+    }
+
+    public Boolean[] getIsReviewed() {
+        return isReviewed;
+    }
+
+    public void setIsReviewed(Boolean[] isReviewed) {
+        this.isReviewed = isReviewed;
+    }
+
+    public String[] getConfidences() {
+        return confidences;
+    }
+
+    public void setConfidences(String[] confidences) {
+        this.confidences = confidences;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public List<JSONObject> getPost1() {
         return post1;
@@ -177,6 +237,14 @@ public class Paper implements Serializable {
         this.isCheckedReview = isCheckedReview;
     }
 
+    public Boolean[] getIsRebuttalChecked() {
+        return isRebuttalChecked;
+    }
+
+    public void setIsRebuttalChecked(Boolean[] isRebuttalChecked) {
+        this.isRebuttalChecked = isRebuttalChecked;
+    }
+
     @Override
     public String toString() {
         return "Paper{" +
@@ -197,45 +265,46 @@ public class Paper implements Serializable {
                 '}';
     }
 
-    public boolean isAllReviewed(){
-        for(Boolean isReviewed: isReviewed){
-            if(isReviewed == null || !isReviewed)
-                return false;
-        }
-        return true;
-    }
-    public boolean isAllChecked(){
-        for(Boolean isChecked: isCheckedReview){
-            if(isChecked == null || !isChecked)
+    public boolean isAllReviewed() {
+        for (Boolean isReviewed : isReviewed) {
+            if (isReviewed == null || !isReviewed)
                 return false;
         }
         return true;
     }
 
-    public int isCurrPCMemberReviewed(Long reviewerId){
+    public boolean isAllChecked() {
+        for (Boolean isChecked : isCheckedReview) {
+            if (isChecked == null || !isChecked)
+                return false;
+        }
+        return true;
+    }
+
+    public int isCurrPCMemberReviewed(Long reviewerId) {
         return isCurrPCOperated(reviewerId, isReviewed);
     }
-    public int isCurrPCMemberChecked(Long reviewerId){
+
+    public int isCurrPCMemberChecked(Long reviewerId) {
         return isCurrPCOperated(reviewerId, isCheckedReview);
     }
 
     private int isCurrPCOperated(Long reviewerId, Boolean[] isOperated) {
         for (int i = 0; i < REVIEWER_NUM; i++) {
             User reviewer = reviewers.get(i);
-            if(reviewer != null && reviewer.getId().equals(reviewerId) && isOperated[i] != null && isOperated[i]){
+            if (reviewer != null && reviewer.getId().equals(reviewerId) && isOperated[i] != null && isOperated[i]) {
                 return i;
             }
         }
         return -1;
     }
 
-    
 
-    public JSONObject toBriefJson(){
+    public JSONObject toBriefJson() {
         return toBriefJson(null);
     }
 
-    public JSONObject toBriefJson(Long reviewerId){
+    public JSONObject toBriefJson(Long reviewerId) {
         try {
             String str = "{" +
                     "\"paperId\":\"" + paperId + '\"' +
@@ -248,7 +317,7 @@ public class Paper implements Serializable {
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"fileName\":\"" + fileName + '\"' +
                     ", \"status\":\"" + status + '\"';
-            if(reviewerId != null){
+            if (reviewerId != null) {
                 str += ", \"isCurrPCMemberReviewed\":" + (isCurrPCMemberReviewed(reviewerId) != -1);
             }
             str += '}';
@@ -259,18 +328,18 @@ public class Paper implements Serializable {
         }
     }
 
-    public JSONObject toStandardJson(){
+    public JSONObject toStandardJson() {
         return toStandardJson(null);
     }
 
-    public JSONObject toStandardJson(Long reviewerId){
+    public JSONObject toStandardJson(Long reviewerId) {
         try {
             Long[] reviewerIds = new Long[REVIEWER_NUM];
             String[] reviewerFullNames = new String[REVIEWER_NUM];
             int i = 0;
-            for (User reviewer: reviewers
-                 ) {
-                if(reviewer != null){
+            for (User reviewer : reviewers
+            ) {
+                if (reviewer != null) {
                     reviewerIds[i] = reviewer.getId();
                     reviewerFullNames[i] = reviewer.getFullName();
                     i++;
@@ -292,17 +361,17 @@ public class Paper implements Serializable {
                     ", \"authors\":" + getAuthorsObjectArray() +
                     ", \"status\":\"" + status + '\"' +
                     ", \"fileName\":\"" + fileName + '\"' +
-                    ", \"fileSize\":\"" + file.length() + '\"' ;
-            if(reviewerId != null){
+                    ", \"fileSize\":\"" + file.length() + '\"';
+            if (reviewerId != null) {
                 int reId = isCurrPCMemberReviewed(reviewerId);
                 str += ", \"isCurrPCMemberReviewed\":" + (reId != -1);
-                if(reId != -1){
+                if (reId != -1) {
                     str += ", \"myGrade\":" + grades[reId] +
                             ", \"myComment\":\"" + comments[reId] + '\"' +
                             ", \"myConfidence\":\"" + confidences[reId] + '\"';
                 }
             }
-            if(status == Status.REVIEWED){
+            if (status == Status.REVIEWED) {
                 str += ", \"grades\":" + UtilityService.getJsonStringFromArray(grades) +
                         ", \"comments\":" + UtilityService.getJsonStringFromArray(comments) +
                         ", \"confidences\":" + UtilityService.getJsonStringFromArray(confidences);
@@ -316,7 +385,7 @@ public class Paper implements Serializable {
         }
     }
 
-    private String getAuthorsObjectArray(){
+    private String getAuthorsObjectArray() {
         StringBuilder result = new StringBuilder("[");
 
         for (String[] author : paperAuthors) {

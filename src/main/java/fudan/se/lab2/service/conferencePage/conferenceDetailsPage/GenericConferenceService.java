@@ -7,7 +7,7 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.gen
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
-import fudan.se.lab2.exception.ConferencException.PaperSubmitOrModifyFailException;
+import fudan.se.lab2.exception.ConferencException.AuthorPaperOperateFailException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Service
 public class GenericConferenceService {
@@ -71,38 +70,38 @@ public class GenericConferenceService {
         User author = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         if (author == null || conference == null || conference.getChairman().getId().equals(author.getId())) {
-            throw new PaperSubmitOrModifyFailException("Invalid identity!");
+            throw new AuthorPaperOperateFailException("Invalid identity!");
         }
         if (conference.getStage() != Conference.Stage.CONTRIBUTION) {
-            throw new PaperSubmitOrModifyFailException("Not Contribution Stage!");
+            throw new AuthorPaperOperateFailException("Not Contribution Stage!");
         }
 
         MultipartFile multipartFile = request.getFile();
         if (multipartFile == null) {
-            throw new PaperSubmitOrModifyFailException("pdf file missing!");
+            throw new AuthorPaperOperateFailException("pdf file missing!");
         }
         // get file name
         String fileName = multipartFile.getOriginalFilename();
 
         if(fileName == null){
-            throw new PaperSubmitOrModifyFailException("paper submit wrong, not pdf file!");
+            throw new AuthorPaperOperateFailException("paper submit wrong, not pdf file!");
         }
         if (fileName.equals(""))fileName=multipartFile.getName();
 
         int index = fileName.lastIndexOf('.');
         if(index == -1){
-            throw new PaperSubmitOrModifyFailException("paper submit wrong, not pdf file!");
+            throw new AuthorPaperOperateFailException("paper submit wrong, not pdf file!");
         }
         String suffix = fileName.substring(index);
         if (!suffix.toLowerCase().equals(".pdf")) {
-            throw new PaperSubmitOrModifyFailException("paper submit wrong, not pdf file!");
+            throw new AuthorPaperOperateFailException("paper submit wrong, not pdf file!");
         }
 
         String[][] authors = UtilityService.isAuthorsValid(request.getAuthors());
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
                 || authors == null) {
-            throw new PaperSubmitOrModifyFailException("paper submit wrong, information format error!!");
+            throw new AuthorPaperOperateFailException("paper submit wrong, information format error!!");
         }
 
         File excelFile;
@@ -112,12 +111,12 @@ public class GenericConferenceService {
             multipartFile.transferTo(excelFile);
         } catch (IOException ex) {
             logger.trace("context", ex);   // Compliant
-            throw new PaperSubmitOrModifyFailException("paper submit wrong, unknown error occurs! Please try again later!");
+            throw new AuthorPaperOperateFailException("paper submit wrong, unknown error occurs! Please try again later!");
         }
 
         // check the validation of all topics
         if (!UtilityService.isTopicsValidInConference(conference, request.getTopics())) {
-            throw new PaperSubmitOrModifyFailException("paper submit wrong, topics selected error!");
+            throw new AuthorPaperOperateFailException("paper submit wrong, topics selected error!");
         }
 
         Paper newPaper = new Paper(conference, author, request.getTitle(),

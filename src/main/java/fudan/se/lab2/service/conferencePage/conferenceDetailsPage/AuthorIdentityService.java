@@ -3,10 +3,11 @@ package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPaperDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPapersRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorModifyPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorRebuttalResultRequset;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
-import fudan.se.lab2.exception.ConferencException.PaperSubmitOrModifyFailException;
+import fudan.se.lab2.exception.ConferencException.AuthorPaperOperateFailException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -82,14 +83,14 @@ public class AuthorIdentityService {
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
         if (paper == null || author == null || !paper.getAuthor().getId().equals(author.getId())
                 || paper.getConference().getStage() != Conference.Stage.CONTRIBUTION || paper.getStatus() != Paper.Status.CONTRIBUTION) {
-            throw new PaperSubmitOrModifyFailException("Invalid Request!");
+            throw new AuthorPaperOperateFailException("Invalid Request!");
         }
 
         String[][] authors = UtilityService.isAuthorsValid(request.getAuthors());
         if (!UtilityService.checkStringLength(request.getTitle(), 1, 50)
                 || !UtilityService.checkStringLength(request.getSummary(), 1, 800)
                 || authors == null || !UtilityService.isTopicsValidInConference(paper.getConference(), request.getTopics())) {
-            throw new PaperSubmitOrModifyFailException("paper modify wrong, information format error or topics selected error!");
+            throw new AuthorPaperOperateFailException("paper modify wrong, information format error or topics selected error!");
         }
 
         MultipartFile multipartFile = request.getFile();
@@ -100,10 +101,10 @@ public class AuthorIdentityService {
             if (fileName == null || fileName.equals("")) fileName = multipartFile.getName();
             int index = fileName.lastIndexOf('.');
             if (index == -1) {
-                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
+                throw new AuthorPaperOperateFailException("paper modify wrong, not pdf file!");
             }
             if (!fileName.substring(index).toLowerCase().equals(".pdf")) {
-                throw new PaperSubmitOrModifyFailException("paper modify wrong, not pdf file!");
+                throw new AuthorPaperOperateFailException("paper modify wrong, not pdf file!");
             }
             // check over
             File excelFile;
@@ -113,7 +114,7 @@ public class AuthorIdentityService {
                 multipartFile.transferTo(excelFile);
             } catch (IOException ex) {
                 logger.trace("context", ex);   // Compliant
-                throw new PaperSubmitOrModifyFailException("paper modify wrong, unknown error occurs! Please try again later!");
+                throw new AuthorPaperOperateFailException("paper modify wrong, unknown error occurs! Please try again later!");
             }
             paper.setFileName(fileName);
             paper.setFile(excelFile);
@@ -127,6 +128,24 @@ public class AuthorIdentityService {
         // modify success
         return "{\"message\":\"your paper submit success!\"}";
     }
+
+
+    public String sendRebuttal(AuthorRebuttalResultRequset request){
+        Paper paper=paperRepository.findByPaperId(request.getPaperId());
+        User author=userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        if (paper == null || author == null || !paper.getAuthor().getId().equals(author.getId())
+              || paper.getStatus() != Paper.Status.REVIEWED) {
+            throw new AuthorPaperOperateFailException("Invalid Request!");
+        }
+        if (!UtilityService.checkStringLength(request.getRebuttal(), 1)){
+            throw new AuthorPaperOperateFailException("Invalid rebuttal message");
+
+        }
+        paper.setRebuttal(request.getRebuttal());
+        paperRepository.save(paper);
+        return "{\"message\":\"Your rebuttal message submit success!\"}";
+    }
+
 
 
 }

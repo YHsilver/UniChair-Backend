@@ -3,6 +3,7 @@ package fudan.se.lab2.controller.conferencePage.conferenceDetailsPage;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPaperDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPapersRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorModifyPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorRebuttalResultRequset;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.*;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
@@ -161,6 +162,15 @@ public class ConferenceDetailPageController {
         System.out.println(request.toString());
         return ResponseEntity.ok(reviewerIdentityService.checkPaperReviewed(request));
     }
+
+    @PostMapping("/system/authorSendRebuttal")
+    public ResponseEntity<?> handleSendRebuttalRequest(@RequestBody AuthorRebuttalResultRequset request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(authorIdentityService.sendRebuttal(request));
+    }
+
+
 
     /* GENERAL IDENTITY */
 

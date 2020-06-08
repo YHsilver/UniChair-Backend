@@ -89,7 +89,9 @@ public class ReviewerIdentityService {
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
         int i = findReviewerIndex(request);
 
-        if(paper.getIsCheckedReview()[i]!=null){
+        if((paper.getIsCheckedReview()[i]!=null&&paper.getStatus()==Paper.Status.REVIEWED)||
+                (paper.getIsRebuttalChecked()[i]!=null&&paper.getStatus()==Paper.Status.CHECKED)
+        ){
             throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
         }
 
@@ -104,11 +106,18 @@ public class ReviewerIdentityService {
     }
 
     private void checkSubmitReviewValid(ReviewerSubmitPaperReviewedRequest request){
+
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
 
         if(!UtilityService.isValidReviewer(paper, reviewer)){
             throw new ReviewerReviewPaperFailException("You are not the reviewer of this paper!");
+        }
+
+        if (paper.getStatus()!=Paper.Status.REVIEWING||paper.getStatus()!=Paper.Status.REVIEWED||
+        paper.getStatus()!=Paper.Status.CHECKED
+        ){
+            throw new ReviewerReviewPaperFailException("Paper status not valid!");
         }
 
         if(!UtilityService.checkStringLength(request.getComment(), 1)){
