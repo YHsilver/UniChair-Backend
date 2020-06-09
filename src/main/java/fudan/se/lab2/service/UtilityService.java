@@ -21,7 +21,7 @@ public class UtilityService {
     // 日志
     public static final Random random = getSecureRandom();
 
-    private static Random getSecureRandom(){
+    private static Random getSecureRandom() {
         Random random;
         try {
             random = SecureRandom.getInstanceStrong();
@@ -47,18 +47,17 @@ public class UtilityService {
         return validTopics.size() == topics.length;
     }
 
-    public static boolean isValidReviewer(Conference conference, User reviewer){
-        if(reviewer == null || conference == null){
+    public static boolean isValidReviewer(Conference conference, User reviewer) {
+        if (reviewer == null || conference == null) {
             return false;
         }
-        for(User tarReviewer: conference.getReviewerSet()){
-            if(tarReviewer.getId().equals(reviewer.getId())){
+        for (User tarReviewer : conference.getReviewerSet()) {
+            if (tarReviewer.getId().equals(reviewer.getId())) {
                 return true;
             }
         }
         return false;
     }
-
 
 
     /**
@@ -135,33 +134,38 @@ public class UtilityService {
             return false;
         }
 
+        checkToReviewedStageValid(conference, stage, paperRepository);
+        checkToEndingStageValid(conference, stage, paperRepository);
+
+        return true;
+    }
+
+    private static void checkToReviewedStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
         if (stage == Conference.Stage.REVIEWED) {
             Set<Paper> papers = paperRepository.findPapersByConference(conference);
-            for(Paper paper: papers){
-                for(Boolean isReviewChecked: paper.getIsReviewChecked()){
-                    if(isReviewChecked == null || !isReviewChecked)
+            for (Paper paper : papers) {
+                for (Boolean isReviewChecked : paper.getIsReviewChecked()) {
+                    if (isReviewChecked == null || !isReviewChecked)
                         throw new ChairChangeConferenceStageFailException("Not All Papers Review Checked!");
                 }
             }
         }
+    }
 
+    private static void checkToEndingStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
         if (stage == Conference.Stage.ENDING) {
             Set<Paper> papers = paperRepository.findPapersByConference(conference);
-            for(Paper paper: papers){
-               if (!paper.isPass()&&paper.getRebuttal()!=null){
-                   for(Boolean isRebuttalChecked: paper.getIsRebuttalChecked()){
-                       if(isRebuttalChecked == null || !isRebuttalChecked)
-                           throw new ChairChangeConferenceStageFailException("Not All Rebuttal Papers Checked!");
-                   }
-               }
+            for (Paper paper : papers) {
+                if (!paper.isPass() && paper.getRebuttal() != null) {
+                    for (Boolean isRebuttalChecked : paper.getIsRebuttalChecked()) {
+                        if (isRebuttalChecked == null || !isRebuttalChecked)
+                            throw new ChairChangeConferenceStageFailException("Not All Rebuttal Papers Checked!");
+                    }
+                }
             }
         }
-
-
-
-
-        return true;
     }
+
 
     public static Conference.Stage getNextStage(Conference.Stage stage) {
         switch (stage) {
@@ -184,23 +188,23 @@ public class UtilityService {
      * @return a string with json array format
      */
     public static String getJsonStringFromArray(Object[] array) {
-        if(array == null ||array.length == 0){
+        if (array == null || array.length == 0) {
             return "[]";
         }
         StringBuilder result = new StringBuilder("[");
         boolean isBasicData = false;
-        if(array[0] instanceof Integer || array[0] instanceof Long){
+        if (array[0] instanceof Integer || array[0] instanceof Long) {
             isBasicData = true;
         }
 
         for (Object object : array) {
-            if(object != null){
-                if(isBasicData){
+            if (object != null) {
+                if (isBasicData) {
                     result.append(object.toString()).append(',');
-                }else{
+                } else {
                     result.append('\"').append(object.toString()).append("\",");
                 }
-            }else{
+            } else {
                 result.append('\"').append("null").append("\",");
             }
         }
@@ -218,12 +222,12 @@ public class UtilityService {
     public static String[][] isAuthorsValid(String[] authors) {
         String[][] authorArrays;
 
-        if(authors == null || authors.length == 0 || authors.length % 4 != 0){
+        if (authors == null || authors.length == 0 || authors.length % 4 != 0) {
             return null;
         }
 
         authorArrays = new String[authors.length / 4][4];
-        for(int i = 0; i < authors.length / 4; i++){
+        for (int i = 0; i < authors.length / 4; i++) {
             String[] author = new String[4];
             author[0] = authors[4 * i];
             author[1] = authors[4 * i + 1];
@@ -265,21 +269,21 @@ public class UtilityService {
         return resultSet;
     }
 
-    public static boolean isValidReviewer(Paper paper, User reviewer){
-        if(reviewer == null || paper == null){
+    public static boolean isValidReviewer(Paper paper, User reviewer) {
+        if (reviewer == null || paper == null) {
             return false;
         }
-        for (User tarReviewer: paper.getReviewers()
+        for (User tarReviewer : paper.getReviewers()
         ) {
-            if(tarReviewer.getId().equals(reviewer.getId())){
+            if (tarReviewer.getId().equals(reviewer.getId())) {
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean isValidReviewerOrChair(Paper paper,User user){
-         return isValidReviewer(paper,user)||paper.getConference().getChairman().getId().equals(user.getId());
+    public static boolean isValidReviewerOrChair(Paper paper, User user) {
+        return isValidReviewer(paper, user) || paper.getConference().getChairman().getId().equals(user.getId());
     }
 
 

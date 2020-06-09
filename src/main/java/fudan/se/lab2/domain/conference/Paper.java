@@ -206,7 +206,7 @@ public class Paper implements Serializable {
     }
 
     public List<JSONObject> getJSONPost1() {
-        List<JSONObject> list=new ArrayList<>();
+        List<JSONObject> list = new ArrayList<>();
 
         for (PaperPosts paperPosts : post1) {
             list.add(paperPosts.tojSON());
@@ -218,8 +218,8 @@ public class Paper implements Serializable {
         this.post1 = post1;
     }
 
-    public  List<JSONObject> getJSONPost2() {
-        List<JSONObject> list=new ArrayList<>();
+    public List<JSONObject> getJSONPost2() {
+        List<JSONObject> list = new ArrayList<>();
 
         for (PaperPosts paperPosts : post2) {
             list.add(paperPosts.tojSON());
@@ -263,10 +263,14 @@ public class Paper implements Serializable {
         this.post2.add(comment);
     }
 
-    public boolean isPass(){
-        for (int i=0;i<REVIEWER_NUM;i++){
-         if (grades[i]==null||grades[i]<0)
-             return false;
+    private boolean isRebuttal() {
+        return rebuttal != null;
+    }
+
+    public boolean isPass() {
+        for (int i = 0; i < REVIEWER_NUM; i++) {
+            if (grades[i] == null || grades[i] < 0)
+                return false;
         }
         return true;
     }
@@ -283,11 +287,14 @@ public class Paper implements Serializable {
                 ", status=" + status +
                 ", fileSize=" + file.length() +
                 ", reviewers=" + reviewers +
+                ", isRebuttal=" + isRebuttal() +
                 ", isReviewed=" + Arrays.toString(isReviewed) +
                 ", comments=" + Arrays.toString(comments) +
                 ", grades=" + Arrays.toString(grades) +
                 ", confidences=" + Arrays.toString(confidences) +
                 ", topics=" + Arrays.toString(topics) +
+                ", isReviewChecked=" + Arrays.toString(isReviewChecked) +
+                ", isRebuttalChecked=" + Arrays.toString(isRebuttalChecked) +
                 '}';
     }
 
@@ -307,13 +314,18 @@ public class Paper implements Serializable {
         return true;
     }
 
-    public int isCurrPCMemberReviewed(Long reviewerId) {
+    private int isCurrPCMemberReviewed(Long reviewerId) {
         return isCurrPCOperated(reviewerId, isReviewed);
     }
 
-    public int isCurrPCMemberChecked(Long reviewerId) {
+    private int isCurrPCMemberChecked(Long reviewerId) {
         return isCurrPCOperated(reviewerId, isReviewChecked);
     }
+
+    private int isCurrPCMemberRebuttalChecked(Long reviewerId) {
+        return isCurrPCOperated(reviewerId, isRebuttalChecked);
+    }
+
 
     private int isCurrPCOperated(Long reviewerId, Boolean[] isOperated) {
         for (int i = 0; i < REVIEWER_NUM; i++) {
@@ -390,17 +402,27 @@ public class Paper implements Serializable {
                     ", \"fileSize\":\"" + file.length() + '\"';
             if (reviewerId != null) {
                 int reId = isCurrPCMemberReviewed(reviewerId);
-                str += ", \"isCurrPCMemberReviewed\":" + (reId != -1);
+                str += ", \"isCurrPCMemberReviewed\":\"" + (reId != -1) + "\"";
                 if (reId != -1) {
-                    str += ", \"myGrade\":" + grades[reId] +
+                    str += ", \"myGrade\":\"" + grades[reId] + "\"" +
                             ", \"myComment\":\"" + comments[reId] + '\"' +
                             ", \"myConfidence\":\"" + confidences[reId] + '\"';
                 }
+                int ckId = isCurrPCMemberChecked(reviewerId);
+                str += ", \"isCurrPCMemberChecked\":\"" + (ckId != -1) + "\"";
+
             }
             if (status == Status.REVIEWED) {
+                if (!isPass()) {
+                    int reckId = isCurrPCMemberRebuttalChecked(reviewerId);
+                    str += ", \"isCurrPCMemberRebuttalChecked\":\"" + (reckId != -1) + "\"";
+                }
+
                 str += ", \"grades\":" + UtilityService.getJsonStringFromArray(grades) +
                         ", \"comments\":" + UtilityService.getJsonStringFromArray(comments) +
-                        ", \"confidences\":" + UtilityService.getJsonStringFromArray(confidences);
+                        ", \"confidences\":" + UtilityService.getJsonStringFromArray(confidences) +
+                        ", \"isRebuttal\":\"" + isRebuttal() + "\"" +
+                        ", \"isPass\":\"" + isPass() + "\"";
 
             }
             str += '}';
