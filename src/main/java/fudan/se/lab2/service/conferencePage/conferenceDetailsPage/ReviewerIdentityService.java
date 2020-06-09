@@ -4,12 +4,10 @@ import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.rev
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
+import fudan.se.lab2.domain.conference.PaperPosts;
 import fudan.se.lab2.exception.ConferencException.ReviewerNotFoundException;
 import fudan.se.lab2.exception.ConferencException.ReviewerReviewPaperFailException;
-import fudan.se.lab2.repository.ConferenceRepository;
-import fudan.se.lab2.repository.PaperRepository;
-import fudan.se.lab2.repository.ReviewRepository;
-import fudan.se.lab2.repository.UserRepository;
+import fudan.se.lab2.repository.*;
 import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import fudan.se.lab2.service.UtilityService;
 import org.json.simple.JSONObject;
@@ -27,15 +25,18 @@ public class ReviewerIdentityService {
     private PaperRepository paperRepository;
     private ReviewRepository reviewRepository;
     private JwtTokenUtil tokenUtil;
+    private PaperPostsRepository paperPostsRepository;
 
     @Autowired
     public ReviewerIdentityService(UserRepository userRepository, ConferenceRepository conferenceRepository,
-                                    PaperRepository paperRepository, ReviewRepository reviewRepository, JwtTokenUtil tokenUtil) {
+                                   PaperRepository paperRepository, ReviewRepository reviewRepository,
+                                   JwtTokenUtil tokenUtil, PaperPostsRepository paperPostsRepository) {
         this.userRepository = userRepository;
         this.paperRepository = paperRepository;
         this.conferenceRepository = conferenceRepository;
         this.reviewRepository = reviewRepository;
         this.tokenUtil = tokenUtil;
+        this.paperPostsRepository=paperPostsRepository;
     }
 
     public List<JSONObject> getPapers(ReviewerGetPapersRequest request){
@@ -210,54 +211,36 @@ public class ReviewerIdentityService {
         if (!UtilityService.isValidReviewerOrChair(paper,user)){
             throw new ReviewerNotFoundException("You are not the reviewer or chair of this paper !");
         }
-        if (i==1) return paper.getPost1();
-        else if (i==2) return  paper.getPost2();
-        else return null;
+        if (i==1) return paper.getJSONPost1();
+        else if (i==2) return  paper.getJSONPost2();
+        else throw new RuntimeException("wrong method call: arguments false! ");
     }
 
 
 
 
     public String sendComment(ReviewerSendCommentJudgeRequest request){
-        Paper paper=paperRepository.findByPaperId(request.getPaperId());
-        User user=userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
-        if (!UtilityService.isValidReviewerOrChair(paper,user)){
-            throw new ReviewerNotFoundException("You are not the reviewer or chair of this paper !");
-        }
-
-        JSONObject message = null;
-        try {
-          message =UtilityService.String2Json(
-                  "{\"name\":\""+user.getUsername()+"\",\"comment\":\""+request.getMessage()+"\"}"
-          );
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        paper.addOneToPost1(message);
-        paperRepository.save(paper);
+       setPost(request,1);
         return "{\"message\":\"Send comment success!\"}";
     }
 
     public String sendJudgment(ReviewerSendCommentJudgeRequest request){
+        setPost(request,2);
+        return "{\"message\":\"Send judgment success!\"}";
+    }
+
+    private void setPost(ReviewerSendCommentJudgeRequest request, int i){
         Paper paper=paperRepository.findByPaperId(request.getPaperId());
         User user=userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         if (!UtilityService.isValidReviewerOrChair(paper,user)){
             throw new ReviewerNotFoundException("You are not the reviewer or chair of this paper !");
         }
+        PaperPosts post=new PaperPosts(user,request.getMessage());
 
-        JSONObject message = null;
-        try {
-            message =UtilityService.String2Json(
-                    "{\"name\":\""+user.getUsername()+"\",\"judge\":\""+request.getMessage()+"\"}"
-            );
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        paper.addOneToPost2(message);
+        if (i==1) paper.addOneToPost1(post);
+        else if (i==2) paper.addOneToPost2(post);
+        else throw new RuntimeException("wrong method call: arguments false! ");
+        paperPostsRepository.save(post);
         paperRepository.save(paper);
-        return "{\"message\":\"Send judgment success!\"}";
     }
-
-
 }

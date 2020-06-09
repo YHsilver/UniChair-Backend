@@ -66,9 +66,11 @@ public class Paper implements Serializable {
     }
 
     //the first discuss post after reviewed
-    private List<JSONObject> post1 = new LinkedList<>();
+    @OneToMany
+    private List<PaperPosts> post1 = new ArrayList<>();
     //the second discuss post after rebuttal
-    private List<JSONObject> post2 = new LinkedList<>();
+    @OneToMany
+    private List<PaperPosts> post2 = new ArrayList<>();
     //author's rebuttal message
     private String rebuttal;
 
@@ -203,21 +205,29 @@ public class Paper implements Serializable {
         this.fileName = fileName;
     }
 
-    public List<JSONObject> getPost1() {
-        return post1;
+    public List<JSONObject> getJSONPost1() {
+        List<JSONObject> list=new ArrayList<>();
+
+        for (PaperPosts paperPosts : post1) {
+            list.add(paperPosts.tojSON());
+        }
+        return list;
     }
 
-    public void setPost1(List<JSONObject> post1) {
+    public void setPost1(List<PaperPosts> post1) {
         this.post1 = post1;
     }
 
+    public  List<JSONObject> getJSONPost2() {
+        List<JSONObject> list=new ArrayList<>();
 
-
-    public List<JSONObject> getPost2() {
-        return post2;
+        for (PaperPosts paperPosts : post2) {
+            list.add(paperPosts.tojSON());
+        }
+        return list;
     }
 
-    public void setPost2(List<JSONObject> post2) {
+    public void setPost2(List<PaperPosts> post2) {
         this.post2 = post2;
     }
 
@@ -245,11 +255,11 @@ public class Paper implements Serializable {
         this.isRebuttalChecked = isRebuttalChecked;
     }
 
-    public void addOneToPost1(JSONObject comment) {
+    public void addOneToPost1(PaperPosts comment) {
         this.post1.add(comment);
     }
 
-    public void addOneToPost2(JSONObject comment) {
+    public void addOneToPost2(PaperPosts comment) {
         this.post2.add(comment);
     }
 

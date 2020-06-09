@@ -38,11 +38,12 @@ class ReviewerIdentityServiceTest {
     private ReviewerIdentityService reviewerIdentityService;
     private GenericConferenceService genericConferenceService;
     private ChairIdentityService chairIdentityService;
+    private PaperPostsRepository paperPostsRepository;
 
     @Autowired
     public ReviewerIdentityServiceTest(UserRepository userRepository, ConferenceRepository conferenceRepository,
                                        PaperRepository paperRepository, ReviewRepository reviewRepository, JwtTokenUtil tokenUtil,
-                                       InvitationRepository invitationRepository) {
+                                       InvitationRepository invitationRepository, PaperPostsRepository paperPostsRepository) {
         this.userRepository = userRepository;
         this.paperRepository = paperRepository;
         this.conferenceRepository = conferenceRepository;
@@ -50,7 +51,7 @@ class ReviewerIdentityServiceTest {
         this.tokenUtil = tokenUtil;
         this.genericConferenceService = new GenericConferenceService(userRepository, conferenceRepository, paperRepository,tokenUtil);
         this.reviewerIdentityService=new ReviewerIdentityService(userRepository,conferenceRepository,paperRepository,
-                reviewRepository,tokenUtil);
+                reviewRepository,tokenUtil,paperPostsRepository);
         this.chairIdentityService=new ChairIdentityService(userRepository,invitationRepository,conferenceRepository,paperRepository,reviewRepository,tokenUtil);
     }
 
@@ -172,14 +173,9 @@ class ReviewerIdentityServiceTest {
     void getPaperDetails() {
 
 
-
-
-
     }
 
     @Test
     void submitPaperReviewed() {
-
-
     }
 }
