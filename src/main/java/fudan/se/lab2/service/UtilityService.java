@@ -59,6 +59,8 @@ public class UtilityService {
         return false;
     }
 
+
+
     /**
      * change a JSON String 2 JSONObject
      * public static!!!
@@ -262,5 +264,10 @@ public class UtilityService {
         }
         return false;
     }
-    
+
+    public static boolean isValidReviewerOrChair(Paper paper,User user){
+         return isValidReviewer(paper,user)||paper.getConference().getChairman().getId().equals(user.getId());
+    }
+
+
 }

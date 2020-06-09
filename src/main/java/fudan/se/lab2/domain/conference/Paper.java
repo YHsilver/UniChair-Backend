@@ -213,6 +213,8 @@ public class Paper implements Serializable {
         this.post1 = post1;
     }
 
+
+
     public List<JSONObject> getPost2() {
         return post2;
     }
@@ -243,6 +245,14 @@ public class Paper implements Serializable {
 
     public void setIsRebuttalChecked(Boolean[] isRebuttalChecked) {
         this.isRebuttalChecked = isRebuttalChecked;
+    }
+
+    public void addOneToPost1(JSONObject comment) {
+        this.post1.add(comment);
+    }
+
+    public void addOneToPost2(JSONObject comment) {
+        this.post2.add(comment);
     }
 
     @Override

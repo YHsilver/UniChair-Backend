@@ -1,5 +1,6 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.*;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
@@ -17,6 +18,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.PortUnreachableException;
 import java.util.*;
 
 @Service
@@ -64,10 +66,11 @@ public class ReviewerIdentityService {
     }
 
     public String submitPaperReviewed(ReviewerSubmitPaperReviewedRequest request){
-        checkSubmitReviewValid(request);
+        checkSubmitReviewRequestValid(request);
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
+        User reviewer= userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
 
-        int i = findReviewerIndex(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),paper);
+        int i = findReviewerIndex(reviewer,paper);
 
         if(paper.getIsReviewed()[i]!=null){
             throw new ReviewerReviewPaperFailException("You have reviewed this paper!");
@@ -84,9 +87,11 @@ public class ReviewerIdentityService {
     }
 
     public String modifyPaperReviewed(ReviewerSubmitPaperReviewedRequest request){
-        checkSubmitReviewValid(request);
+        checkSubmitReviewRequestValid(request);
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
-        int i = findReviewerIndex(userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken())),paper);
+        User reviewer= userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+
+        int i = findReviewerIndex(reviewer,paper);
 
         if((paper.getIsCheckedReview()[i]!=null&&paper.getStatus()==Paper.Status.REVIEWED)||
                 (paper.getIsRebuttalChecked()[i]!=null&&paper.getStatus()==Paper.Status.CHECKED)
@@ -104,7 +109,7 @@ public class ReviewerIdentityService {
         return "{\"message\":\"Modify reviewed paper success!\"}";
     }
 
-    private void checkSubmitReviewValid(ReviewerSubmitPaperReviewedRequest request){
+    private void checkSubmitReviewRequestValid(ReviewerSubmitPaperReviewedRequest request){
 
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
@@ -130,15 +135,16 @@ public class ReviewerIdentityService {
         }
     }
 
-    private int findReviewerIndex(User reviewer ,Paper paper){
+    private int findReviewerIndex(User reviewer , Paper paper){
         int i = 0;
         for(; i < Paper.REVIEWER_NUM; i++){
             if(paper.getReviewers().get(i).getId().equals(reviewer.getId())){
                 break;
             }
         }
-        if (i==3)
-            throw new ReviewerNotFoundException("Your are not the paper's reviewer/chair");
+        if(i==3){
+            throw new ReviewerNotFoundException("You are not the reviewer of this paper !");
+        }
         return i;
     }
 
@@ -150,13 +156,13 @@ public class ReviewerIdentityService {
         paperRepository.save(paper);
     }
 
-    //todo: deal with duplicated with "modify func"
+
     public String checkPaperReviewed(ReviewerCheckPaperReviewedRequest request){
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
 
         if(!UtilityService.isValidReviewer(paper, reviewer)){
-            throw new ReviewerReviewPaperFailException("You are not the reviewer of this paper!");
+            throw new ReviewerNotFoundException("You are not the reviewer of this paper !");
         }
 
         int i = 0;
@@ -189,4 +195,71 @@ public class ReviewerIdentityService {
             return null;
         }
     }
+
+
+    public List<JSONObject> getPaperComment(ReviewerGetCommentJudgeRequest request){
+        return getPost(request,1);
+
+    }
+
+    public List<JSONObject> getPaperJudgment(ReviewerGetCommentJudgeRequest request){
+        return  getPost(request,2);
+    }
+
+    private  List<JSONObject> getPost(ReviewerGetCommentJudgeRequest request, int i) {
+        Paper paper=paperRepository.findByPaperId(request.getPaperId());
+        User user=userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        if (!UtilityService.isValidReviewerOrChair(paper,user)){
+            throw new ReviewerNotFoundException("You are not the reviewer or chair of this paper !");
+        }
+        if (i==1) return paper.getPost1();
+        else if (i==2) return  paper.getPost2();
+        else return null;
+    }
+
+
+
+
+    public String sendComment(ReviewerSendCommentJudgeRequest request){
+        Paper paper=paperRepository.findByPaperId(request.getPaperId());
+        User user=userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        if (!UtilityService.isValidReviewerOrChair(paper,user)){
+            throw new ReviewerNotFoundException("You are not the reviewer or chair of this paper !");
+        }
+
+        JSONObject message = null;
+        try {
+          message =UtilityService.String2Json(
+                  "{\"name\":\""+user.getUsername()+"\",\"comment\":\""+request.getMessage()+"\"}"
+          );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        paper.addOneToPost1(message);
+        paperRepository.save(paper);
+        return "{\"message\":\"Send comment success!\"}";
+    }
+
+    public String sendJudgment(ReviewerSendCommentJudgeRequest request){
+        Paper paper=paperRepository.findByPaperId(request.getPaperId());
+        User user=userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        if (!UtilityService.isValidReviewerOrChair(paper,user)){
+            throw new ReviewerNotFoundException("You are not the reviewer or chair of this paper !");
+        }
+
+        JSONObject message = null;
+        try {
+            message =UtilityService.String2Json(
+                    "{\"name\":\""+user.getUsername()+"\",\"judge\":\""+request.getMessage()+"\"}"
+            );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        paper.addOneToPost2(message);
+        paperRepository.save(paper);
+        return "{\"message\":\"Send judgment success!\"}";
+    }
+
+
 }

@@ -174,6 +174,28 @@ public class ConferenceDetailPageController {
         return ResponseEntity.ok(authorIdentityService.sendRebuttal(request));
     }
 
+
+    @PostMapping("/system/reviewerGetComment")
+    public ResponseEntity<?> handleReviewerGetComment(@RequestBody ReviewerGetCommentJudgeRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.getPaperComment(request));
+    }
+
+    @PostMapping("/system/reviewerSendComment")
+    public ResponseEntity<?> handleReviewerSendComment(@RequestBody ReviewerSendCommentJudgeRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.sendComment(request));
+    }
+
+    @PostMapping("/system/reviewerSendJudge")
+    public ResponseEntity<?> handleReviewerSendJudge(@RequestBody ReviewerSendCommentJudgeRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.sendJudgment(request));
+    }
+
     /* GENERAL IDENTITY */
 
     // user投稿
