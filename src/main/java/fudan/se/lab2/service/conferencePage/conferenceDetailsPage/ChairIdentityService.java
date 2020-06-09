@@ -40,6 +40,11 @@ public class ChairIdentityService {
 
     /**
      * changeConferenceStatus(chair 改变会议阶段)
+     * PREPARATION      -->
+     * CONTRIBUTION     -->(there is a strategy for review)
+     * REVIEWING        -->(all PC reviewed and checked the result)
+     * REVIEWED         -->(all rebuttal papers rechecked)
+     * ENDING
      *
      * @param request the UserRequest request
      * @return return conference's id and changed stage

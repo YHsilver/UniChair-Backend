@@ -135,15 +135,30 @@ public class UtilityService {
             return false;
         }
 
-        if (stage == Conference.Stage.GRADING) {
+        if (stage == Conference.Stage.REVIEWED) {
             Set<Paper> papers = paperRepository.findPapersByConference(conference);
             for(Paper paper: papers){
-                for(Boolean isReviewed: paper.getIsReviewed()){
-                    if(isReviewed == null || !isReviewed)
-                        throw new ChairChangeConferenceStageFailException("Not All Papers Reviewed!");
+                for(Boolean isReviewChecked: paper.getIsReviewChecked()){
+                    if(isReviewChecked == null || !isReviewChecked)
+                        throw new ChairChangeConferenceStageFailException("Not All Papers Review Checked!");
                 }
             }
         }
+
+        if (stage == Conference.Stage.ENDING) {
+            Set<Paper> papers = paperRepository.findPapersByConference(conference);
+            for(Paper paper: papers){
+               if (!paper.isPass()&&paper.getRebuttal()!=null){
+                   for(Boolean isRebuttalChecked: paper.getIsRebuttalChecked()){
+                       if(isRebuttalChecked == null || !isRebuttalChecked)
+                           throw new ChairChangeConferenceStageFailException("Not All Rebuttal Papers Checked!");
+                   }
+               }
+            }
+        }
+
+
+
 
         return true;
     }
@@ -155,12 +170,10 @@ public class UtilityService {
             case CONTRIBUTION:
                 return REVIEWING;
             case REVIEWING:
-                return GRADING;
-            case GRADING:
+                return REVIEWED;
+            case REVIEWED:
                 return ENDING;
             case ENDING:
-                return FINISHED;
-            case FINISHED:
                 return null;
         }
         return null;

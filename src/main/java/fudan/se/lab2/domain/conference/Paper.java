@@ -2,12 +2,10 @@ package fudan.se.lab2.domain.conference;
 
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.service.UtilityService;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
@@ -52,7 +50,7 @@ public class Paper implements Serializable {
     private List<User> reviewers = new ArrayList<>();
     // three comments from reviewers
     private Boolean[] isReviewed = new Boolean[REVIEWER_NUM];
-    private Boolean[] isCheckedReview = new Boolean[REVIEWER_NUM];
+    private Boolean[] isReviewChecked = new Boolean[REVIEWER_NUM];
     private Boolean[] isRebuttalChecked = new Boolean[REVIEWER_NUM];
 
     private String[] comments = new String[REVIEWER_NUM];
@@ -231,12 +229,12 @@ public class Paper implements Serializable {
         this.rebuttal = rebuttal;
     }
 
-    public Boolean[] getIsCheckedReview() {
-        return isCheckedReview;
+    public Boolean[] getIsReviewChecked() {
+        return isReviewChecked;
     }
 
-    public void setIsCheckedReview(Boolean[] isCheckedReview) {
-        this.isCheckedReview = isCheckedReview;
+    public void setIsReviewChecked(Boolean[] isReviewChecked) {
+        this.isReviewChecked = isReviewChecked;
     }
 
     public Boolean[] getIsRebuttalChecked() {
@@ -253,6 +251,14 @@ public class Paper implements Serializable {
 
     public void addOneToPost2(JSONObject comment) {
         this.post2.add(comment);
+    }
+
+    public boolean isPass(){
+        for (int i=0;i<REVIEWER_NUM;i++){
+         if (grades[i]==null||grades[i]<0)
+             return false;
+        }
+        return true;
     }
 
     @Override
@@ -284,7 +290,7 @@ public class Paper implements Serializable {
     }
 
     public boolean isAllChecked() {
-        for (Boolean isChecked : isCheckedReview) {
+        for (Boolean isChecked : isReviewChecked) {
             if (isChecked == null || !isChecked)
                 return false;
         }
@@ -296,7 +302,7 @@ public class Paper implements Serializable {
     }
 
     public int isCurrPCMemberChecked(Long reviewerId) {
-        return isCurrPCOperated(reviewerId, isCheckedReview);
+        return isCurrPCOperated(reviewerId, isReviewChecked);
     }
 
     private int isCurrPCOperated(Long reviewerId, Boolean[] isOperated) {

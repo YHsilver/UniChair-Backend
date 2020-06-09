@@ -182,6 +182,14 @@ public class ConferenceDetailPageController {
         return ResponseEntity.ok(reviewerIdentityService.getPaperComment(request));
     }
 
+    @PostMapping("/system/reviewerGetJudge")
+    public ResponseEntity<?> handleReviewerGetJudge(@RequestBody ReviewerGetCommentJudgeRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(reviewerIdentityService.getPaperJudgment(request));
+    }
+
+
     @PostMapping("/system/reviewerSendComment")
     public ResponseEntity<?> handleReviewerSendComment(@RequestBody ReviewerSendCommentJudgeRequest request) {
         logger.debug(request.toString());

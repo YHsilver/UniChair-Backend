@@ -1,6 +1,5 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.*;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
@@ -18,7 +17,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.PortUnreachableException;
 import java.util.*;
 
 @Service
@@ -93,7 +91,7 @@ public class ReviewerIdentityService {
 
         int i = findReviewerIndex(reviewer,paper);
 
-        if((paper.getIsCheckedReview()[i]!=null&&paper.getStatus()==Paper.Status.REVIEWED)||
+        if((paper.getIsReviewChecked()[i]!=null&&paper.getStatus()==Paper.Status.REVIEWED)||
                 (paper.getIsRebuttalChecked()[i]!=null&&paper.getStatus()==Paper.Status.CHECKED)
         ){
             throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
@@ -101,7 +99,7 @@ public class ReviewerIdentityService {
 
         writeValidReview(request,i);
         paper = paperRepository.findByPaperId(request.getPaperId());
-        paper.getIsCheckedReview()[i] = true;
+        paper.getIsReviewChecked()[i] = true;
         if(paper.isAllChecked()){
             paper.setStatus(Paper.Status.CHECKED);
         }
@@ -172,11 +170,11 @@ public class ReviewerIdentityService {
             }
         }
 
-        if(paper.getIsCheckedReview()[i]!=null){
+        if(paper.getIsReviewChecked()[i]!=null){
             throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
         }
 
-        paper.getIsCheckedReview()[i] = true;
+        paper.getIsReviewChecked()[i] = true;
         if(paper.isAllChecked()){
             paper.setStatus(Paper.Status.CHECKED);
         }

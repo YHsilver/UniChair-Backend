@@ -139,8 +139,10 @@ public class AuthorIdentityService {
         }
         if (!UtilityService.checkStringLength(request.getRebuttal(), 1)){
             throw new AuthorPaperOperateFailException("Invalid rebuttal message");
-
         }
+        if (paper.getRebuttal() != null)
+            throw new AuthorPaperOperateFailException("You have sent your rebuttal");
+
         paper.setRebuttal(request.getRebuttal());
         paperRepository.save(paper);
         return "{\"message\":\"Your rebuttal message submit success!\"}";

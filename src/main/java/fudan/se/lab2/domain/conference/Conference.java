@@ -45,7 +45,7 @@ public class Conference implements Serializable {
     // 会议申请状态类别:PENDING(待审核), PASS(通过), REJECT(驳回)
     public enum Status {PENDING, PASS, REJECT}
     private Status status;
-    public enum Stage {PREPARATION, CONTRIBUTION, REVIEWING, GRADING, ENDING,FINISHED}
+    public enum Stage {PREPARATION, CONTRIBUTION, REVIEWING, REVIEWED, ENDING}
     private Stage stage;
 
     // users in the conference
@@ -223,8 +223,8 @@ public class Conference implements Serializable {
             case CONTRIBUTION:
                 return  tarStage == Stage.REVIEWING;
             case REVIEWING:
-                return  tarStage == Stage.GRADING;
-            case GRADING:
+                return  tarStage == Stage.REVIEWED;
+            case REVIEWED:
                 return  tarStage == Stage.ENDING;
             case ENDING:
                 return false;

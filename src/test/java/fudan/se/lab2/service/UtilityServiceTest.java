@@ -21,8 +21,8 @@ class UtilityServiceTest {
      assertEquals(Conference.Stage.CONTRIBUTION,UtilityService.getNextStage(Conference.Stage.PREPARATION));
         assertEquals(Conference.Stage.REVIEWING,UtilityService.getNextStage(Conference.Stage.CONTRIBUTION));
 
-        assertEquals(Conference.Stage.GRADING,UtilityService.getNextStage(Conference.Stage.REVIEWING));
-        assertEquals(Conference.Stage.ENDING,UtilityService.getNextStage(Conference.Stage.GRADING));
+        assertEquals(Conference.Stage.REVIEWED,UtilityService.getNextStage(Conference.Stage.REVIEWING));
+        assertEquals(Conference.Stage.ENDING,UtilityService.getNextStage(Conference.Stage.REVIEWED));
         assertNull(UtilityService.getNextStage(Conference.Stage.ENDING));
 
     }
