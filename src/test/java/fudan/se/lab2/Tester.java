@@ -165,6 +165,8 @@ public class Tester {
         for(int i = 0; i < number; i++){
             Long invitationId = invitationRepository.findByReviewerAndConferenceAndStatus(pcs[i], conference, Invitation.Status.PENDING)
                     .iterator().next().getInvitationId();
+            //Invitation invitation = invitationRepository.findByInvitationId(invitationId);
+            //System.out.println(invitation);
             messageService.userDecideInvitations(new UserDecideInvitationsRequest(tokenUtil.generateToken(pcs[i]),
                     invitationId, Invitation.Status.PASS, conference.getTopics()));
         }

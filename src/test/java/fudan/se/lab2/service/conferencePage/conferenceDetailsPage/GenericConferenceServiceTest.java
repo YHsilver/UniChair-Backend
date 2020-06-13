@@ -1,10 +1,13 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
+import fudan.se.lab2.Tester;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetPaperPdfFileRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
+import fudan.se.lab2.domain.conference.Paper;
 import fudan.se.lab2.generator.ConferenceGenerator;
 import fudan.se.lab2.generator.UserGenerator;
 import fudan.se.lab2.repository.ConferenceRepository;
@@ -16,6 +19,10 @@ import fudan.se.lab2.security.jwt.JwtTokenUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -23,6 +30,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -31,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class GenericConferenceServiceTest {
 
+    private Tester tester;
     private UserRepository userRepository;
     private ConferenceRepository conferenceRepository;
     private PaperRepository paperRepository;
@@ -40,7 +49,8 @@ class GenericConferenceServiceTest {
 
     @Autowired
     public GenericConferenceServiceTest(UserRepository userRepository, ConferenceRepository conferenceRepository,
-                                        PaperRepository paperRepository, JwtTokenUtil tokenUtil) {
+                                        PaperRepository paperRepository, JwtTokenUtil tokenUtil, Tester tester) {
+        this.tester = tester;
         this.userRepository = userRepository;
         this.paperRepository = paperRepository;
         this.conferenceRepository = conferenceRepository;
@@ -105,6 +115,22 @@ class GenericConferenceServiceTest {
 
     @Test
     void getPaperPdfFile(){
-        assert(false);
+        User chair = tester.getNewUser();
+        Conference conference = tester.getNewConference(chair);
+        User author = tester.getNewUser();
+        tester.startContribution(conference);
+        conference = conferenceRepository.findByConferenceId(conference.getConferenceId());
+        Paper paper = tester.submitNewPaper(conference, author);
+
+        byte[] contents = null;
+        try{
+            contents = Files.readAllBytes(paper.getFile().toPath());
+        }catch (IOException ioe){
+            assert(false);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/pdf"));
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+        assertEquals(new ResponseEntity<>(contents, headers, HttpStatus.OK), genericConferenceService.getPaperPdfFile(new UserGetPaperPdfFileRequest(paper.getPaperId())));
     }
 }

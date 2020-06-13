@@ -273,8 +273,10 @@ public class UtilityService {
         if (reviewer == null || paper == null) {
             return false;
         }
+        //System.out.println("IN IS VALID REVIEWER");
         for (User tarReviewer : paper.getReviewers()
         ) {
+            //System.out.println(tarReviewer);
             if (tarReviewer.getId().equals(reviewer.getId())) {
                 return true;
             }

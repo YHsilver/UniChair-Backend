@@ -185,8 +185,6 @@ public class GenericConferenceService {
         }
 
         headers.setContentType(MediaType.parseMediaType("application/pdf"));
-        String filename = tarFile.getName();
-        headers.setContentDispositionFormData("attachment", filename);
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
         return new ResponseEntity<>(contents, headers, HttpStatus.OK);
     }

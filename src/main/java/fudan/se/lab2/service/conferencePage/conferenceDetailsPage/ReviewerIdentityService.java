@@ -111,13 +111,14 @@ public class ReviewerIdentityService {
     private void checkSubmitReviewRequestValid(ReviewerSubmitPaperReviewedRequest request) {
 
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
+        //System.out.println(reviewer);
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
 
         if (!UtilityService.isValidReviewer(paper, reviewer)) {
             throw new ReviewerReviewPaperFailException("You are not the reviewer of this paper!");
         }
 
-        if (paper.getStatus() != Paper.Status.REVIEWING || paper.getStatus() != Paper.Status.REVIEWED ||
+        if (paper.getStatus() != Paper.Status.REVIEWING && paper.getStatus() != Paper.Status.REVIEWED &&
                 paper.getStatus() != Paper.Status.CHECKED
         ) {
             throw new ReviewerReviewPaperFailException("Paper status not valid!");

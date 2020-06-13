@@ -134,7 +134,7 @@ public class AuthorIdentityService {
         Paper paper=paperRepository.findByPaperId(request.getPaperId());
         User author=userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         if (paper == null || author == null || !paper.getAuthor().getId().equals(author.getId())
-              || paper.getStatus() != Paper.Status.REVIEWED) {
+              || paper.getStatus() != Paper.Status.CHECKED) {
             throw new AuthorPaperOperateFailException("Invalid Request!");
         }
         if (!UtilityService.checkStringLength(request.getRebuttal(), 1)){

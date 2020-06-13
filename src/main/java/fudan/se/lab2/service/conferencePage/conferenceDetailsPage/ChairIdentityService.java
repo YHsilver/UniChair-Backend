@@ -79,6 +79,7 @@ public class ChairIdentityService {
         User chair = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
         Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
         ChairStartReviewingRequest.Strategy strategy = request.getStrategy();
+        //System.out.println("START REVIEWING : " + request);
         if(chair == null || conference == null || strategy == null || !conference.getChairman().getId().equals(chair.getId())){
             throw new ChairChangeConferenceStageFailException("Invalid request");
         }
@@ -178,22 +179,23 @@ public class ChairIdentityService {
             papersCopy.add(paper);
             papersCopy.add(paper);
         }
+        //System.out.println(papersCopy.size() + " " + reviewersCopy.size());
         int average = papersCopy.size() / reviewersCopy.size();
         Random random = UtilityService.random;
         for (User reviewer : reviewersCopy) {
             Review review = reviewRepository.findReviewByConferenceAndReviewer(conference, reviewer);
             Set<Long> assignedPaperIds = new HashSet<>();
-            for(Paper assignedPaper : review.getPapers()){
-                assignedPaperIds.add(assignedPaper.getPaperId());
-            }
             for (int i = 0; i < average; i++) {
                 Paper randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
                 while(assignedPaperIds.contains(randomPaper.getPaperId())){
                     randomPaper = papersCopy.get(random.nextInt(papersCopy.size()));
                 }
-                randomPaper.getReviewers().add(reviewer);
-                paperRepository.save(randomPaper);
-                review.getPapers().add(randomPaper);
+                Paper newRandomPaper = paperRepository.findByPaperId(randomPaper.getPaperId());
+                newRandomPaper.getReviewers().add(reviewer);
+                //System.out.println("IN RANDOM: " + reviewer);
+                assignedPaperIds.add(randomPaper.getPaperId());
+                paperRepository.save(newRandomPaper);
+                review.getPapers().add(paperRepository.findByPaperId(randomPaper.getPaperId()));
                 papersCopy.remove(randomPaper);
             }
             reviewRepository.save(review);
@@ -220,8 +222,9 @@ public class ChairIdentityService {
                 }
             }
             // add paper's reviewer
-            paper.getReviewers().add(randomReviewer);
-            paperRepository.save(paper);
+            Paper newPaper = paperRepository.findByPaperId(paper.getPaperId());
+            newPaper.getReviewers().add(randomReviewer);
+            paperRepository.save(newPaper);
             // add reviewer's paper
             review.getPapers().add(paperRepository.findByPaperId(paper.getPaperId()));
 
