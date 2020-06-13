@@ -31,7 +31,9 @@ class GetUserDetailsServiceTest {
         userRepository.save(user);
          GetUserDetailsRequest getUserDetailsRequest=new GetUserDetailsRequest(tokenUtil.generateToken(user));
          assertEquals(user.toStandardJson(),getUserDetailsService.getUserDetails(getUserDetailsRequest));
+    }
 
-
+    void checkUsernameRegisteredOrNot() {
+        assert(false);
     }
 }

@@ -171,11 +171,46 @@ class ReviewerIdentityServiceTest {
 
     @Test
     void getPaperDetails() {
-
-
+        assert(false);
     }
 
     @Test
     void submitPaperReviewed() {
+        assert(false);
+    }
+
+    @Test
+    void modifyPaperReviewed() {
+        assert(false);
+    }
+
+    @Test
+    void checkPaperReviewed() {
+        assert(false);
+    }
+
+    @Test
+    void getPaperRebuttal() {
+        assert(false);
+    }
+
+    @Test
+    void getPaperComment() {
+        assert(false);
+    }
+
+    @Test
+    void getPaperJudgement() {
+        assert(false);
+    }
+
+    @Test
+    void sendComment() {
+        assert(false);
+    }
+
+    @Test
+    void sendJudgement() {
+        assert(false);
     }
 }

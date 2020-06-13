@@ -147,7 +147,4 @@ public class AuthorIdentityService {
         paperRepository.save(paper);
         return "{\"message\":\"Your rebuttal message submit success!\"}";
     }
-
-
-
 }

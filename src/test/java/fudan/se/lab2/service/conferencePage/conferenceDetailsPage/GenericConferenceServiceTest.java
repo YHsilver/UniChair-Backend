@@ -102,4 +102,9 @@ class GenericConferenceServiceTest {
         assertEquals("[0,1,1]", genericConferenceService.getIdentity(userGetIdentityRequest));
 
     }
+
+    @Test
+    void getPaperPdfFile(){
+        assert(false);
+    }
 }

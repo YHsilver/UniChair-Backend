@@ -54,40 +54,40 @@ public class Lab2Application {
                 userRepository.save(admin);
             }
 
-            if (userRepository.findByUsername("robert1") == null) {
-                User AI = new User(
-                        "robert1",
-                        passwordEncoder.encode("pass"),
-                        "robert1",
-                        "fudan",
-                        "software",
-                        "AI@fudan.edu.cn"
-                );
-                userRepository.save(AI);
-            }
-            if (userRepository.findByUsername("robert2") == null) {
-                User AI = new User(
-                        "robert2",
-                        passwordEncoder.encode("pass"),
-                        "robert2",
-                        "fudan",
-                        "software",
-                        "AI@fudan.edu.cn"
-                );
-                userRepository.save(AI);
-            }
-
-            if (userRepository.findByUsername("robert3") == null) {
-                User AI = new User(
-                        "robert3",
-                        passwordEncoder.encode("pass"),
-                        "robert3",
-                        "fudan",
-                        "software",
-                        "AI@fudan.edu.cn"
-                );
-                userRepository.save(AI);
-            }
+//            if (userRepository.findByUsername("robert1") == null) {
+//                User AI = new User(
+//                        "robert1",
+//                        passwordEncoder.encode("pass"),
+//                        "robert1",
+//                        "fudan",
+//                        "software",
+//                        "AI@fudan.edu.cn"
+//                );
+//                userRepository.save(AI);
+//            }
+//            if (userRepository.findByUsername("robert2") == null) {
+//                User AI = new User(
+//                        "robert2",
+//                        passwordEncoder.encode("pass"),
+//                        "robert2",
+//                        "fudan",
+//                        "software",
+//                        "AI@fudan.edu.cn"
+//                );
+//                userRepository.save(AI);
+//            }
+//
+//            if (userRepository.findByUsername("robert3") == null) {
+//                User AI = new User(
+//                        "robert3",
+//                        passwordEncoder.encode("pass"),
+//                        "robert3",
+//                        "fudan",
+//                        "software",
+//                        "AI@fudan.edu.cn"
+//                );
+//                userRepository.save(AI);
+//            }
         };
     }
 }

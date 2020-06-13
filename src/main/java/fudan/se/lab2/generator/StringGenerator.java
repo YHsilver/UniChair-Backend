@@ -37,11 +37,11 @@ public class StringGenerator {
         return result;
     }
 
-    protected static String getRandomString(){
+    public static String getRandomString(){
         return getRandomString(6, 12, DIGITS_AND_LETTERS_SET);
     }
 
-    protected static String getRandomString(int minLength, int maxLength){
+    public static String getRandomString(int minLength, int maxLength){
         return getRandomString(minLength, maxLength, DIGITS_AND_LETTERS_SET);
     }
 
