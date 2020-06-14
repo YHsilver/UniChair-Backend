@@ -275,6 +275,14 @@ public class Paper implements Serializable {
         return true;
     }
 
+    public boolean isRebuttalAllChecked() {
+        for (Boolean isReviewChecked : isReviewChecked) {
+            if (isReviewChecked == null || !isReviewChecked)
+                return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Paper{" +
