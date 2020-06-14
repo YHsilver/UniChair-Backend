@@ -167,18 +167,21 @@ public class ReviewerIdentityService {
             throw new ReviewerNotFoundException("You are not the reviewer of this paper !");
         }
 
-        int i = 0;
-        for (; i < Paper.REVIEWER_NUM; i++) {
-            if (paper.getReviewers().get(i).getId().equals(reviewer.getId())) {
-                break;
-            }
-        }
+        int i = findReviewerIndex(reviewer,paper);
 
-        if (paper.getIsReviewChecked()[i] != null) {
+        if ((paper.getIsReviewChecked()[i] != null && paper.getStatus() == Paper.Status.REVIEWED) ||
+                (paper.getIsRebuttalChecked()[i] != null && paper.getStatus() == Paper.Status.CHECKED)
+        ) {
             throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
         }
 
+
         paper.getIsReviewChecked()[i] = true;
+
+        if (paper.getStatus() == Paper.Status.CHECKED) {
+            paper.getIsRebuttalChecked()[i] = true;
+        }
+
         if (paper.isAllChecked()) {
             paper.setStatus(Paper.Status.CHECKED);
         }
