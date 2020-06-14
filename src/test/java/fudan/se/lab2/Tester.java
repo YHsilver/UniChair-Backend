@@ -2,6 +2,7 @@ package fudan.se.lab2;
 
 import fudan.se.lab2.controller.adminPage.request.AdminChangeConferenceStatusRequest;
 import fudan.se.lab2.controller.applicationPage.request.UserAddConferenceApplicationRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorModifyPaperRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairChangeConferenceStageRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairSendInvitationRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.ChairStartReviewingRequest;
@@ -29,6 +30,7 @@ import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.AuthorIdentity
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ChairIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.GenericConferenceService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ReviewerIdentityService;
+import fudan.se.lab2.service.indexPage.LoginService;
 import fudan.se.lab2.service.messagePage.MessageService;
 import fudan.se.lab2.service.registerPage.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +65,7 @@ public class Tester {
     // general Service
     public GetConferenceTopicsService getConferenceTopicsService;
     public GetUserDetailsService getUserDetailsService;
-
+    public LoginService loginService;
     public MessageService messageService;
     public RegisterService registerService;
 
@@ -75,8 +77,9 @@ public class Tester {
                   AuthorIdentityService authorIdentityService, ChairIdentityService chairIdentityService,
                   GenericConferenceService genericConferenceService, ReviewerIdentityService reviewerIdentityService,
                   ConferenceAbstractPageService conferenceAbstractPageService, GetConferenceTopicsService getConferenceTopicsService,
-                  GetUserDetailsService getUserDetailsService, MessageService messageService, RegisterService registerService) {
+                  GetUserDetailsService getUserDetailsService, MessageService messageService, RegisterService registerService, LoginService loginService) {
         this.userRepository = userRepository;
+        this.loginService = loginService;
         this.conferenceRepository = conferenceRepository;
         this.paperRepository = paperRepository;
         this.invitationRepository = invitationRepository;
@@ -114,7 +117,26 @@ public class Tester {
         return conferenceRepository.findConferenceByConferenceFullName(conference.getConferenceFullName());
     }
 
+    public Paper modifyPaper(Paper oldPaper){
+        assert(paperRepository.findByPaperId(oldPaper.getPaperId()) != null);
+        paperIdOfTester++;
+        User temAuthor1 = UserGenerator.getRandomUser();
+        String[] authors = new String[4];
+        authors[0] = temAuthor1.getUsername();
+        authors[1] = temAuthor1.getFullName();
+        authors[2] = temAuthor1.getEmail();
+        authors[3] = temAuthor1.getUnit();
+        MockMultipartFile mockMultipartFile = new MockMultipartFile(
+                "test.pdf",    //filename
+                StringGenerator.getRandomString().getBytes()); //content
+        authorIdentityService.modifyPaper(new AuthorModifyPaperRequest(tokenUtil.generateToken(oldPaper.getAuthor()), oldPaper.getPaperId(),
+                oldPaper.getTopics(),"Title" + paperIdOfTester + ": " + StringGenerator.getRandomString(), authors,
+                "Summary: " + StringGenerator.getRandomString(), mockMultipartFile));
+        return paperRepository.findByPaperId(oldPaper.getPaperId());
+    }
+
     public Paper submitNewPaper(Conference conference, User author){
+        paperIdOfTester++;
         assert(conference.getStage().equals(Conference.Stage.CONTRIBUTION));
 
         User temAuthor1 = UserGenerator.getRandomUser();
@@ -212,7 +234,7 @@ public class Tester {
         assert(conference.getStage().equals(Conference.Stage.PREPARATION));
         chairIdentityService.changeConferenceStage(new ChairChangeConferenceStageRequest(tokenUtil.generateToken(conference.getChairman()),
                 Conference.Stage.CONTRIBUTION, conference.getConferenceId()));
-        assert(conference.getStage().equals(Conference.Stage.PREPARATION));
+        assert(conferenceRepository.findByConferenceId(conference.getConferenceId()).getStage().equals(Conference.Stage.CONTRIBUTION));
     }
 
     public void startReviewed(Conference conference){

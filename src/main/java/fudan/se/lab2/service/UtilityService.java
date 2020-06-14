@@ -221,11 +221,7 @@ public class UtilityService {
      * */
     public static String[][] isAuthorsValid(String[] authors) {
         String[][] authorArrays;
-
-        if (authors == null || authors.length == 0 || authors.length % 4 != 0) {
-            return null;
-        }
-
+        if (authors == null || authors.length == 0 || authors.length % 4 != 0) { return null; }
         authorArrays = new String[authors.length / 4][4];
         for (int i = 0; i < authors.length / 4; i++) {
             String[] author = new String[4];
@@ -243,12 +239,8 @@ public class UtilityService {
     }
 
     public static <T> Set<T> selectObjectsFromBaseSet(Set<T> baseSet, int num) {
-        if (num < 0) {
-            return null;
-        }
-        if (num == 0) {
-            return new HashSet<>();
-        }
+        if (num < 0) { return null; }
+        if (num == 0) { return new HashSet<>(); }
         if (num >= baseSet.size()) {
             return new HashSet<>(baseSet);
         }
@@ -270,13 +262,8 @@ public class UtilityService {
     }
 
     public static boolean isValidReviewer(Paper paper, User reviewer) {
-        if (reviewer == null || paper == null) {
-            return false;
-        }
-        //System.out.println("IN IS VALID REVIEWER");
-        for (User tarReviewer : paper.getReviewers()
-        ) {
-            //System.out.println(tarReviewer);
+        if (reviewer == null || paper == null) { return false; }
+        for (User tarReviewer : paper.getReviewers()) {
             if (tarReviewer.getId().equals(reviewer.getId())) {
                 return true;
             }
