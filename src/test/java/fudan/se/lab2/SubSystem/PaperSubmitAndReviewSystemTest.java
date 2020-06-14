@@ -42,7 +42,7 @@ public class PaperSubmitAndReviewSystemTest {
 
     @Test
     void systemTest(){
-        // 得到与子系统相关的 Service 实例，包括 adminService, applicationService
+        // 得到与子系统相关的 Service 实例，包括 authorIdentityService, reviewerIdentityService
         AuthorIdentityService authorIdentityService = tester.authorIdentityService;
         ReviewerIdentityService reviewerIdentityService = tester.reviewerIdentityService;
 
