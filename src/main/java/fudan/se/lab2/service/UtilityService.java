@@ -155,12 +155,16 @@ public class UtilityService {
     private static void checkToEndingStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
         if (stage == Conference.Stage.ENDING) {
             Set<Paper> papers = paperRepository.findPapersByConference(conference);
+            Set<Paper> failedPaper=new HashSet<>();
             for (Paper paper : papers) {
                 if (!paper.isPass() && paper.getRebuttal() != null) {
-                    for (Boolean isRebuttalChecked : paper.getIsRebuttalChecked()) {
-                        if (isRebuttalChecked == null || !isRebuttalChecked)
-                            throw new ChairChangeConferenceStageFailException("Not All Rebuttal Papers Checked!");
-                    }
+                    failedPaper.add(paper);
+                }
+            }
+            for (Paper paper : failedPaper) {
+                for (Boolean isRebuttalChecked : paper.getIsRebuttalChecked()) {
+                    if (isRebuttalChecked == null || !isRebuttalChecked)
+                        throw new ChairChangeConferenceStageFailException("Not All Rebuttal Papers Checked!");
                 }
             }
         }

@@ -392,8 +392,7 @@ public class Paper implements Serializable {
                     ", \"authorId\":\"" + author.getId() + '\"' +
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
                     ", \"reviewerIds\":" + UtilityService.getJsonStringFromArray(reviewerIds) +
-                    ", \"reviewerFullNames\":" + UtilityService.getJsonStringFromArray(reviewerFullNames) +
-                    ", \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
+                    ",  \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"authors\":" + getAuthorsObjectArray() +
