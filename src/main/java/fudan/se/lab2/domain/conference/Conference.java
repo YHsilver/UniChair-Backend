@@ -252,6 +252,7 @@ public class Conference implements Serializable {
                     ", \"place\":\"" + conferenceLocation + '\"' +
                     ", \"contributeEndTime\":\"" + contributeEndTime.toString() + '\"' +
                     ", \"resultReleaseTime\":\"" + resultReleaseTime.toString() + '\"' +
+                    ", \"contributeStartTime\":\"" + contributeStartTime.toString() + '\"' +
                     ", \"status\":\"" + status.toString() + '\"' +
                     ", \"stage\":\"" + stage.toString() + '\"' +
                     ", \"chairman\":\"" + chairman.getUsername() + '\"' +

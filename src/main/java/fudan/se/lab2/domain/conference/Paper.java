@@ -417,6 +417,7 @@ public class Paper implements Serializable {
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"authors\":" + getAuthorsObjectArray() +
                     ", \"status\":\"" + status + '\"' +
+                    ", \"reviewerFullNames\":" + UtilityService.getJsonStringFromArray(reviewerFullNames) +
                     ", \"fileName\":\"" + fileName + '\"' +
                     ", \"fileSize\":\"" + file.length() + '\"';
             if (reviewerId != null) {

@@ -90,13 +90,9 @@ public class ReviewerIdentityService {
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
         User reviewer = userRepository.findByUsername(tokenUtil.getUsernameFromToken(request.getToken()));
 
-        int i = findReviewerIndex(reviewer, paper);
 
-        if ((paper.getIsReviewChecked()[i] != null && paper.getStatus() == Paper.Status.REVIEWED) ||
-                (paper.getIsRebuttalChecked()[i] != null && paper.getStatus() == Paper.Status.CHECKED)
-        ) {
-            throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
-        }
+        int i = findReviewerIndex(reviewer,paper);
+        checkModifyCheckReviewValid(paper,i);
 
         writeValidReview(request, i);
         paper = paperRepository.findByPaperId(request.getPaperId());
@@ -166,14 +162,10 @@ public class ReviewerIdentityService {
         if (!UtilityService.isValidReviewer(paper, reviewer)) {
             throw new ReviewerNotFoundException("You are not the reviewer of this paper !");
         }
-
         int i = findReviewerIndex(reviewer,paper);
 
-        if ((paper.getIsReviewChecked()[i] != null && paper.getStatus() == Paper.Status.REVIEWED) ||
-                (paper.getIsRebuttalChecked()[i] != null && paper.getStatus() == Paper.Status.CHECKED)
-        ) {
-            throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
-        }
+        checkModifyCheckReviewValid( paper,i);
+
 
 
         paper.getIsReviewChecked()[i] = true;
@@ -187,6 +179,15 @@ public class ReviewerIdentityService {
         }
         paperRepository.save(paper);
         return "{\"message\":\"Check reviewed paper success!\"}";
+    }
+
+    private void checkModifyCheckReviewValid(Paper paper,int i) {
+
+        if ((paper.getIsReviewChecked()[i] != null && paper.getConference().getStage()== Conference.Stage.REVIEWING) ||
+                (paper.getIsRebuttalChecked()[i] != null &&  paper.getConference().getStage()==Conference.Stage.REVIEWED)
+        ) {
+            throw new ReviewerReviewPaperFailException("You have checked/modified your review for this paper!");
+        }
     }
 
     public JSONObject getPaperRebuttal(ReviewerGetRebuttalRequest request) {
