@@ -1,14 +1,12 @@
 package fudan.se.lab2.controller.conferencePage.conferenceDetailsPage;
 
+import fudan.se.lab2.controller.conferencePage.conferenceAbstractPage.request.UserGetPassedConferenceRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPaperDetailsRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorGetMyPapersRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorModifyPaperRequest;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.authorIdentity.AuthorRebuttalResultRequset;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.chairIndentity.*;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetPaperPdfFileRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.*;
 import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.reviewerIdentity.*;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.AuthorIdentityService;
 import fudan.se.lab2.service.conferencePage.conferenceDetailsPage.ChairIdentityService;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -67,13 +66,13 @@ public class ConferenceDetailPageController {
     // author modify a submitted paper
     @PostMapping("/system/authorModifyPaper")
     public ResponseEntity<?> handleAuthorModifyPaperRequest(@RequestParam("file") MultipartFile file,
-                                               @RequestParam("paperId") Long paperId,
-                                               @RequestParam("topics") String[] topics,
-                                               @RequestParam("title") String title,
-                                               @RequestParam("authors") String[] authors,
-                                               @RequestParam("summary") String summary,
-                                               @RequestParam("token") String token,
-                                               HttpServletRequest modifyRequest) {
+                                                            @RequestParam("paperId") Long paperId,
+                                                            @RequestParam("topics") String[] topics,
+                                                            @RequestParam("title") String title,
+                                                            @RequestParam("authors") String[] authors,
+                                                            @RequestParam("summary") String summary,
+                                                            @RequestParam("token") String token,
+                                                            HttpServletRequest modifyRequest) {
 
         AuthorModifyPaperRequest authorModifyPaperRequest = new AuthorModifyPaperRequest(token, paperId,
                 topics, title, authors, summary, file);
@@ -88,7 +87,6 @@ public class ConferenceDetailPageController {
         System.out.println(request.toString());
         return ResponseEntity.ok(chairIdentityService.searchReviewers(request));
     }
-
 
 
     // chair发出邀请请别人成为 PC member
@@ -243,6 +241,15 @@ public class ConferenceDetailPageController {
         logger.debug(request.toString());
         System.out.println(request.toString());
         return genericConferenceService.getPaperPdfFile(request);
+    }
+
+
+    // user获取一个PAPER 的 PDF file
+    @PostMapping("/system/userGetPassedPapers")
+    public ResponseEntity<?> handleUserRequest(@RequestBody UserGetPassedPapersRequest request) {
+        logger.debug(request.toString());
+        System.out.println(request.toString());
+        return ResponseEntity.ok(genericConferenceService.getPassedPapers(request));
     }
 
 }

@@ -1,13 +1,13 @@
 package fudan.se.lab2.service.conferencePage.conferenceDetailsPage;
 
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetConferenceDetailsRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetIdentityRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserGetPaperPdfFileRequest;
-import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.UserSubmitPaperRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceAbstractPage.request.UserGetPassedConferenceRequest;
+import fudan.se.lab2.controller.conferencePage.conferenceDetailsPage.request.generic.*;
 import fudan.se.lab2.domain.User;
 import fudan.se.lab2.domain.conference.Conference;
 import fudan.se.lab2.domain.conference.Paper;
 import fudan.se.lab2.exception.ConferencException.AuthorPaperOperateFailException;
+import fudan.se.lab2.exception.ConferencException.ConferenceNotFoundException;
+import fudan.se.lab2.exception.ConferencException.IllegalConferenceOperateException;
 import fudan.se.lab2.repository.ConferenceRepository;
 import fudan.se.lab2.repository.PaperRepository;
 import fudan.se.lab2.repository.UserRepository;
@@ -27,6 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class GenericConferenceService {
@@ -190,4 +194,19 @@ public class GenericConferenceService {
     }
 
 
+    public List<JSONObject> getPassedPapers(UserGetPassedPapersRequest request) {
+        Conference conference =conferenceRepository.findByConferenceId(request.getConferenceId());
+        if (conference==null)
+            throw new ConferenceNotFoundException();
+        if (conference.getStage()!=Conference.Stage.REVIEWED||conference.getStage()!=Conference.Stage.ENDING)
+            throw new IllegalConferenceOperateException();
+
+        Set<Paper> allPapers=paperRepository.findPapersByConference(conference);
+        List<JSONObject> passedPapers=new ArrayList<>();
+        for (Paper paper: allPapers){
+            if (paper.isPass())
+                passedPapers.add(paper.toStandardJson());
+        }
+        return passedPapers;
+    }
 }
