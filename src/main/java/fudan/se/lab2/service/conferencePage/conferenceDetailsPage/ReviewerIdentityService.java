@@ -101,6 +101,11 @@ public class ReviewerIdentityService {
         writeValidReview(request, i);
         paper = paperRepository.findByPaperId(request.getPaperId());
         paper.getIsReviewChecked()[i] = true;
+
+        if (paper.getStatus() == Paper.Status.CHECKED) {
+            paper.getIsRebuttalChecked()[i] = true;
+        }
+
         if (paper.isAllChecked()) {
             paper.setStatus(Paper.Status.CHECKED);
         }
@@ -233,11 +238,14 @@ public class ReviewerIdentityService {
             throw new ReviewerNotFoundException("You are not the reviewer or chair of this paper !");
         }
         PaperPosts post = new PaperPosts(user, request.getMessage());
-
-        if (i == 1) paper.addOneToPost1(post);
-        else if (i == 2) paper.addOneToPost2(post);
-        else throw new RuntimeException("wrong method call: arguments false! ");
         paperPostsRepository.save(post);
+
+        if (i == 1) paper.addOneToPost1(paperPostsRepository.findByPostsId(post.getPostsId()));
+        else if (i == 2) paper.addOneToPost2(paperPostsRepository.findByPostsId(post.getPostsId()));
+        else throw new RuntimeException("wrong method call: arguments false! ");
+
+
         paperRepository.save(paper);
+
     }
 }

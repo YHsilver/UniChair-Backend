@@ -278,6 +278,9 @@ public class UtilityService {
     }
 
     public static boolean isValidReviewerOrChair(Paper paper, User user) {
+        if (user == null || paper == null) {
+            return false;
+        }
         return isValidReviewer(paper, user) || paper.getConference().getChairman().getId().equals(user.getId());
     }
 
