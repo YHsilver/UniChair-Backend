@@ -20,6 +20,7 @@ public class Paper implements Serializable {
 
     public static final int REVIEWER_NUM = 3;
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
@@ -66,10 +67,12 @@ public class Paper implements Serializable {
     }
 
     //the first discuss post after reviewed
-    @OneToMany
+    @OrderColumn(name = "postsId")
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<PaperPosts> post1 = new ArrayList<>();
     //the second discuss post after rebuttal
-    @OneToMany
+    @OrderColumn(name = "postsId")
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<PaperPosts> post2 = new ArrayList<>();
     //author's rebuttal message
     private String rebuttal;
@@ -205,6 +208,14 @@ public class Paper implements Serializable {
         this.fileName = fileName;
     }
 
+    public List<PaperPosts> getPost1() {
+        return post1;
+    }
+
+    public List<PaperPosts> getPost2() {
+        return post2;
+    }
+
     public List<JSONObject> getJSONPost1() {
         List<JSONObject> list = new ArrayList<>();
 
@@ -219,6 +230,7 @@ public class Paper implements Serializable {
     }
 
     public List<JSONObject> getJSONPost2() {
+
         List<JSONObject> list = new ArrayList<>();
 
         for (PaperPosts paperPosts : post2) {
@@ -270,6 +282,14 @@ public class Paper implements Serializable {
     public boolean isPass() {
         for (int i = 0; i < REVIEWER_NUM; i++) {
             if (grades[i] == null || grades[i] < 0)
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isRebuttalAllChecked() {
+        for (Boolean isReviewChecked : isReviewChecked) {
+            if (isReviewChecked == null || !isReviewChecked)
                 return false;
         }
         return true;
@@ -392,8 +412,7 @@ public class Paper implements Serializable {
                     ", \"authorId\":\"" + author.getId() + '\"' +
                     ", \"authorFullName\":\"" + author.getFullName() + '\"' +
                     ", \"reviewerIds\":" + UtilityService.getJsonStringFromArray(reviewerIds) +
-                    ", \"reviewerFullNames\":" + UtilityService.getJsonStringFromArray(reviewerFullNames) +
-                    ", \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
+                    ",  \"topics\":" + UtilityService.getJsonStringFromArray(topics) +
                     ", \"title\":\"" + title + '\"' +
                     ", \"summary\":\"" + summary + '\"' +
                     ", \"authors\":" + getAuthorsObjectArray() +

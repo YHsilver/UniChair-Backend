@@ -133,35 +133,28 @@ public class UtilityService {
         if (!conference.isNextStage(stage) || stage == Conference.Stage.REVIEWING) {
             return false;
         }
-
-        checkToReviewedStageValid(conference, stage, paperRepository);
-        checkToEndingStageValid(conference, stage, paperRepository);
-
+        checkToReviewedStageValid(conference, paperRepository);
+        checkToEndingStageValid(conference, paperRepository);
         return true;
     }
 
-    private static void checkToReviewedStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
-        if (stage == Conference.Stage.REVIEWED) {
-            Set<Paper> papers = paperRepository.findPapersByConference(conference);
-            for (Paper paper : papers) {
-                for (Boolean isReviewChecked : paper.getIsReviewChecked()) {
-                    if (isReviewChecked == null || !isReviewChecked)
-                        throw new ChairChangeConferenceStageFailException("Not All Papers Review Checked!");
-                }
+    private static void checkToReviewedStageValid(Conference conference, PaperRepository paperRepository) {
+        Set<Paper> papers = paperRepository.findPapersByConference(conference);
+        for (Paper paper : papers) {
+            for (Boolean isReviewChecked : paper.getIsReviewChecked()) {
+                if (isReviewChecked == null || !isReviewChecked)
+                    throw new ChairChangeConferenceStageFailException("Not All Papers Review Checked!");
             }
         }
+
     }
 
-    private static void checkToEndingStageValid(Conference conference, Conference.Stage stage, PaperRepository paperRepository) {
-        if (stage == Conference.Stage.ENDING) {
-            Set<Paper> papers = paperRepository.findPapersByConference(conference);
-            for (Paper paper : papers) {
-                if (!paper.isPass() && paper.getRebuttal() != null) {
-                    for (Boolean isRebuttalChecked : paper.getIsRebuttalChecked()) {
-                        if (isRebuttalChecked == null || !isRebuttalChecked)
-                            throw new ChairChangeConferenceStageFailException("Not All Rebuttal Papers Checked!");
-                    }
-                }
+    private static void checkToEndingStageValid(Conference conference, PaperRepository paperRepository) {
+        Set<Paper> papers = paperRepository.findPapersByConference(conference);
+        for (Paper paper : papers) {
+            if (!paper.isPass() && paper.getRebuttal() != null) {
+                if (!paper.isRebuttalAllChecked())
+                    throw new ChairChangeConferenceStageFailException("Not All Papers Review Checked!");
             }
         }
     }
@@ -272,6 +265,9 @@ public class UtilityService {
     }
 
     public static boolean isValidReviewerOrChair(Paper paper, User user) {
+        if (user == null || paper == null) {
+            return false;
+        }
         return isValidReviewer(paper, user) || paper.getConference().getChairman().getId().equals(user.getId());
     }
 

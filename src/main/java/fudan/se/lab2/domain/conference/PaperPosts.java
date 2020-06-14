@@ -21,7 +21,12 @@ public class PaperPosts {
     private User user;
 
     private String comments;
-
+    public PaperPosts() {
+    }
+    public PaperPosts(User user, String comments) {
+        this.user=user;
+        this.comments=comments;
+    }
     public Long getPostsId() {
         return postsId;
     }
@@ -46,10 +51,7 @@ public class PaperPosts {
         this.comments = comments;
     }
 
-    public PaperPosts(User user, String comments) {
-        this.user=user;
-        this.comments=comments;
-    }
+
 
 
     public JSONObject tojSON() {

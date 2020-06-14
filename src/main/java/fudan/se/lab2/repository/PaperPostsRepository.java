@@ -11,5 +11,5 @@ import java.util.Set;
 @Repository
 public interface PaperPostsRepository extends CrudRepository<PaperPosts, Long> {
     PaperPosts findByPostsId(Long id);
-    Set<PaperPosts> findPaperPostsByUser(User user);
+    Set<PaperPosts> findByUser(User user);
 }

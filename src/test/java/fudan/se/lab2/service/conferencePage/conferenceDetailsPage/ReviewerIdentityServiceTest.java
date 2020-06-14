@@ -52,6 +52,7 @@ class ReviewerIdentityServiceTest {
         this.tester = tester;
         this.userRepository = userRepository;
         this.paperRepository = paperRepository;
+        this.paperPostsRepository=paperPostsRepository;
         this.conferenceRepository = conferenceRepository;
         this.reviewRepository = reviewRepository;
         this.tokenUtil = tokenUtil;
@@ -208,6 +209,7 @@ class ReviewerIdentityServiceTest {
         tester.reviewerReviewAllPapers(conference, -2);
         tester.reviewerCheckAllPaperReviewed(conference);
         //move to reviewed
+
         tester.startReviewed(conference);
         //conference = conferenceRepository.findByConferenceId(conference.getConferenceId());c
         String rebuttal = "rebuttal Message" + StringGenerator.getRandomString();
@@ -242,7 +244,7 @@ class ReviewerIdentityServiceTest {
         String message = "message: " + StringGenerator.getRandomString();
         reviewerIdentityService.sendComment(new ReviewerSendCommentJudgeRequest(tokenUtil.generateToken(chair), paper.getPaperId(), message));
 
-        PaperPosts paperPosts = paperPostsRepository.findPaperPostsByUser(chair).iterator().next();
+        PaperPosts paperPosts = paperPostsRepository.findByUser(chair).iterator().next();
         assertNotNull(paperPosts);
         List<JSONObject> expectedList = new ArrayList<>();
         expectedList.add(paperPosts.tojSON());
@@ -259,7 +261,7 @@ class ReviewerIdentityServiceTest {
         tester.startContribution(conference);
         conference = conferenceRepository.findByConferenceId(conference.getConferenceId());
         Paper paper = tester.submitNewPaper(conference, author);
-        User[] reviewers = tester.addReviewers(conference, 3);
+        User[] reviewers = tester.addReviewers(conference, 2);
         //move to reviewing
         assertTrue(tester.startReviewing(conference));
         conference = conferenceRepository.findByConferenceId(conference.getConferenceId());
@@ -274,7 +276,8 @@ class ReviewerIdentityServiceTest {
 
         String message = "message: " + StringGenerator.getRandomString();
         reviewerIdentityService.sendJudgment(new ReviewerSendCommentJudgeRequest(tokenUtil.generateToken(chair), paper.getPaperId(), message));
-        PaperPosts paperPosts = paperPostsRepository.findPaperPostsByUser(chair).iterator().next();
+
+        PaperPosts paperPosts = paperPostsRepository.findByUser(chair).iterator().next();
         assertNotNull(paperPosts);
         List<JSONObject> expectedList = new ArrayList<>();
         expectedList.add(paperPosts.tojSON());
