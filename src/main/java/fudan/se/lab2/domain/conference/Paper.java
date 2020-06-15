@@ -288,8 +288,8 @@ public class Paper implements Serializable {
     }
 
     public boolean isRebuttalAllChecked() {
-        for (Boolean isReviewChecked : isReviewChecked) {
-            if (isReviewChecked == null || !isReviewChecked)
+        for (Boolean isRebuttalChecked : isRebuttalChecked) {
+            if (isRebuttalChecked == null || !isRebuttalChecked)
                 return false;
         }
         return true;

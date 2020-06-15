@@ -154,7 +154,7 @@ public class UtilityService {
         for (Paper paper : papers) {
             if (!paper.isPass() && paper.getRebuttal() != null) {
                 if (!paper.isRebuttalAllChecked())
-                    throw new ChairChangeConferenceStageFailException("Not All Papers Review Checked!");
+                    throw new ChairChangeConferenceStageFailException("Not All Papers Rebuttal Checked!");
             }
         }
     }
