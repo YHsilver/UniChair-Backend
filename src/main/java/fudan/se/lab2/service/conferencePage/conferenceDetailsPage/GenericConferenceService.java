@@ -87,13 +87,13 @@ public class GenericConferenceService {
         // get file name
         String fileName = multipartFile.getOriginalFilename();
 
-        if(fileName == null){
+        if (fileName == null) {
             throw new AuthorPaperOperateFailException("paper submit wrong, not pdf file!");
         }
-        if (fileName.equals(""))fileName=multipartFile.getName();
+        if (fileName.equals("")) fileName = multipartFile.getName();
 
         int index = fileName.lastIndexOf('.');
-        if(index == -1){
+        if (index == -1) {
             throw new AuthorPaperOperateFailException("paper submit wrong, not pdf file!");
         }
         String suffix = fileName.substring(index);
@@ -136,8 +136,6 @@ public class GenericConferenceService {
     }
 
 
-
-
     /**
      * user get identity
      *
@@ -167,12 +165,12 @@ public class GenericConferenceService {
         return resp + "]";
     }
 
-    public ResponseEntity<byte[]> getPaperPdfFile(UserGetPaperPdfFileRequest request){
+    public ResponseEntity<byte[]> getPaperPdfFile(UserGetPaperPdfFileRequest request) {
         // 读取pdf文件到字节里
         Paper paper = paperRepository.findByPaperId(request.getPaperId());
         byte[] contents;
         HttpHeaders headers = new HttpHeaders();
-        if(paper == null){
+        if (paper == null) {
             contents = "No Such Paper".getBytes();
             headers.setContentType(MediaType.parseMediaType("text/plain"));
             return new ResponseEntity<>(contents, headers, HttpStatus.BAD_REQUEST);
@@ -180,9 +178,9 @@ public class GenericConferenceService {
 
         File tarFile = paper.getFile();
 
-        try{
+        try {
             contents = Files.readAllBytes(tarFile.toPath());
-        }catch (IOException ioe){
+        } catch (IOException ioe) {
             contents = "Get File Error.".getBytes();
             headers.setContentType(MediaType.parseMediaType("text/plain"));
             return new ResponseEntity<>(contents, headers, HttpStatus.BAD_REQUEST);
@@ -195,15 +193,15 @@ public class GenericConferenceService {
 
 
     public List<JSONObject> getPassedPapers(UserGetPassedPapersRequest request) {
-        Conference conference =conferenceRepository.findByConferenceId(request.getConferenceId());
-        if (conference==null)
+        Conference conference = conferenceRepository.findByConferenceId(request.getConferenceId());
+        if (conference == null)
             throw new ConferenceNotFoundException();
-        if (conference.getStage()!=Conference.Stage.REVIEWED&&conference.getStage()!=Conference.Stage.ENDING)
+        if (conference.getStage() != Conference.Stage.REVIEWED && conference.getStage() != Conference.Stage.ENDING)
             throw new IllegalConferenceOperateException();
 
-        Set<Paper> allPapers=paperRepository.findPapersByConference(conference);
-        List<JSONObject> passedPapers=new ArrayList<>();
-        for (Paper paper: allPapers){
+        Set<Paper> allPapers = paperRepository.findPapersByConference(conference);
+        List<JSONObject> passedPapers = new ArrayList<>();
+        for (Paper paper : allPapers) {
             if (paper.isPass())
                 passedPapers.add(paper.toStandardJson());
         }

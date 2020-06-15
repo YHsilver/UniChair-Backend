@@ -434,12 +434,10 @@ public class Paper implements Serializable {
             }
             if (status == Status.REVIEWED || status == Status.CHECKED) {
 
-                if (!isPass() && reviewerId != null) {
+                if (isRebuttal() && reviewerId != null) {
                     int reckId = isCurrPCMemberRebuttalChecked(reviewerId);
                     str += ", \"isCurrPCMemberRebuttalChecked\":\"" + (reckId != -1) + "\"";
                 }
-
-
                 str += ", \"grades\":" + UtilityService.getJsonStringFromArray(grades) +
                         ", \"comments\":" + UtilityService.getJsonStringFromArray(comments) +
                         ", \"confidences\":" + UtilityService.getJsonStringFromArray(confidences) +
