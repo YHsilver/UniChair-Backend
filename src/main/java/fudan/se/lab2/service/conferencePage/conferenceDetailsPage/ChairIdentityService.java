@@ -170,7 +170,7 @@ public class ChairIdentityService {
         return true;
     }
 
-    //todo deal with benefit conflict
+
     private boolean paperAssignment_RANDOM(Conference conference) {
         List<User> reviewersCopy = new ArrayList<>(conference.getReviewerSet());
         List<Paper> papersCopy1 = new ArrayList<>(paperRepository.findPapersByConference(conference));
@@ -179,7 +179,7 @@ public class ChairIdentityService {
             papersCopy.add(paper);
             papersCopy.add(paper);
         }
-        //System.out.println(papersCopy.size() + " " + reviewersCopy.size());
+
         int average = papersCopy.size() / reviewersCopy.size();
         Random random = UtilityService.random;
         for (User reviewer : reviewersCopy) {

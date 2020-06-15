@@ -11,7 +11,6 @@ public class ChairSendInvitationRequest {
 
     private String token;
     private Long conferenceId;
-    // TODO: id will be better
     private String[] reviewerUsername;
     private String message;
 

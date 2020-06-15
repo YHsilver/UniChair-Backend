@@ -244,7 +244,6 @@ public class ConferenceDetailPageController {
     }
 
 
-    // user获取一个PAPER 的 PDF file
     @PostMapping("/system/userGetPassedPapers")
     public ResponseEntity<?> handleUserRequest(@RequestBody UserGetPassedPapersRequest request) {
         logger.debug(request.toString());

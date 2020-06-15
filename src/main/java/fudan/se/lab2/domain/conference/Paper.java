@@ -432,11 +432,13 @@ public class Paper implements Serializable {
                 str += ", \"isCurrPCMemberChecked\":\"" + (ckId != -1) + "\"";
 
             }
-            if (status == Status.REVIEWED) {
-                if (!isPass()) {
+            if (status == Status.REVIEWED || status == Status.CHECKED) {
+
+                if (!isPass() && reviewerId != null) {
                     int reckId = isCurrPCMemberRebuttalChecked(reviewerId);
                     str += ", \"isCurrPCMemberRebuttalChecked\":\"" + (reckId != -1) + "\"";
                 }
+
 
                 str += ", \"grades\":" + UtilityService.getJsonStringFromArray(grades) +
                         ", \"comments\":" + UtilityService.getJsonStringFromArray(comments) +
