@@ -198,7 +198,7 @@ public class GenericConferenceService {
         Conference conference =conferenceRepository.findByConferenceId(request.getConferenceId());
         if (conference==null)
             throw new ConferenceNotFoundException();
-        if (conference.getStage()!=Conference.Stage.REVIEWED||conference.getStage()!=Conference.Stage.ENDING)
+        if (conference.getStage()!=Conference.Stage.REVIEWED&&conference.getStage()!=Conference.Stage.ENDING)
             throw new IllegalConferenceOperateException();
 
         Set<Paper> allPapers=paperRepository.findPapersByConference(conference);
